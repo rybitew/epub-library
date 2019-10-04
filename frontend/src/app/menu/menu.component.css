@@ -1,0 +1,11 @@
+.container-fluid {
+  padding: 0;
+}
+.menu {
+  background-color: #226120;
+}
+.col-2 {
+  font-family: "nevis";
+  color: darkgray;
+  width: 100vh;
+}
