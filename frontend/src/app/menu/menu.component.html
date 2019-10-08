@@ -1,18 +1,20 @@
-<div class="container-fluid">
-  <mat-toolbar class="menu">
-    <div class="col-2"></div>
-    <div class="col-2" id="categories">
-      <span>CATEGORIES</span>
-    </div>
-    <div class="col-2" id="upload">
-      <span>UPLOAD E-BOOK</span>
-    </div>
-    <div class="col-2" id="library">
-      <span>MY LIBRARY</span>
-    </div>
-    <div class="col-2" id="account">
-      <span>MANAGE ACCOUNT</span>
-    </div>
-    <div class="col-2"></div>
-  </mat-toolbar>
-</div>
+<mat-toolbar class="nav" id="menu">
+  <div class="container-fluid">
+    <mat-nav-list class="nav">
+      <mat-list-item class="col-2"></mat-list-item>
+      <mat-list-item class="col-2" id="categories" [routerLink]="'/books/categories'">
+        <div class="h5">CATEGORIES</div>
+      </mat-list-item>
+      <mat-list-item class="col-2" id="upload" [routerLink]="'/upload'">
+        <div class="h5">UPLOAD E-BOOK</div>
+      </mat-list-item>
+      <mat-list-item class="col-2" id="library" [routerLink]="'/library'">
+        <div class="h5">MY LIBRARY</div>
+      </mat-list-item>
+      <mat-list-item class="col-2" id="account" [routerLink]="'/user/account'">
+        <div class="h5">MY ACCOUNT</div>
+      </mat-list-item>
+      <mat-list-item class="col-2"></mat-list-item>
+    </mat-nav-list>
+  </div>
+</mat-toolbar>

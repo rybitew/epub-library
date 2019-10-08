@@ -1,11 +1,30 @@
 .container-fluid {
+  height: 100%;
   padding: 0;
 }
-.menu {
-  background-color: #226120;
+.row {
+  vertical-align: middle;
+  justify-content: center;
+}
+#menu {
+  height: 100%;
+  width: 100%;
+
+  font-family: "nevis";
+  color: #28a745;
+  text-align: center;
 }
 .col-2 {
-  font-family: "nevis";
-  color: darkgray;
-  width: 100vh;
+  padding: 0;
+
+  height: 100%;
+  width: 20%;
+  justify-items: center;
+  /*line-height: 2.9em;*/
+}
+.h4 {
+  vertical-align: center;
+}
+.mat-list-item {
+  float: right;
 }
