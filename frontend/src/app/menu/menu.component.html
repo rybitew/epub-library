@@ -1,20 +1,22 @@
 <mat-toolbar class="nav" id="menu">
-  <div class="container-fluid">
-    <mat-nav-list class="nav">
-      <mat-list-item class="col-2"></mat-list-item>
-      <mat-list-item class="col-2" id="categories" [routerLink]="'/books/categories'">
-        <div class="h5">CATEGORIES</div>
+    <mat-nav-list class="list-horizontal">
+      <mat-list-item id="home">
+        <h2>HOME</h2>
       </mat-list-item>
-      <mat-list-item class="col-2" id="upload" [routerLink]="'/upload'">
-        <div class="h5">UPLOAD E-BOOK</div>
+      <mat-list-item id="categories" [routerLink]="'/books/categories'">
+        <h2>CATEGORIES</h2>
       </mat-list-item>
-      <mat-list-item class="col-2" id="library" [routerLink]="'/library'">
-        <div class="h5">MY LIBRARY</div>
+      <mat-list-item id="upload" [routerLink]="'/upload'">
+        <h2>UPLOAD E-BOOK</h2>
       </mat-list-item>
-      <mat-list-item class="col-2" id="account" [routerLink]="'/user/account'">
-        <div class="h5">MY ACCOUNT</div>
+      <mat-list-item id="library" [routerLink]="'/library'">
+        <h2>MY LIBRARY</h2>
       </mat-list-item>
-      <mat-list-item class="col-2"></mat-list-item>
+      <mat-list-item id="account" [routerLink]="'/user/account'">
+        <h2>MY ACCOUNT</h2>
+      </mat-list-item>
+      <mat-list-item id="search">
+        <h2>SEARCH</h2>
+      </mat-list-item>
     </mat-nav-list>
-  </div>
 </mat-toolbar>

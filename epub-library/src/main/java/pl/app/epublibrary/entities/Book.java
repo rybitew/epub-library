@@ -1,15 +1,20 @@
 package pl.app.epublibrary.entities;
 
+import com.datastax.driver.core.DataType;
+import com.datastax.driver.mapping.annotations.Frozen;
+//import com.datastax.driver.mapping.annotations.Table;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
+import org.springframework.data.cassandra.core.mapping.CassandraType;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
-@Table("books")
+@Table(value = "books")
 public class Book {
 
     @PrimaryKeyColumn(
@@ -24,17 +29,32 @@ public class Book {
     )
     private String title;
 
-    private List<String> authorSurnames;
-    private List<String> authorNames;
+    /**
+     * Key: surname
+     * Value: name
+     */
+    @Frozen
+    @PrimaryKeyColumn(
+            ordinal = 2,
+            type = PrimaryKeyType.CLUSTERED
+    )
+    private Map<String, String> author;
+//    private List<String> authorNames;
 
+    @PrimaryKeyColumn(
+            ordinal = 3,
+            type = PrimaryKeyType.PARTITIONED
+    )
     private LocalDate releaseDate;
     private String genre;
 
-    public Book(UUID bookId, String title, List<String> authorSurnames, List<String> authorNames, LocalDate releaseDate, String genre) {
-        this.bookId = bookId;
+    public Book() {
+    }
+
+    public Book(UUID id, String title, Map<String, String> author, LocalDate releaseDate, String genre) {
+        this.bookId = id;
         this.title = title;
-        this.authorSurnames = authorSurnames;
-        this.authorNames = authorNames;
+        this.author = author;
         this.releaseDate = releaseDate;
         this.genre = genre;
     }
@@ -55,20 +75,12 @@ public class Book {
         this.title = title;
     }
 
-    public List<String> getAuthorSurname() {
-        return authorSurnames;
+    public Map<String, String> getAuthor() {
+        return author;
     }
 
-    public void setAuthorSurname(List<String> authorSurname) {
-        this.authorSurnames = authorSurname;
-    }
-
-    public List<String> getAuthorNames() {
-        return authorNames;
-    }
-
-    public void setAuthorNames(List<String> authorNames) {
-        this.authorNames = authorNames;
+    public void setAuthor(Map<String, String> author) {
+        this.author = author;
     }
 
     public LocalDate getReleaseDate() {
