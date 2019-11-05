@@ -1,16 +1,11 @@
 package pl.app.epublibrary.entities;
 
-import com.datastax.driver.core.DataType;
-import com.datastax.driver.mapping.annotations.Frozen;
-//import com.datastax.driver.mapping.annotations.Table;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
-import org.springframework.data.cassandra.core.mapping.CassandraType;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -19,9 +14,10 @@ public class Book {
 
     @PrimaryKeyColumn(
             ordinal = 0,
-            type = PrimaryKeyType.PARTITIONED
+            type = PrimaryKeyType.PARTITIONED,
+            name = "book_id"
     )
-    private UUID bookId;
+    private UUID id;
 
     @PrimaryKeyColumn(
             ordinal = 1,
@@ -33,38 +29,38 @@ public class Book {
      * Key: surname
      * Value: name
      */
-    @Frozen
-    @PrimaryKeyColumn(
-            ordinal = 2,
-            type = PrimaryKeyType.CLUSTERED
-    )
     private Map<String, String> author;
 //    private List<String> authorNames;
 
-    @PrimaryKeyColumn(
-            ordinal = 3,
-            type = PrimaryKeyType.PARTITIONED
-    )
+    @Column("release_date")
     private LocalDate releaseDate;
+
     private String genre;
+
+    @Column("cover_url")
+    private String coverUrl;
+
+    private Map<String, String> comments;
 
     public Book() {
     }
 
-    public Book(UUID id, String title, Map<String, String> author, LocalDate releaseDate, String genre) {
-        this.bookId = id;
+    public Book(UUID id, String title, Map<String, String> author, LocalDate releaseDate, String genre, String coverUrl, Map<String, String> comments) {
+        this.id = id;
         this.title = title;
         this.author = author;
         this.releaseDate = releaseDate;
         this.genre = genre;
+        this.coverUrl = coverUrl;
+        this.comments = comments;
     }
 
-    public UUID getBookId() {
-        return bookId;
+    public UUID getId() {
+        return id;
     }
 
-    public void setBookId(UUID bookId) {
-        this.bookId = bookId;
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -97,5 +93,21 @@ public class Book {
 
     public void setGenre(String genre) {
         this.genre = genre;
+    }
+
+    public String getCoverUrl() {
+        return coverUrl;
+    }
+
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
+    }
+
+    public Map<String, String> getComments() {
+        return comments;
+    }
+
+    public void setComments(Map<String, String> comments) {
+        this.comments = comments;
     }
 }
