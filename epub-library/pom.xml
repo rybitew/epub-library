@@ -33,7 +33,12 @@
 			<artifactId>spring-data-cassandra</artifactId>
 			<version>2.2.0.RELEASE</version>
 		</dependency>
-<!--		Spring		-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+<!--		metrics ??		-->
 		<!-- https://mvnrepository.com/artifact/com.codahale.metrics/metrics-core -->
         <dependency>
             <groupId>com.codahale.metrics</groupId>
@@ -41,7 +46,7 @@
             <version>3.0.2</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.datastax.cassandra/cassandra-driver-core -->
+<!--		Datastax 	-->
 		<dependency>
 			<groupId>com.datastax.cassandra</groupId>
 			<artifactId>cassandra-driver-core</artifactId>
@@ -57,17 +62,21 @@
 <!--			<artifactId>cassandra-unit</artifactId>-->
 <!--			<version>3.0.0.1</version>-->
 <!--		</dependency>-->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
+
 <!--		<dependency>-->
 <!--			<groupId>net.minidev</groupId>-->
 <!--			<artifactId>json-smart</artifactId>-->
 <!--			<version>2.3</version>-->
 <!--			<scope>compile</scope>-->
 <!--		</dependency>-->
+<!-- 		Lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.8</version>
+			<scope>provided</scope>
+		</dependency>
+
 	</dependencies>
 	<repositories>
 		<repository>

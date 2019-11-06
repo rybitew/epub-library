@@ -1,5 +1,9 @@
 package pl.app.epublibrary.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
@@ -7,6 +11,10 @@ import org.springframework.data.cassandra.core.mapping.Table;
 import java.time.LocalDate;
 import java.util.UUID;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(value = "books_by_release_date")
 public class BookByReleaseDate {
 
@@ -25,37 +33,4 @@ public class BookByReleaseDate {
     private LocalDate releaseDate;
 
     private String title;
-
-    public BookByReleaseDate() {
-    }
-
-    public BookByReleaseDate(UUID id, LocalDate releaseDate, String title) {
-        this.id = id;
-        this.releaseDate = releaseDate;
-        this.title = title;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public LocalDate getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(LocalDate releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
 }
