@@ -3,13 +3,12 @@ package pl.app.epublibrary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import pl.app.epublibrary.entities.Author;
 import pl.app.epublibrary.entities.Book;
 import pl.app.epublibrary.services.BookService;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @SpringBootApplication
 public class EpubLibraryApplication {

@@ -38,9 +38,9 @@ public class Book {
      * Key: surname
      * Value: name
      */
-//    private Map<String, String> author;
-    @Column
-    private List<Author> authors;
+    private Map<String, String> author;
+//    @Column //TODO:
+//    private List<Author> authors;
 
     @Column("release_date")
     private LocalDate releaseDate;
