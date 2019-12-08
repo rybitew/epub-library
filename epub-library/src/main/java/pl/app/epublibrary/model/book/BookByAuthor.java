@@ -1,4 +1,4 @@
-package pl.app.epublibrary.entities;
+package pl.app.epublibrary.model.book;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.Column;
+import org.springframework.data.cassandra.core.mapping.Indexed;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
@@ -15,30 +16,23 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "admins")
-public class Admin {
+@Table(value = "books_by_author")
+public class BookByAuthor {
 
     @PrimaryKeyColumn(
-            ordinal = 0,
             type = PrimaryKeyType.PARTITIONED,
-            name = "admin_id"
+            name = "author"
     )
-    private UUID id;
-
+    private String author;
     @PrimaryKeyColumn(
-            ordinal = 1,
-            type = PrimaryKeyType.PARTITIONED
+            type = PrimaryKeyType.CLUSTERED,
+            name = "book_id"
     )
-    private String username;
+    private UUID bookId;
 
-    private String password;
+    @Column("author_id")
+    private UUID authorId;
 
-    private String email;
-
-    private String name;
-
-    private  String surname;
-
-    @Column("phone_number")
-    private String phoneNumber;
+    @Indexed
+    private String title;
 }

@@ -14,13 +14,13 @@ import java.util.Arrays;
 import java.util.List;
 
 @Configuration
-@EnableCassandraRepositories(basePackages = "pl.app.epublibrary.repositories")
+@EnableCassandraRepositories(basePackages = "pl.app.epublibrary.repositories.*")
 public class CassandraConfig extends AbstractCassandraConfiguration{
 
-    private final String KEYSPACE = "librarydb";
-    private final String CONTACT_POINTS = "localhost";
-    private final String USERNAME = "admin";
-    private final String PASSWORD = "admin";
+    private static final String KEYSPACE = "librarydb";
+    private static final String CONTACT_POINTS = "localhost";
+    private static final String USERNAME = "admin";
+    private static final String PASSWORD = "admin";
 
     @Bean
     @Override
@@ -66,7 +66,7 @@ public class CassandraConfig extends AbstractCassandraConfiguration{
      */
     @Override
     public String[] getEntityBasePackages() {
-        return new String[] { "pl.app.epublibrary.entities" };
+        return new String[] { "pl.app.epublibrary.model.*" };
     }
 
     @Override

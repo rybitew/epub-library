@@ -1,4 +1,4 @@
-package pl.app.epublibrary.entities;
+package pl.app.epublibrary.model.publisher;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,36 +8,26 @@ import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table("authors")
-public class Author {
+@Table(value = "publishers")
+public class Publisher {
 
     @PrimaryKeyColumn(
             ordinal = 0,
             type = PrimaryKeyType.PARTITIONED,
-            name = "author_id"
+            name = "publisher_id"
     )
     private UUID id;
 
     @PrimaryKeyColumn(
             ordinal = 1,
-            type = PrimaryKeyType.PARTITIONED,
-            name = "author_surname"
+            type = PrimaryKeyType.CLUSTERED,
+            name = "publisher_name"
     )
-    private String authorSurname;
-
-    @PrimaryKeyColumn(
-            ordinal = 2,
-            type = PrimaryKeyType.PARTITIONED,
-            name = "author_name"
-    )
-    private String authorName;
-
-    private LocalDate birthDate;
+    private String publisherName;
 }
