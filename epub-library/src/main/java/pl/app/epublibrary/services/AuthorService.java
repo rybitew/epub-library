@@ -43,6 +43,8 @@ public class AuthorService {
         AuthorByName authorToUpdate = authorByNameRepository.findByName(author.getName());
 
         List<String> titles = authorToUpdate.getTitles();
+        if (titles == null)
+            titles = new LinkedList<>();
         titles.add(title);
         authorToUpdate.setTitles(titles);
 
@@ -58,9 +60,12 @@ public class AuthorService {
         return authorByNameRepository.findByName(name);
     }
 
+/*
+// Is it needed?
     public AuthorByName findByNameAndTitle(String name, String title) {
-        return authorByNameRepository.findByNameAndTitle(name, title);
+        return authorByNameRepository.findByNameAndTitles(name, title);
     }
+*/
 
     private Author getExistingEntity(Author author) {
         AuthorByName authorByName = findByName(author.getName());
@@ -68,6 +73,6 @@ public class AuthorService {
     }
 
     private void saveAllAuthorTables(Author author) {
-        authorByNameRepository.save(new AuthorByName(author.getName(), new LinkedList<>(), author.getId()));
+        authorByNameRepository.save(new AuthorByName(author.getName(), null, author.getId()));
     }
 }
