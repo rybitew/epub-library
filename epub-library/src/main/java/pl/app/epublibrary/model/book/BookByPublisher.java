@@ -28,6 +28,4 @@ public class BookByPublisher {
             name = "book_id"
     )
     private UUID bookId;
-
-    private String title;
 }

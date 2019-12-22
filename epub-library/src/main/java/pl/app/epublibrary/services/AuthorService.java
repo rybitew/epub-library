@@ -9,6 +9,7 @@ import pl.app.epublibrary.repositories.author.AuthorRepository;
 import pl.app.epublibrary.repositories.book.BookByAuthorRepository;
 
 import java.util.LinkedList;
+import java.util.List;
 
 @Service
 public class AuthorService {
@@ -27,18 +28,30 @@ public class AuthorService {
     public Author saveAuthor(Author author) {
         Author existingEntity = this.getExistingEntity(author);
         if (!author.equals(existingEntity)) {
-            this.saveAllAuthorTables(author);
+            saveAllAuthorTables(author);
             return authorRepository.save(author);
         }
         return existingEntity;
     }
 
-    public void updateAuthor(Author author) {
+    /**
+     * Adds new book to the list of books in the AuthorByName table
+     * @param author author to update
+     * @param title book to add
+     */
+    public void updateAuthor(Author author, String title) {
+        AuthorByName authorToUpdate = authorByNameRepository.findByName(author.getName());
 
+        List<String> titles = authorToUpdate.getTitles();
+        titles.add(title);
+        authorToUpdate.setTitles(titles);
+
+        authorByNameRepository.save(authorToUpdate);
     }
 
     public void deleteAuthor(Author author) {
-
+        authorByNameRepository.deleteByAuthorIdAndAndName(author.getId(), author.getName());
+        authorRepository.delete(author);
     }
 
     public AuthorByName findByName(String name) {
@@ -50,7 +63,7 @@ public class AuthorService {
     }
 
     private Author getExistingEntity(Author author) {
-        AuthorByName authorByName = this.findByName(author.getName());
+        AuthorByName authorByName = findByName(author.getName());
         return authorByName == null ? null : authorRepository.getById(authorByName.getAuthorId());
     }
 

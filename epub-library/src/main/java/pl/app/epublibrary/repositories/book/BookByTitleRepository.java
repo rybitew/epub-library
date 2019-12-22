@@ -8,5 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface BookByTitleRepository extends CassandraRepository<BookByTitle, String> {
-    void deleteByBookId(UUID id);
+    void deleteByBookIdAndTitle(UUID id, String title);
 }

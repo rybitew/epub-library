@@ -23,7 +23,7 @@ public class AuthorByName {
     )
     private String name;
 
-    private List<String> title;
+    private List<String> titles;
 
     @PrimaryKeyColumn(
             type = PrimaryKeyType.CLUSTERED,

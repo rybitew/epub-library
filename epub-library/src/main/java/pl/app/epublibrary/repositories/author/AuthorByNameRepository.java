@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import pl.app.epublibrary.model.author.AuthorByName;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface AuthorByNameRepository extends CassandraRepository<AuthorByName, String> {
@@ -13,5 +14,7 @@ public interface AuthorByNameRepository extends CassandraRepository<AuthorByName
     AuthorByName findByName(String name);
 
     AuthorByName findByNameAndTitle(String name, String title);
+
+    void deleteByAuthorIdAndAndName(UUID id, String name);
 }
 

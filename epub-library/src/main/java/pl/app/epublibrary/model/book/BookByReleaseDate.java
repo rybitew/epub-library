@@ -30,6 +30,4 @@ public class BookByReleaseDate {
             name = "book_id"
     )
     private UUID bookId;
-
-    private String title;
 }

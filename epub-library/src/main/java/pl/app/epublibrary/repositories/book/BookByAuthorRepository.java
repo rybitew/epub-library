@@ -11,7 +11,10 @@ import java.util.UUID;
 @Repository
 public interface BookByAuthorRepository extends CassandraRepository<BookByAuthor, String> {
 
+    @Query("SELECT * FROM books_by_author WHERE title = ?1 AND book_id = ?2")
+    UUID findAuthorIdByTitleAndBookId(String title, UUID id);
+
     BookByAuthor findByAuthorAndTitle(String author, String title);
 
-    void deleteByBookId(UUID id);
+    void deleteByBookIdAndAuthor(UUID id, String author);
 }
