@@ -23,6 +23,7 @@ import java.util.UUID;
 @Table(value = "books")
 public class Book {
 
+    @Id
     @PrimaryKeyColumn(
             type = PrimaryKeyType.PARTITIONED
     )

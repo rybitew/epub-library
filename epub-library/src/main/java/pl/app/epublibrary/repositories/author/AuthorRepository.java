@@ -10,5 +10,5 @@ import java.util.UUID;
 @Repository
 public interface AuthorRepository extends CassandraRepository<Author, UUID> {
 
-    Author getById(UUID uuid);
+    Optional<Author> getById(UUID uuid);
 }

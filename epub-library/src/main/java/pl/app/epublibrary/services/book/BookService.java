@@ -15,7 +15,6 @@ public class BookService {
 
     private BookRepository bookRepository;
     private AuthorService authorService;
-    private PublisherService publisherService;
 
     private BookByAuthorRepository bookByAuthorRepository;
     private BookByPublisherRepository bookByPublisherRepository;
@@ -23,28 +22,29 @@ public class BookService {
     private BookByTitleRepository bookByTitleRepository;
 
     @Autowired
-    public BookService(BookRepository bookRepository, BookByAuthorRepository bookByAuthorRepository,
-                       PublisherService publisherService, AuthorService authorService,
+    public BookService(BookRepository bookRepository,
+                       BookByAuthorRepository bookByAuthorRepository, AuthorService authorService,
                        BookByPublisherRepository bookByPublisherRepository,
                        BookByReleaseDateRepository bookByReleaseDateRepository,
                        BookByTitleRepository bookByTitleRepository) {
         this.bookRepository = bookRepository;
         this.bookByAuthorRepository = bookByAuthorRepository;
-        this.publisherService = publisherService;
         this.authorService = authorService;
         this.bookByPublisherRepository = bookByPublisherRepository;
         this.bookByReleaseDateRepository = bookByReleaseDateRepository;
         this.bookByTitleRepository = bookByTitleRepository;
     }
 
+// region CRUD
+
     public void saveBook(Book book) {
-        Map<UUID, String> savedAuthors = new HashMap<>();
-        book.getAuthors().forEach((uuid, name) -> {
-            Author author = authorService.saveAuthor(new Author(uuid, name));
-            authorService.updateAuthor(author, book.getTitle());
-            savedAuthors.put(author.getId(), author.getName());
-        });
-        book.setAuthors(savedAuthors);
+//        Map<UUID, String> savedAuthors = new HashMap<>();
+//        book.getAuthors().forEach((uuid, name) -> {
+//            Author author = authorService.saveAuthor(new Author(uuid, name));
+//            authorService.updateAuthor(author, book.getTitle());
+//            savedAuthors.put(author.getId(), author.getName());
+//        });
+        book.setAuthors(saveBookAuthors(book.getAuthors(), book.getTitle()));
 
         Book existingBook = this.getExistingBook(book);
         if (existingBook == null || !existingBook.equals(book)) {
@@ -83,12 +83,12 @@ public class BookService {
             bookRepository.deleteById(id);
             bookByTitleRepository.deleteByBookIdAndTitle(id, book.getTitle());
             bookByReleaseDateRepository.deleteByBookIdAndReleaseDate(id, book.getReleaseDate());
-            bookByPublisherRepository.deleteByBookIdAndPublisherName(id, book.getPublisher());
+//            bookByPublisherRepository.deleteByBookIdAndPublisherName(id, book.getPublisher());
 
             //Delete every author of the deleted book who has no books
             book.getAuthors().forEach((k, v) -> {
                 bookByAuthorRepository.deleteByBookIdAndAuthor(id, v);
-                if (bookByAuthorRepository.findById(v).isEmpty())
+                if (bookByAuthorRepository.findByAuthor(v) == null)
                     authorService.deleteAuthor(new Author(k, v));
             });
         }
@@ -97,10 +97,29 @@ public class BookService {
 //                if (bookByAuthorRepository.findById(author).isEmpty())
 //                    authorService.deleteAuthor(book.getAuthors().);
 //            }
+    }
+//endregion
 
+//region GETTERS
 
+    public List<BookByAuthor> findBooksByAuthor(String author) {
+        return bookByAuthorRepository.findAllByAuthor(author);
     }
 
+    public Book findBookById(UUID id) {
+        return bookRepository.findById(id).orElse(null);
+    }
+
+    public List<BookByTitle> findBooksByTitle(String title) {
+        return bookByTitleRepository.findAllByTitle(title);
+    }
+
+    public List<BookByPublisher> findBooksByPublisher(String publisher) {
+        return bookByPublisherRepository.findAllByPublisherName(publisher);
+    }
+//endregion
+
+//region UTIL
     private Book getExistingBook(Book book) {
         //TODO: make sure it works (for now it does)
         return book
@@ -135,4 +154,16 @@ public class BookService {
             bookByReleaseDateRepository.save(new BookByReleaseDate(book.getReleaseDate(), book.getId()));
         bookByTitleRepository.save(new BookByTitle(book.getTitle(), book.getId()));
     }
+
+    private Map<UUID, String> saveBookAuthors(Map<UUID, String> authors, String title) {
+        Map<UUID, String> savedAuthors = new HashMap<>();
+        authors.forEach((uuid, name) -> {
+            Author author = authorService.saveAuthor(new Author(uuid, name));
+            authorService.updateAuthor(author.getName(), author.getId(), title);
+            savedAuthors.put(author.getId(), author.getName());
+        });
+
+        return savedAuthors;
+    }
+//endregion
 }

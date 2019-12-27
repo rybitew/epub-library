@@ -38,7 +38,7 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-<!--		metrics ??		-->
+<!--		Cassandra		-->
 		<!-- https://mvnrepository.com/artifact/com.codahale.metrics/metrics-core -->
         <dependency>
             <groupId>com.codahale.metrics</groupId>
@@ -57,7 +57,15 @@
 			<artifactId>cassandra-driver-mapping</artifactId>
 			<version>3.6.0</version>
 		</dependency>
-<!--		<dependency>-->
+
+<!--		Epublib		-->
+		<dependency>
+			<groupId>nl.siegmann.epublib</groupId>
+			<artifactId>epublib-core</artifactId>
+			<version>3.1</version>
+		</dependency>
+
+		<!--		<dependency>-->
 <!--			<groupId>org.cassandraunit</groupId>-->
 <!--			<artifactId>cassandra-unit</artifactId>-->
 <!--			<version>3.0.0.1</version>-->
@@ -83,6 +91,11 @@
 			<id>spring-milestone</id>
 			<name>Spring Maven MILESTONE Repository</name>
 			<url>http://repo.spring.io/libs-milestone</url>
+		</repository>
+		<repository>
+			<id>epublib</id>
+			<name>Epublib Siegmann</name>
+			<url>http://maven.openkm.com/</url>
 		</repository>
 	</repositories>
 	<build>

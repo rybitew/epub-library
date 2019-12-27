@@ -10,6 +10,7 @@ import pl.app.epublibrary.repositories.book.BookByAuthorRepository;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class AuthorService {
@@ -25,40 +26,53 @@ public class AuthorService {
         this.bookByAuthorRepository = bookByAuthorRepository;
     }
 
+//region CRUD
     public Author saveAuthor(Author author) {
-        Author existingEntity = this.getExistingEntity(author);
-        if (!author.equals(existingEntity)) {
-            saveAllAuthorTables(author);
-            return authorRepository.save(author);
+        List<Author> existingEntity = this.getExistingEntity(author);
+
+        if (existingEntity != null) {
+            for (Author author1 : existingEntity) {
+                if (!author.equals(author1)) {
+                    saveAllAuthorTables(author);
+                    return authorRepository.save(author);
+                } else {
+                    return author1;
+                }
+            }
         }
-        return existingEntity;
+
+        saveAllAuthorTables(author);
+        return authorRepository.save(author);
     }
 
     /**
      * Adds new book to the list of books in the AuthorByName table
-     * @param author author to update
      * @param title book to add
      */
-    public void updateAuthor(Author author, String title) {
-        AuthorByName authorToUpdate = authorByNameRepository.findByName(author.getName());
+    public void updateAuthor(String name, UUID id, String title) {
+        AuthorByName authorToUpdate = authorByNameRepository.findByNameAndAuthorId(name, id);
 
         List<String> titles = authorToUpdate.getTitles();
         if (titles == null)
             titles = new LinkedList<>();
-        titles.add(title);
-        authorToUpdate.setTitles(titles);
-
-        authorByNameRepository.save(authorToUpdate);
+        if (!titles.contains(title)) {
+            titles.add(title);
+            authorToUpdate.setTitles(titles);
+            authorByNameRepository.save(authorToUpdate);
+        }
     }
 
     public void deleteAuthor(Author author) {
         authorByNameRepository.deleteByAuthorIdAndAndName(author.getId(), author.getName());
         authorRepository.delete(author);
     }
+//endregion
 
-    public AuthorByName findByName(String name) {
-        return authorByNameRepository.findByName(name);
+//region GETTERS
+    public List<AuthorByName> findByName(String name) {
+        return authorByNameRepository.findAllByName(name);
     }
+//endregion
 
 /*
 // Is it needed?
@@ -67,9 +81,16 @@ public class AuthorService {
     }
 */
 
-    private Author getExistingEntity(Author author) {
-        AuthorByName authorByName = findByName(author.getName());
-        return authorByName == null ? null : authorRepository.getById(authorByName.getAuthorId());
+    private List<Author> getExistingEntity(Author author) {
+        List<AuthorByName> authorsByName = findByName(author.getName());
+        List<Author> authors = new LinkedList<>();
+
+        if (authorsByName == null) {
+            return null;
+        }
+
+        authorsByName.forEach(a -> authorRepository.getById(a.getAuthorId()).ifPresent(authors::add));
+        return authors;
     }
 
     private void saveAllAuthorTables(Author author) {
