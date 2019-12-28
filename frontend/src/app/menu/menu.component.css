@@ -6,12 +6,11 @@
   color: #28a745;
   text-align: center;
 }
+.mat-list-item {
+  height: 100%;
+}
 .mat-nav-list {
   padding: 0;
+  height: 100%;
   flex-direction: row;
-}
-.mat-list-item {
-  height: auto;
-  width: auto;
-  float: right;
 }

@@ -1,22 +1,22 @@
 <mat-toolbar class="nav" id="menu">
-    <mat-nav-list class="list-horizontal">
-      <mat-list-item id="home">
-        <h2>HOME</h2>
-      </mat-list-item>
-      <mat-list-item id="categories" [routerLink]="'/books/categories'">
-        <h2>CATEGORIES</h2>
-      </mat-list-item>
-      <mat-list-item id="upload" [routerLink]="'/upload'">
-        <h2>UPLOAD E-BOOK</h2>
-      </mat-list-item>
-      <mat-list-item id="library" [routerLink]="'/library'">
-        <h2>MY LIBRARY</h2>
-      </mat-list-item>
-      <mat-list-item id="account" [routerLink]="'/user/account'">
-        <h2>MY ACCOUNT</h2>
-      </mat-list-item>
-      <mat-list-item id="search">
-        <h2>SEARCH</h2>
-      </mat-list-item>
-    </mat-nav-list>
+  <mat-nav-list fxLayout>
+    <mat-list-item fxFlex id="home">
+      <h2>HOME</h2>
+    </mat-list-item>
+    <mat-list-item fxFlex id="categories" [routerLink]="'/books/categories'">
+      <h2>CATEGORIES</h2>
+    </mat-list-item>
+    <mat-list-item fxFlex id="upload" [routerLink]="'/upload'">
+      <h2>UPLOAD E-BOOK</h2>
+    </mat-list-item>
+    <mat-list-item fxFlex id="library" [routerLink]="'/library'">
+      <h2>MY LIBRARY</h2>
+    </mat-list-item>
+    <mat-list-item fxFlex id="account" [routerLink]="'/user/account'">
+      <h2>MY ACCOUNT</h2>
+    </mat-list-item>
+    <mat-list-item fxFlex id="search">
+      <h2>SEARCH</h2>
+    </mat-list-item>
+  </mat-nav-list>
 </mat-toolbar>
