@@ -31,9 +31,6 @@ public class BookByAuthor {
     )
     private UUID bookId;
 
-    @Column("author_id")
-    private UUID authorId;
-
     @Indexed
     private String title;
 }

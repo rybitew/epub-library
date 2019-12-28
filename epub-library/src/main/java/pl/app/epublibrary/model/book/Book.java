@@ -31,7 +31,7 @@ public class Book {
 
     private String title;
 
-    private Map<UUID, String> authors;
+    private List<String> authors;
 
     @Column("release_date")
     private LocalDate releaseDate;

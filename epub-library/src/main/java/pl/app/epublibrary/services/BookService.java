@@ -1,4 +1,4 @@
-package pl.app.epublibrary.services.book;
+package pl.app.epublibrary.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,7 +44,8 @@ public class BookService {
 //            authorService.updateAuthor(author, book.getTitle());
 //            savedAuthors.put(author.getId(), author.getName());
 //        });
-        book.setAuthors(saveBookAuthors(book.getAuthors(), book.getTitle()));
+        //chyba niepotrzebne
+        //book.setAuthors(saveBookAuthors(book.getAuthors(), book.getTitle()));
 
         Book existingBook = this.getExistingBook(book);
         if (existingBook == null || !existingBook.equals(book)) {
@@ -86,11 +87,7 @@ public class BookService {
 //            bookByPublisherRepository.deleteByBookIdAndPublisherName(id, book.getPublisher());
 
             //Delete every author of the deleted book who has no books
-            book.getAuthors().forEach((k, v) -> {
-                bookByAuthorRepository.deleteByBookIdAndAuthor(id, v);
-                if (bookByAuthorRepository.findByAuthor(v) == null)
-                    authorService.deleteAuthor(new Author(k, v));
-            });
+            book.getAuthors().forEach((a) -> bookByAuthorRepository.deleteByBookIdAndAuthor(id, a));
         }
 //            for (String author : book.getAuthors().values()) {
 //                bookByAuthorRepository.deleteByBookIdAndAuthor(id, author);
@@ -124,8 +121,8 @@ public class BookService {
         //TODO: make sure it works (for now it does)
         return book
                 .getAuthors()
-                .values().stream()
-                .filter(a -> authorService.findByName(a) != null)
+                .stream()
+//                .filter(a -> authorService.findByName(a) != null)
                 .map(a -> Optional.ofNullable(bookByAuthorRepository.findByAuthorAndTitle(a, book.getTitle())))
                 .filter(Optional::isPresent)
                 .map(a -> a.map(bookByAuthor -> bookRepository.getById(bookByAuthor.getBookId())))
@@ -146,7 +143,7 @@ public class BookService {
 
     private void saveAllBookTables(Book book) {
         book.getAuthors().forEach(
-                (uuid, name) -> bookByAuthorRepository.save(new BookByAuthor(name, book.getId(), uuid, book.getTitle()))
+                (a) -> bookByAuthorRepository.save(new BookByAuthor(a, book.getId(), book.getTitle()))
         );
         if (book.getPublisher() != null)
             bookByPublisherRepository.save(new BookByPublisher(book.getPublisher(), book.getId()));
@@ -155,7 +152,7 @@ public class BookService {
         bookByTitleRepository.save(new BookByTitle(book.getTitle(), book.getId()));
     }
 
-    private Map<UUID, String> saveBookAuthors(Map<UUID, String> authors, String title) {
+/*    private Map<UUID, String> saveBookAuthors(Map<UUID, String> authors, String title) {
         Map<UUID, String> savedAuthors = new HashMap<>();
         authors.forEach((uuid, name) -> {
             Author author = authorService.saveAuthor(new Author(uuid, name));
@@ -164,6 +161,6 @@ public class BookService {
         });
 
         return savedAuthors;
-    }
+    }*/
 //endregion
 }
