@@ -60,10 +60,10 @@ public class EpubLibraryApplication {
 		book2.setReleaseDate(LocalDate.of(1990, 11, 20));
 		bookService.saveBook(book2);
 
+		System.out.println("inserting done");
+		bookService.updateAuthor(UUID.fromString("d062f741-3216-4aeb-8949-d1b851d71aa2"), new LinkedList<>(List.of("bu1", "bu2")));
+
 		System.out.println("done");
-		metadataReader.setBook("boska-komedia.epub");
-		LocalDate date = metadataReader.getReleaseDate();
-		Resource res = metadataReader.getCoverImage();
 	}
 
 }

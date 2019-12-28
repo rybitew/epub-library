@@ -1,14 +1,14 @@
 package pl.app.epublibrary.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.stereotype.Service;
-import pl.app.epublibrary.model.author.Author;
 import pl.app.epublibrary.model.book.*;
 import pl.app.epublibrary.repositories.book.BookRepository;
 import pl.app.epublibrary.repositories.book.*;
-import pl.app.epublibrary.services.AuthorService;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -20,19 +20,21 @@ public class BookService {
     private BookByPublisherRepository bookByPublisherRepository;
     private BookByReleaseDateRepository bookByReleaseDateRepository;
     private BookByTitleRepository bookByTitleRepository;
+    private CassandraTemplate cassandraTemplate;
 
     @Autowired
     public BookService(BookRepository bookRepository,
                        BookByAuthorRepository bookByAuthorRepository, AuthorService authorService,
                        BookByPublisherRepository bookByPublisherRepository,
                        BookByReleaseDateRepository bookByReleaseDateRepository,
-                       BookByTitleRepository bookByTitleRepository) {
+                       BookByTitleRepository bookByTitleRepository, CassandraTemplate cassandraTemplate) {
         this.bookRepository = bookRepository;
         this.bookByAuthorRepository = bookByAuthorRepository;
         this.authorService = authorService;
         this.bookByPublisherRepository = bookByPublisherRepository;
         this.bookByReleaseDateRepository = bookByReleaseDateRepository;
         this.bookByTitleRepository = bookByTitleRepository;
+        this.cassandraTemplate = cassandraTemplate;
     }
 
 // region CRUD
@@ -44,9 +46,8 @@ public class BookService {
 //            authorService.updateAuthor(author, book.getTitle());
 //            savedAuthors.put(author.getId(), author.getName());
 //        });
-        //chyba niepotrzebne
         //book.setAuthors(saveBookAuthors(book.getAuthors(), book.getTitle()));
-
+        book = convertToLower(book);
         Book existingBook = this.getExistingBook(book);
         if (existingBook == null || !existingBook.equals(book)) {
             bookRepository.save(book);
@@ -70,6 +71,25 @@ public class BookService {
 //                bookToUpdate.getTitle()));
 //
 //        bookRepository.save()
+    }
+
+    public void updateAuthor(UUID id, List<String> authors) {
+        Book bookToUpdate = bookRepository.findById(id).orElse(null);
+
+        if (bookToUpdate != null) {
+            //delete rows with authors of book not in the updated authors
+            bookToUpdate.getAuthors().stream()
+                    .filter(a -> !authors.contains(a))
+                    .forEach(a -> bookByAuthorRepository.deleteByBookIdAndAuthor(id, a));
+
+            //add rows where updated authors are different from existing authors
+            authors.stream()
+                    .filter(a -> !bookToUpdate.getAuthors().contains(a))
+                    .forEach(a -> bookByAuthorRepository.save(new BookByAuthor(a, id, bookToUpdate.getTitle())));
+
+            bookToUpdate.setAuthors(authors);
+            bookRepository.save(bookToUpdate);
+        }
     }
 
     /**
@@ -99,7 +119,7 @@ public class BookService {
 
 //region GETTERS
 
-    public List<BookByAuthor> findBooksByAuthor(String author) {
+    public List<BookByAuthor> findAllBooksByAuthor(String author) {
         return bookByAuthorRepository.findAllByAuthor(author);
     }
 
@@ -150,6 +170,16 @@ public class BookService {
         if (book.getReleaseDate() != null)
             bookByReleaseDateRepository.save(new BookByReleaseDate(book.getReleaseDate(), book.getId()));
         bookByTitleRepository.save(new BookByTitle(book.getTitle(), book.getId()));
+    }
+
+    private Book convertToLower(Book book) {
+        book.setAuthors(book.getAuthors().stream().map(String::toLowerCase).collect(Collectors.toList()));
+        book.setTitle(book.getTitle().toLowerCase());
+        if (book.getPublisher() == null) {
+            book.setPublisher("unknown publisher");
+        }
+        book.setPublisher(book.getPublisher().toLowerCase());
+        return book;
     }
 
 /*    private Map<UUID, String> saveBookAuthors(Map<UUID, String> authors, String title) {
