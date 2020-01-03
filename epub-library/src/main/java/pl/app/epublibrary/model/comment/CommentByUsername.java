@@ -1,4 +1,4 @@
-package pl.app.epublibrary.model.user;
+package pl.app.epublibrary.model.comment;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,19 +19,27 @@ import java.util.UUID;
 public class CommentByUsername {
 
     @PrimaryKeyColumn(
-            ordinal = 0,
-            type = PrimaryKeyType.PARTITIONED,
-            name = "comment_id"
-    )
-    private UUID id;
-
-    @PrimaryKeyColumn(
-            ordinal = 1,
             type = PrimaryKeyType.PARTITIONED
     )
     private String username;
 
+    @PrimaryKeyColumn(
+            type = PrimaryKeyType.CLUSTERED,
+            name = "book_id"
+    )
+    private UUID bookId;
+
+    @PrimaryKeyColumn(
+            type = PrimaryKeyType.CLUSTERED
+    )
+    private Instant timestamp;
+
     private  String comment;
 
-    private Instant timestamp;
+    public CommentByUsername(Comment comment) {
+        this.username = comment.getUsername();
+        this.bookId = comment.getBookId();
+        this.timestamp = comment.getTimestamp();
+        this.comment = comment.getComment();
+    }
 }

@@ -1,5 +1,6 @@
 package pl.app.epublibrary.services;
 
+import jnr.ffi.annotations.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.stereotype.Service;
@@ -73,7 +74,7 @@ public class BookService {
 //        bookRepository.save()
     }
 
-    public void updateAuthor(UUID id, List<String> authors) {
+    public boolean updateAuthor(UUID id, List<String> authors) {
         Book bookToUpdate = bookRepository.findById(id).orElse(null);
 
         if (bookToUpdate != null) {
@@ -89,7 +90,9 @@ public class BookService {
 
             bookToUpdate.setAuthors(authors);
             bookRepository.save(bookToUpdate);
+            return true;
         }
+        return false;
     }
 
     /**
@@ -134,6 +137,32 @@ public class BookService {
     public List<BookByPublisher> findBooksByPublisher(String publisher) {
         return bookByPublisherRepository.findAllByPublisherName(publisher);
     }
+
+    public BookByAuthor findBookByTitleAndAuthor(String title, String author) {
+        return bookByAuthorRepository.findByAuthorAndTitle(author, title);
+    }
+
+    //TODO add paging
+    public Set<String> findAllAuthors() {
+        Set<String> authors = new HashSet<>();
+        bookByAuthorRepository.findAllAuthors().forEach(author -> authors.add(author.getAuthor()));
+
+        return authors;
+    }
+    //TODO add paging
+    public Set<String> findAllPublishers() {
+        Set<String> publishers = new HashSet<>();
+        bookByPublisherRepository.findAllPublishers().forEach(publisher -> publishers.add(publisher.getPublisherName()));
+
+        return publishers;
+    }
+
+/*    public Map<String, Integer> findAllAuthorsAndBookCount() {
+        Map<String, Integer> map = new HashMap<>();
+        List<Object[]> authorAndBookCount = bookByAuthorRepository.findAllAuthorsAndBookCount();
+        authorAndBookCount.forEach(a -> map.put((String) a[0], (Integer) a[1]));
+        return map;
+    }*/
 //endregion
 
 //region UTIL
@@ -166,10 +195,12 @@ public class BookService {
                 (a) -> bookByAuthorRepository.save(new BookByAuthor(a, book.getId(), book.getTitle()))
         );
         if (book.getPublisher() != null)
-            bookByPublisherRepository.save(new BookByPublisher(book.getPublisher(), book.getId()));
+            bookByPublisherRepository.save(
+                    new BookByPublisher(book.getPublisher(), book.getId(), book.getTitle(), book.getAuthors()));
         if (book.getReleaseDate() != null)
-            bookByReleaseDateRepository.save(new BookByReleaseDate(book.getReleaseDate(), book.getId()));
-        bookByTitleRepository.save(new BookByTitle(book.getTitle(), book.getId()));
+            bookByReleaseDateRepository.save(
+                    new BookByReleaseDate(book.getReleaseDate(), book.getId(), book.getTitle(), book.getAuthors()));
+        bookByTitleRepository.save(new BookByTitle(book.getTitle(), book.getId(), book.getAuthors()));
     }
 
     private Book convertToLower(Book book) {

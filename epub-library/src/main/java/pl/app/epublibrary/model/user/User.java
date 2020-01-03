@@ -18,19 +18,14 @@ import java.util.UUID;
 public class User {
 
     @PrimaryKeyColumn(
-            ordinal = 0,
-            type = PrimaryKeyType.PARTITIONED,
-            name = "user_id"
-    )
-    private UUID id;
-
-    @PrimaryKeyColumn(
-            ordinal = 1,
-            type = PrimaryKeyType.CLUSTERED
+            type = PrimaryKeyType.PARTITIONED
     )
     private String username;
 
     private String password;
 
+    @PrimaryKeyColumn(
+            type = PrimaryKeyType.PARTITIONED
+    )
     private String email;
 }

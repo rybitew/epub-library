@@ -1,4 +1,4 @@
-package pl.app.epublibrary.model.book;
+package pl.app.epublibrary.model.comment;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,27 +8,20 @@ import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
-import java.util.List;
+import java.time.Instant;
 import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "books_by_title")
-public class BookByTitle {
+public class Comment {
 
-    @PrimaryKeyColumn(
-            type = PrimaryKeyType.PARTITIONED,
-            name = "title"
-    )
-    private String title;
+    private String username;
 
-    @PrimaryKeyColumn(
-            type = PrimaryKeyType.CLUSTERED,
-            name = "book_id"
-    )
     private UUID bookId;
 
-    private List<String> authors;
+    private Instant timestamp;
+
+    private  String comment;
 }

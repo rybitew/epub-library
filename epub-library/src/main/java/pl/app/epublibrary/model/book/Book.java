@@ -40,12 +40,12 @@ public class Book {
 
     @Column("cover_url")
     private String coverUrl;
-
-    /**
-     * Key: user
-     * Value: timestamp + comment's text
-     */
-    private Map<String, String> comments;
+//
+//    /**
+//     * Key: user
+//     * Value: timestamp + comment's text
+//     */
+//    private Map<String, String> comments;
 
     @Override
     public boolean equals(Object o) {

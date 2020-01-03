@@ -36,6 +36,7 @@ public class EpubLibraryApplication {
 		book.setTitle("Chronicles");
 		book.setAuthors(authors1);
 		book.setReleaseDate(LocalDate.of(1999, 4, 10));
+		book.setPublisher("Wyd1");
 		bookService.saveBook(book);
 
 		Book book1 = new Book();
@@ -48,6 +49,7 @@ public class EpubLibraryApplication {
 		book1.setTitle("Undertitle");
 		book1.setAuthors(authors2);
 		book1.setReleaseDate(LocalDate.of(2011, 12, 10));
+		book1.setPublisher("Wyd1");
 		bookService.saveBook(book1);
 
 		Book book2 = new Book();
@@ -58,10 +60,11 @@ public class EpubLibraryApplication {
 		book2.setTitle("Tok n");
 		book2.setAuthors(authors3);
 		book2.setReleaseDate(LocalDate.of(1990, 11, 20));
+		book2.setPublisher("Wyd2");
 		bookService.saveBook(book2);
 
 		System.out.println("inserting done");
-		bookService.updateAuthor(UUID.fromString("d062f741-3216-4aeb-8949-d1b851d71aa2"), new LinkedList<>(List.of("bu1", "bu2")));
+//		bookService.updateAuthor(UUID.fromString("d062f741-3216-4aeb-8949-d1b851d71aa2"), new LinkedList<>(List.of("bu1", "bu2")));
 
 		System.out.println("done");
 	}
