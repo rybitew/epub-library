@@ -12,7 +12,4 @@ import java.util.UUID;
 public interface BookRepository extends CassandraRepository<Book, UUID> {
 
     Book getById(UUID uuid);
-
-    @Query("SELECT title FROM books WHERE id = ?1")
-    String getTitleById(UUID uuid);
 }

@@ -1,12 +1,14 @@
 package pl.app.epublibrary.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import pl.app.epublibrary.exception.InvalidBookIdException;
 import pl.app.epublibrary.model.book.*;
 import pl.app.epublibrary.services.BookService;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -20,52 +22,91 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @RequestMapping(value = "/authors/", params = {"author"})
+    @GetMapping(value = "/authors/", params = {"author"})
     public @ResponseBody
     List<BookByAuthor> getBooksByAuthor(@RequestParam(value = "author") String author) {
         return bookService.findAllBooksByAuthor(author);
     }
 
-    @RequestMapping(value = "/books/", params = {"id"})
+    @GetMapping(value = "/books/", params = {"id"})
     public @ResponseBody
     Book getBookById(@RequestParam(value = "id") String id) {
         return bookService.findBookById(UUID.fromString(id));
     }
 
-    @RequestMapping(value = "/books/", params = {"title"})
+    @GetMapping(value = "/books/", params = {"title"})
     public @ResponseBody
     List<BookByTitle> getBooksByTitle(@RequestParam(value = "title") String title) {
         return bookService.findBooksByTitle(title);
     }
 
-    @RequestMapping(value = "/books/", params = {"publisher"})
+    @GetMapping(value = "/books/", params = {"publisher"})
     public @ResponseBody
     List<BookByPublisher> getBooksByPublisher(@RequestParam(value = "publisher") String publisher) {
         return bookService.findBooksByPublisher(publisher);
     }
 
-    @RequestMapping(value = "books/change-author/", params = {"id", "authors"}, method = RequestMethod.GET)
+    @PostMapping(value = "books/change-author/", params = {"id", "authors"})
     public String changeAuthors(
             @RequestParam(value = "id") String id, @RequestParam(value = "authors") List<String> authors) {
-        return bookService.updateAuthor(UUID.fromString(id), authors) ? "OK" : "ERROR";
+        try {
+            bookService.updateAuthor(UUID.fromString(id), authors);
+            return "OK";
+        } catch (InvalidBookIdException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Unknown Error", e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Unknown Error", e);
+        }
     }
 
-    @RequestMapping(value = "/books/", params = {"title", "author"})
+    @GetMapping(value = "/books/", params = {"title", "author"})
     public @ResponseBody
     BookByAuthor getBookByTitleAndAuthor(
             @RequestParam(value = "title") String title, @RequestParam(value = "author") String author) {
         return bookService.findBookByTitleAndAuthor(title, author);
     }
 
-    @RequestMapping(value = "/authors/all")
+    @GetMapping(value = "/authors/all")
     public @ResponseBody
     Set<String> getAllAuthors() {
         return bookService.findAllAuthors();
     }
 
-    @RequestMapping(value = "/publishers/all")
+    @GetMapping(value = "/publishers/all")
     public @ResponseBody
     Set<String> getAllPublishers() {
         return bookService.findAllPublishers();
+    }
+
+    @DeleteMapping(value = "/books/delete/", params = {"id"})
+    public void deleteBookById(@RequestParam(value = "id") String id) {
+        try {
+            bookService.deleteBook(UUID.fromString(id));
+        } catch (InvalidBookIdException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    "Invalid book ID.", e);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Unknown Error", e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Unknown Error", e);
+        }
+    }
+
+    @PostMapping(value = "/books/add-to-library/", params = {"id", "user", "title"})
+    public void addToUserLibrary(@RequestParam(value = "id") String bookId,
+                                 @RequestParam(value = "user") String username,
+                                 @RequestParam(value = "title") String title) {
+        bookService.addToUserLibrary(username, UUID.fromString(bookId), title);
     }
 }

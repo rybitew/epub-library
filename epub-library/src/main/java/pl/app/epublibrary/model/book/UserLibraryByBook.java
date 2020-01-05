@@ -1,4 +1,4 @@
-package pl.app.epublibrary.model.user;
+package pl.app.epublibrary.model.book;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,26 +8,25 @@ import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
-import javax.validation.constraints.Email;
 import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "users")
-public class User {
+@Table(value = "user_library_by_book")
+public class UserLibraryByBook {
 
     @PrimaryKeyColumn(
-            type = PrimaryKeyType.PARTITIONED
+            ordinal = 1,
+            type = PrimaryKeyType.CLUSTERED
     )
     private String username;
 
-    private String password;
-
-    @Email
     @PrimaryKeyColumn(
-            type = PrimaryKeyType.CLUSTERED
+            ordinal = 0,
+            type = PrimaryKeyType.PARTITIONED,
+            name = "book_id"
     )
-    private String email;
+    private UUID bookId;
 }

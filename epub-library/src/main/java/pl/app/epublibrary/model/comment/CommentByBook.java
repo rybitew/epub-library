@@ -25,21 +25,13 @@ public class CommentByBook {
     private UUID bookId;
 
     @PrimaryKeyColumn(
-            type = PrimaryKeyType.CLUSTERED
+            type = PrimaryKeyType.CLUSTERED,
+            name = "comment_id"
     )
-    private String username;
-
-    @PrimaryKeyColumn(
-            type = PrimaryKeyType.CLUSTERED
-    )
-    private Instant timestamp;
-
-    private String comment;
+    private UUID commentId;
 
     public CommentByBook(Comment comment) {
         this.bookId = comment.getBookId();
-        this.username = comment.getUsername();
-        this.timestamp = comment.getTimestamp();
-        this.comment = comment.getComment();
+        this.commentId = comment.getId();
     }
 }

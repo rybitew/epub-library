@@ -8,4 +8,10 @@ import java.util.UUID;
 
 @Repository
 public interface UserRepository extends CassandraRepository<User, UUID> {
+
+    User findByUsernameAndEmail(String username, String email);
+
+    User findByUsername(String username);
+
+    void deleteByUsername(String username);
 }

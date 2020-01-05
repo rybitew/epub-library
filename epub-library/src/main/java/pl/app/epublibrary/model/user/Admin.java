@@ -9,6 +9,7 @@ import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
+import javax.validation.constraints.Email;
 import java.util.UUID;
 
 @Getter
@@ -20,19 +21,17 @@ public class Admin {
 
     @PrimaryKeyColumn(
             ordinal = 0,
-            type = PrimaryKeyType.PARTITIONED,
-            name = "admin_id"
-    )
-    private UUID id;
-
-    @PrimaryKeyColumn(
-            ordinal = 1,
             type = PrimaryKeyType.PARTITIONED
     )
     private String username;
 
     private String password;
 
+    @Email
+    @PrimaryKeyColumn(
+            ordinal = 1,
+            type = PrimaryKeyType.PARTITIONED
+    )
     private String email;
 
     private String name;

@@ -7,5 +7,8 @@ import pl.app.epublibrary.model.user.Admin;
 import java.util.UUID;
 
 @Repository
-public interface AdminRepository extends CassandraRepository<Admin, UUID> {
+public interface AdminRepository extends CassandraRepository<Admin, String> {
+    Admin findByUsernameAndEmail(String username, String email);
+
+    void deleteByUsernameAndEmail(String username, String email);
 }

@@ -1,13 +1,14 @@
 package pl.app.epublibrary.services;
 
-import jnr.ffi.annotations.In;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.stereotype.Service;
+import pl.app.epublibrary.exception.BookAlreadyExistsException;
+import pl.app.epublibrary.exception.InvalidBookIdException;
 import pl.app.epublibrary.model.book.*;
 import pl.app.epublibrary.repositories.book.BookRepository;
 import pl.app.epublibrary.repositories.book.*;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -15,32 +16,40 @@ import java.util.stream.Collectors;
 public class BookService {
 
     private BookRepository bookRepository;
-    private AuthorService authorService;
-
     private BookByAuthorRepository bookByAuthorRepository;
     private BookByPublisherRepository bookByPublisherRepository;
     private BookByReleaseDateRepository bookByReleaseDateRepository;
     private BookByTitleRepository bookByTitleRepository;
-    private CassandraTemplate cassandraTemplate;
+    private BookByUserLibraryRepository bookByUserLibraryRepository;
+    private UserLibraryByBookRepository userLibraryByBookRepository;
+
+    private CommentService commentService;
+    private FileStorageService fileStorageService;
 
     @Autowired
     public BookService(BookRepository bookRepository,
-                       BookByAuthorRepository bookByAuthorRepository, AuthorService authorService,
+                       BookByAuthorRepository bookByAuthorRepository,
                        BookByPublisherRepository bookByPublisherRepository,
                        BookByReleaseDateRepository bookByReleaseDateRepository,
-                       BookByTitleRepository bookByTitleRepository, CassandraTemplate cassandraTemplate) {
+                       BookByTitleRepository bookByTitleRepository,
+                       BookByUserLibraryRepository bookByUserLibraryRepository,
+                       UserLibraryByBookRepository userLibraryByBookRepository,
+                       CommentService commentService,
+                       FileStorageService fileStorageService) {
         this.bookRepository = bookRepository;
         this.bookByAuthorRepository = bookByAuthorRepository;
-        this.authorService = authorService;
         this.bookByPublisherRepository = bookByPublisherRepository;
         this.bookByReleaseDateRepository = bookByReleaseDateRepository;
         this.bookByTitleRepository = bookByTitleRepository;
-        this.cassandraTemplate = cassandraTemplate;
+        this.bookByUserLibraryRepository = bookByUserLibraryRepository;
+        this.userLibraryByBookRepository = userLibraryByBookRepository;
+        this.commentService = commentService;
+        this.fileStorageService = fileStorageService;
     }
 
 // region CRUD
 
-    public void saveBook(Book book) {
+    public void saveBook(Book book) throws BookAlreadyExistsException {
 //        Map<UUID, String> savedAuthors = new HashMap<>();
 //        book.getAuthors().forEach((uuid, name) -> {
 //            Author author = authorService.saveAuthor(new Author(uuid, name));
@@ -53,28 +62,12 @@ public class BookService {
         if (existingBook == null || !existingBook.equals(book)) {
             bookRepository.save(book);
             this.saveAllBookTables(book);
+        } else {
+            throw new BookAlreadyExistsException();
         }
     }
 
-    public void updateBook(Book book) {
-//        BookByAuthor bookToUpdate = bookByAuthorRepository
-//                .findByAuthorAndTitle(book.getAuthors().entrySet().iterator().next().getValue(), book.getTitle());
-//        book.setId(bookToUpdate.getBookId());
-//        book.getAuthors().forEach((id, name) -> {
-//            BookByAuthor bookByAuthor = bookByAuthorRepository.findByAuthorAndTitle(name, book.getTitle());
-//            bookByAuthor.set
-//            bookByAuthorRepository.save()
-//        });
-//        bookByAuthorRepository.save(new BookByAuthor(
-//                bookToUpdate.getAuthor(),
-//                book.getId(),
-//                bookToUpdate.getAuthorId(),
-//                bookToUpdate.getTitle()));
-//
-//        bookRepository.save()
-    }
-
-    public boolean updateAuthor(UUID id, List<String> authors) {
+    public void updateAuthor(UUID id, List<String> authors) throws InvalidBookIdException {
         Book bookToUpdate = bookRepository.findById(id).orElse(null);
 
         if (bookToUpdate != null) {
@@ -90,9 +83,9 @@ public class BookService {
 
             bookToUpdate.setAuthors(authors);
             bookRepository.save(bookToUpdate);
-            return true;
+        } else {
+            throw new InvalidBookIdException();
         }
-        return false;
     }
 
     /**
@@ -100,17 +93,27 @@ public class BookService {
      * any books
      * @param id ID of the book to delete
      */
-    public void deleteBook(UUID id) {
+    public void deleteBook(UUID id) throws InvalidBookIdException, IOException {
         Book book = bookRepository.findById(id).orElse(null);
 
         if (book != null) {
             bookRepository.deleteById(id);
             bookByTitleRepository.deleteByBookIdAndTitle(id, book.getTitle());
             bookByReleaseDateRepository.deleteByBookIdAndReleaseDate(id, book.getReleaseDate());
-//            bookByPublisherRepository.deleteByBookIdAndPublisherName(id, book.getPublisher());
+            bookByPublisherRepository.deleteByBookIdAndPublisherName(id, book.getPublisher());
 
             //Delete every author of the deleted book who has no books
             book.getAuthors().forEach((a) -> bookByAuthorRepository.deleteByBookIdAndAuthor(id, a));
+            //Delete the book from the user libraries
+            userLibraryByBookRepository.findAllByBookId(book.getId()).forEach(entity -> {
+                userLibraryByBookRepository.deleteByUsernameAndBookId(entity.getUsername(), entity.getBookId());
+                bookByUserLibraryRepository.deleteByUsernameAndBookId(entity.getUsername(), entity.getBookId());
+            });
+
+            commentService.deleteAllBookComments(book.getId());
+            fileStorageService.deleteCover(book.getId());
+        } else {
+            throw new InvalidBookIdException();
         }
 //            for (String author : book.getAuthors().values()) {
 //                bookByAuthorRepository.deleteByBookIdAndAuthor(id, author);
@@ -120,7 +123,7 @@ public class BookService {
     }
 //endregion
 
-//region GETTERS
+//region ENDPOINT
 
     public List<BookByAuthor> findAllBooksByAuthor(String author) {
         return bookByAuthorRepository.findAllByAuthor(author);
@@ -155,6 +158,10 @@ public class BookService {
         bookByPublisherRepository.findAllPublishers().forEach(publisher -> publishers.add(publisher.getPublisherName()));
 
         return publishers;
+    }
+
+    public void addToUserLibrary(String username, UUID bookId, String title) {
+        bookByUserLibraryRepository.save(new BookByUserLibrary(username, bookId, title));
     }
 
 /*    public Map<String, Integer> findAllAuthorsAndBookCount() {

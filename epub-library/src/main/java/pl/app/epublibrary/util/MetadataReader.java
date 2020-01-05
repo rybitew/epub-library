@@ -5,13 +5,18 @@ import nl.siegmann.epublib.epub.EpubReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class MetadataReader {
@@ -26,7 +31,7 @@ public class MetadataReader {
 
     public boolean setBook(String path) {
         try {
-            book = epubReader.readEpub(new FileInputStream(".\\books\\" + path));
+            book = epubReader.readEpub(new FileInputStream(path));
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -60,7 +65,23 @@ public class MetadataReader {
         }
     }
 
-    public Resource getCoverImage() {
-        return book.getCoverImage();
+    public String getCoverImagePath(UUID bookId) {
+        return saveCoverToFile(book.getCoverImage(), bookId);
+    }
+
+    private String saveCoverToFile(Resource file, UUID bookId) {
+        try {
+
+            InputStream is = file.getInputStream();
+            BufferedImage image = ImageIO.read(is);
+            Files.createDirectory(Path.of("./covers"));
+            String path = "./covers/" + bookId.toString() + ".png";
+
+            ImageIO.write(image, "png", new File(path));
+
+            return path;
+        } catch (IOException e) {
+            return null;
+        }
     }
 }
