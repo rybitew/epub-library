@@ -1,17 +1,11 @@
 package pl.app.epublibrary;
 
-import nl.siegmann.epublib.domain.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import pl.app.epublibrary.config.FileStorageProperties;
-import pl.app.epublibrary.exception.InvalidBookIdException;
-import pl.app.epublibrary.exception.InvalidEmailException;
-import pl.app.epublibrary.exception.InvalidUsernameException;
-import pl.app.epublibrary.exception.UnexpectedErrorException;
 import pl.app.epublibrary.model.book.Book;
-import pl.app.epublibrary.model.user.User;
 import pl.app.epublibrary.repositories.book.BookByAuthorRepository;
 import pl.app.epublibrary.services.BookService;
 import pl.app.epublibrary.services.CommentService;
@@ -96,5 +90,6 @@ public class EpubLibraryApplication {
 //		}
 		System.out.println("done");
 	}
+
 
 }

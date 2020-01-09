@@ -43,7 +43,17 @@
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<version>2.2.1.RELEASE</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.springframework.security.oauth.boot</groupId>
+			<artifactId>spring-security-oauth2-autoconfigure</artifactId>
+			<version>2.1.0.RELEASE</version>
+		</dependency>
+<!--		Okta-->
+		<dependency>
+			<groupId>com.okta.spring</groupId>
+			<artifactId>okta-spring-boot-starter</artifactId>
+			<version>1.2.1</version>
+		</dependency>
 		<!--		Cassandra		-->
 		<!-- https://mvnrepository.com/artifact/com.codahale.metrics/metrics-core -->
         <dependency>

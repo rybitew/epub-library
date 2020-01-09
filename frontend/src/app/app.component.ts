@@ -25,11 +25,10 @@ export class AppComponent {
   }
 
   login() {
-    if (!this.isAuthenticated) {
-      this.oktaAuth.loginRedirect(location.href);
-    } else {
-      this.oktaAuth.logout('/');
-    }
+    this.oktaAuth.loginRedirect();
+  }
+  logout() {
+    this.oktaAuth.logout('/home');
   }
 }
 // username: string;

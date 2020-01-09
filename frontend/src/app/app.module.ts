@@ -27,9 +27,10 @@ import {UserFinderComponent} from './user-finder/user-finder.component';
 import {LoginDialogComponent} from './login-dialog/login-dialog.component';
 import {AppComponent} from './app.component';
 import {FormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {BookComponent} from './book/book.component';
 import { ErrorHandlerComponent } from './error-handler/error-handler.component';
+// import {AuthInterceptor} from './okta/auth.interceptor';
 
 const appRoutes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -38,17 +39,17 @@ const appRoutes: Routes = [
   {path: 'book/upload', component: UploadComponent},
   {path: 'user/library', component: UserPageComponent},
   {path: 'book', component: BookBrowserComponent},
-  {path: 'implicit/callback', component: OktaCallbackComponent},
+  {path: 'login/authorization', component: OktaCallbackComponent},
   {path: 'book/:id', component: BookComponent},
   {path: 'author', component: AuthorBrowserComponent},
   {path: 'user', component: UserFinderComponent},
-  {path: '', redirectTo: '/home', pathMatch: 'full'}
+  {path: '', redirectTo: 'home', pathMatch: 'full'}
 ];
 
 const config = {
   issuer: 'https://dev-401625.okta.com/oauth2/default',
-  redirectUri: 'http://localhost:8082/login/authorization',
-  clientId: '0oa2fema8iQxVp7jH357',
+  redirectUri: 'http://localhost:4200/login/authorization',
+  clientId: '0oa2fv18plLimcgcY357',
   pkce: true
 };
 
@@ -85,7 +86,8 @@ const config = {
     MatTableModule
   ],
   providers: [
-    MatDialog
+    MatDialog,
+    // {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
   ],
   bootstrap: [AppComponent],
   entryComponents: [LoginDialogComponent]

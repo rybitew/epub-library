@@ -38,7 +38,6 @@ export class BookBrowserComponent implements OnInit {
       console.log('author');
       author = author.trim();
       this.bookService.findByAuthor(author).subscribe(book => this.result = book);
-      // console.log(this.result[0].title, this.result[0].authors.toString, this.result[0].id);
       // publisher
     } else if (publisher) {
       console.log('publisher');
