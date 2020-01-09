@@ -1,12 +1,18 @@
-<div class="container-full w-100">
-  <div class="row w-100" id="menu">
-    <app-menu></app-menu>
-  </div>
-  <div class="row" id="router">
-    <div class="col-2"></div>
-    <div class="col-8">
-      <router-outlet></router-outlet>
+<mat-sidenav-container class="sidenav">
+  <mat-sidenav mode="side" opened class="menu">
+    <button mat-raised-button class="login" (click)="login()" [routerLink]="'/login'">
+      <i class="material-icons">
+        exit_to_app
+      </i>
+    </button>
+    <app-menu id="menu"></app-menu>
+  </mat-sidenav>
+  <mat-sidenav-content class="content">
+    <button mat-raised-button class="logo" [routerLink]="'/home'">
+      <h1>E-Book Library</h1>
+    </button>
+    <div class="router">
+      <router-outlet id="content"></router-outlet>
     </div>
-    <div class="col-2"></div>
-  </div>
-</div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

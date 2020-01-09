@@ -66,9 +66,9 @@ public class BookController {
 
     @GetMapping(value = "/books/", params = {"title", "author"})
     public @ResponseBody
-    BookByAuthor getBookByTitleAndAuthor(
+    List<BookByAuthor> getBookByTitleAndAuthor(
             @RequestParam(value = "title") String title, @RequestParam(value = "author") String author) {
-        return bookService.findBookByTitleAndAuthor(title, author);
+        return List.of(bookService.findBookByTitleAndAuthor(title, author));
     }
 
     @GetMapping(value = "/authors/all")

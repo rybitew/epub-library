@@ -54,7 +54,7 @@ public class EpubLibraryApplication {
 			book.setAuthors(authors1);
 			book.setReleaseDate(LocalDate.of(1999, 4, 10));
 			book.setPublisher("Wyd1");
-//			bookService.saveBook(book);
+			bookService.saveBook(book);
 
 			Book book1 = new Book();
 			book1.setId(UUID.randomUUID());
@@ -94,8 +94,6 @@ public class EpubLibraryApplication {
 //		} catch (InvalidBookIdException e) {
 //			e.printStackTrace();
 //		}
-		metadataReader.setBook("./books/boska-komedia.epub");
-		metadataReader.getCoverImagePath(UUID.randomUUID());
 		System.out.println("done");
 	}
 

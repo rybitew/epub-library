@@ -4,3 +4,11 @@
   font-family: nevis;
   src: url(assets/fonts/NevisBold.ttf) format("opentype");
 }
+p {
+  font-size: 20px;
+  font-family: 'Open Sans', sans-serif;
+  word-wrap: break-spaces;
+}
+hr {
+  color: #f5f5f5;
+}

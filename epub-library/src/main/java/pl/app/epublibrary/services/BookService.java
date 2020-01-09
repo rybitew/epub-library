@@ -74,7 +74,7 @@ public class BookService {
             //delete rows with authors of book not in the updated authors
             bookToUpdate.getAuthors().stream()
                     .filter(a -> !authors.contains(a))
-                    .forEach(a -> bookByAuthorRepository.deleteByBookIdAndAuthor(id, a));
+                    .forEach(a -> bookByAuthorRepository.deleteByBookIdAndAuthors(id, a));
 
             //add rows where updated authors are different from existing authors
             authors.stream()
@@ -82,6 +82,17 @@ public class BookService {
                     .forEach(a -> bookByAuthorRepository.save(new BookByAuthor(a, id, bookToUpdate.getTitle())));
 
             bookToUpdate.setAuthors(authors);
+            bookByTitleRepository.save(
+                    new BookByTitle(bookToUpdate.getTitle(), bookToUpdate.getId(), bookToUpdate.getAuthors())
+            );
+            bookByPublisherRepository.save(
+                    new BookByPublisher(bookToUpdate.getPublisher(), bookToUpdate.getId(),
+                            bookToUpdate.getTitle(), bookToUpdate.getAuthors())
+            );
+            bookByReleaseDateRepository.save(
+                    new BookByReleaseDate(bookToUpdate.getReleaseDate(), bookToUpdate.getId(),
+                            bookToUpdate.getTitle(), bookToUpdate.getAuthors())
+            );
             bookRepository.save(bookToUpdate);
         } else {
             throw new InvalidBookIdException();
@@ -91,6 +102,7 @@ public class BookService {
     /**
      * Deletes the book from all of the tables. Also deletes the authors of the deleted book if they don't have
      * any books
+     *
      * @param id ID of the book to delete
      */
     public void deleteBook(UUID id) throws InvalidBookIdException, IOException {
@@ -103,7 +115,7 @@ public class BookService {
             bookByPublisherRepository.deleteByBookIdAndPublisherName(id, book.getPublisher());
 
             //Delete every author of the deleted book who has no books
-            book.getAuthors().forEach((a) -> bookByAuthorRepository.deleteByBookIdAndAuthor(id, a));
+            book.getAuthors().forEach((a) -> bookByAuthorRepository.deleteByBookIdAndAuthors(id, a));
             //Delete the book from the user libraries
             userLibraryByBookRepository.findAllByBookId(book.getId()).forEach(entity -> {
                 userLibraryByBookRepository.deleteByUsernameAndBookId(entity.getUsername(), entity.getBookId());
@@ -126,7 +138,7 @@ public class BookService {
 //region ENDPOINT
 
     public List<BookByAuthor> findAllBooksByAuthor(String author) {
-        return bookByAuthorRepository.findAllByAuthor(author);
+        return bookByAuthorRepository.findAllByAuthors(author.toLowerCase());
     }
 
     public Book findBookById(UUID id) {
@@ -134,15 +146,15 @@ public class BookService {
     }
 
     public List<BookByTitle> findBooksByTitle(String title) {
-        return bookByTitleRepository.findAllByTitle(title);
+        return bookByTitleRepository.findAllByTitle(title.toLowerCase());
     }
 
     public List<BookByPublisher> findBooksByPublisher(String publisher) {
-        return bookByPublisherRepository.findAllByPublisherName(publisher);
+        return bookByPublisherRepository.findAllByPublisherName(publisher.toLowerCase());
     }
 
     public BookByAuthor findBookByTitleAndAuthor(String title, String author) {
-        return bookByAuthorRepository.findByAuthorAndTitle(author, title);
+        return bookByAuthorRepository.findByAuthorsAndTitle(author.toLowerCase(), title.toLowerCase());
     }
 
     //TODO add paging
@@ -152,6 +164,7 @@ public class BookService {
 
         return authors;
     }
+
     //TODO add paging
     public Set<String> findAllPublishers() {
         Set<String> publishers = new HashSet<>();
@@ -161,7 +174,7 @@ public class BookService {
     }
 
     public void addToUserLibrary(String username, UUID bookId, String title) {
-        bookByUserLibraryRepository.save(new BookByUserLibrary(username, bookId, title));
+        bookByUserLibraryRepository.save(new BookByUserLibrary(username, bookId, title.toLowerCase()));
     }
 
 /*    public Map<String, Integer> findAllAuthorsAndBookCount() {
@@ -172,14 +185,14 @@ public class BookService {
     }*/
 //endregion
 
-//region UTIL
+    //region UTIL
     private Book getExistingBook(Book book) {
         //TODO: make sure it works (for now it does)
         return book
                 .getAuthors()
                 .stream()
 //                .filter(a -> authorService.findByName(a) != null)
-                .map(a -> Optional.ofNullable(bookByAuthorRepository.findByAuthorAndTitle(a, book.getTitle())))
+                .map(a -> Optional.ofNullable(bookByAuthorRepository.findByAuthorsAndTitle(a, book.getTitle())))
                 .filter(Optional::isPresent)
                 .map(a -> a.map(bookByAuthor -> bookRepository.getById(bookByAuthor.getBookId())))
                 .findFirst()
@@ -215,8 +228,9 @@ public class BookService {
         book.setTitle(book.getTitle().toLowerCase());
         if (book.getPublisher() == null) {
             book.setPublisher("unknown publisher");
+        } else {
+            book.setPublisher(book.getPublisher().toLowerCase());
         }
-        book.setPublisher(book.getPublisher().toLowerCase());
         return book;
     }
 

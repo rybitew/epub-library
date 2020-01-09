@@ -46,7 +46,7 @@ public class MetadataReader {
     public List<String> getAuthors() {
         List<String> authors = new LinkedList<>();
         for (Author author : book.getMetadata().getAuthors()) {
-            authors.add(author.getFirstname() + author.getLastname());
+            authors.add(author.getFirstname() + " " + author.getLastname());
         }
         return authors;
     }
@@ -74,10 +74,15 @@ public class MetadataReader {
 
             InputStream is = file.getInputStream();
             BufferedImage image = ImageIO.read(is);
-            Files.createDirectory(Path.of("./covers"));
+            File directory = new File("./covers");
+            if (!directory.exists()) {
+                Files.createDirectory(Path.of("./covers"));
+            }
             String path = "./covers/" + bookId.toString() + ".png";
-
-            ImageIO.write(image, "png", new File(path));
+            File imageFile = new File(path);
+            path = imageFile.getCanonicalPath();
+            ImageIO.write(image, "png", imageFile);
+            path = path.replace("\\", "/");
 
             return path;
         } catch (IOException e) {

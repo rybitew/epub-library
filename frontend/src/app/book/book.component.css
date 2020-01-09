@@ -1,0 +1,15 @@
+h1 {
+  text-transform: capitalize;
+}
+img {
+  border:1px solid black;
+  height: 370px;
+  width: 300px;
+}
+p {
+  text-transform: capitalize;
+}
+button {
+  margin: 10px;
+  text-transform: capitalize;
+}

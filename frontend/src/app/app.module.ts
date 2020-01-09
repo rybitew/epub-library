@@ -4,26 +4,53 @@ import {NgModule} from '@angular/core';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {FlexLayoutModule} from '@angular/flex-layout';
+import {OktaAuthModule, OktaCallbackComponent,} from '@okta/okta-angular';
 
-import {AppComponent} from './app.component';
 import {HomeComponent} from './home/home.component';
 import {MenuComponent} from './menu/menu.component';
 import {RouterModule, Routes} from '@angular/router';
 import {UploadComponent} from './upload/upload.component';
 import {ManageAccountComponent} from './manage-account/manage-account.component';
-import {UserLibraryComponent} from './user-library/user-library.component';
+import {UserPageComponent} from './user-page/user-page.component';
 import {BookBrowserComponent} from './book-browser/book-browser.component';
-import {MatListModule} from '@angular/material';
+import {
+  MatCardModule,
+  MatDialog,
+  MatDialogModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatListModule,
+  MatSidenavModule, MatTableModule
+} from '@angular/material';
+import {AuthorBrowserComponent} from './author-browser/author-browser.component';
+import {UserFinderComponent} from './user-finder/user-finder.component';
+import {LoginDialogComponent} from './login-dialog/login-dialog.component';
+import {AppComponent} from './app.component';
+import {FormsModule} from '@angular/forms';
+import {HttpClientModule} from '@angular/common/http';
+import {BookComponent} from './book/book.component';
+import { ErrorHandlerComponent } from './error-handler/error-handler.component';
 
 const appRoutes: Routes = [
   {path: 'home', component: HomeComponent},
+  {path: 'error', component: ErrorHandlerComponent},
   {path: 'user/account', component: ManageAccountComponent},
-  {path: 'upload', component: UploadComponent},
-  {path: 'library', component: UserLibraryComponent},
-  {path: 'books/categories', component: BookBrowserComponent},
+  {path: 'book/upload', component: UploadComponent},
+  {path: 'user/library', component: UserPageComponent},
+  {path: 'book', component: BookBrowserComponent},
+  {path: 'implicit/callback', component: OktaCallbackComponent},
+  {path: 'book/:id', component: BookComponent},
+  {path: 'author', component: AuthorBrowserComponent},
+  {path: 'user', component: UserFinderComponent},
   {path: '', redirectTo: '/home', pathMatch: 'full'}
 ];
+
+const config = {
+  issuer: 'https://dev-401625.okta.com/oauth2/default',
+  redirectUri: 'http://localhost:8082/login/authorization',
+  clientId: '0oa2fema8iQxVp7jH357',
+  pkce: true
+};
 
 @NgModule({
   declarations: [
@@ -32,20 +59,36 @@ const appRoutes: Routes = [
     MenuComponent,
     UploadComponent,
     ManageAccountComponent,
-    UserLibraryComponent,
-    BookBrowserComponent
+    UserPageComponent,
+    BookBrowserComponent,
+    AuthorBrowserComponent,
+    UserFinderComponent,
+    LoginDialogComponent,
+    BookComponent,
+    ErrorHandlerComponent,
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     MatToolbarModule,
     MatButtonModule,
+    MatDialogModule,
     BrowserAnimationsModule,
     RouterModule.forRoot(appRoutes, {enableTracing: true}),
+    OktaAuthModule.initAuth(config),
     MatListModule,
-    FlexLayoutModule
+    MatSidenavModule,
+    MatCardModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [
+    MatDialog
+  ],
+  bootstrap: [AppComponent],
+  entryComponents: [LoginDialogComponent]
 })
 export class AppModule {
 }

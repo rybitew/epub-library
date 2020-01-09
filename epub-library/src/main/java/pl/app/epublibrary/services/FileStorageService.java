@@ -58,13 +58,15 @@ public class FileStorageService {
             metadataReader.setBook(targetLocation.toString());
 
             UUID bookId = UUID.randomUUID();
-
-            return new Book(bookId,
+            Book book = new Book(bookId,
                     metadataReader.getTitle(),
                     metadataReader.getAuthors(),
                     metadataReader.getReleaseDate(),
                     metadataReader.getPublisher(),
                     metadataReader.getCoverImagePath(bookId));
+
+            deleteFile(targetLocation);
+            return book;
         } catch (IOException | InvalidFileNameException ex) {
             throw new FileSaveErrorException();
         } catch (NullPointerException e) {
@@ -76,6 +78,13 @@ public class FileStorageService {
         Files.deleteIfExists(Paths.get("./covers/" + bookId.toString() + ".png"));
     }
 
+    private void deleteFile(Path location) {
+        try {
+            Files.deleteIfExists(location);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 //    public Resource loadFileAsResource(String fileName) {
 //        try {
 //            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();

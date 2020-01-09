@@ -13,14 +13,14 @@ import java.util.UUID;
 @Repository
 public interface BookByAuthorRepository extends CassandraRepository<BookByAuthor, String> {
 
-    BookByAuthor findByAuthorAndBookId(String author, UUID bookId);
+    BookByAuthor findByAuthorsAndBookId(String author, UUID bookId);
 
-    BookByAuthor findByAuthorAndTitle(String author, String title);
+    BookByAuthor findByAuthorsAndTitle(String author, String title);
 
-    void deleteByBookIdAndAuthor(UUID id, String author);
+    void deleteByBookIdAndAuthors(UUID id, String author);
 
-    List<BookByAuthor> findAllByAuthor(String author);
+    List<BookByAuthor> findAllByAuthors(String author);
 
-    @Query(value = "SELECT DISTINCT author FROM books_by_author")
+    @Query(value = "SELECT DISTINCT authors FROM books_by_author")
     Set<BookAuthor> findAllAuthors();
 }

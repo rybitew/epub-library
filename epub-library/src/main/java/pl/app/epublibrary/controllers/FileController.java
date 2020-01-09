@@ -1,10 +1,12 @@
 package pl.app.epublibrary.controllers;
 
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import pl.app.epublibrary.exception.BookAlreadyExistsException;
@@ -16,7 +18,10 @@ import pl.app.epublibrary.services.BookService;
 import pl.app.epublibrary.services.FileStorageService;
 import pl.app.epublibrary.util.MetadataReader;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.UUID;
 
@@ -62,10 +67,23 @@ public class FileController {
                 e.printStackTrace();
             }
         } catch (Exception e) {
-                e.printStackTrace();
-                throw new ResponseStatusException(
-                        HttpStatus.INTERNAL_SERVER_ERROR,
-                        "Unknown Error", e);
+            e.printStackTrace();
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Unknown Error", e);
+        }
+    }
+
+    @GetMapping(value = "books/cover/", params = {"path"}, produces = MediaType.IMAGE_PNG_VALUE)
+    public @ResponseBody
+    byte[] getBookCover(@RequestParam(value = "path") String path) {
+        try {
+            FileInputStream in = new FileInputStream(path);
+            return in.readAllBytes();
+        } catch (IOException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Image not found", e);
         }
     }
 }

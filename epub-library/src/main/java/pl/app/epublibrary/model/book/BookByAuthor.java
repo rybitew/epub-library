@@ -24,7 +24,7 @@ public class BookByAuthor {
             type = PrimaryKeyType.PARTITIONED,
             name = "author"
     )
-    private String author;
+    private String authors;
     @PrimaryKeyColumn(
             type = PrimaryKeyType.CLUSTERED,
             name = "book_id"
