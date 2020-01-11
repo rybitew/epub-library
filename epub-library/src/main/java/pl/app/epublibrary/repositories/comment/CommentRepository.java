@@ -4,6 +4,7 @@ import org.springframework.data.cassandra.repository.CassandraRepository;
 import org.springframework.stereotype.Repository;
 import pl.app.epublibrary.model.comment.Comment;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -12,5 +13,7 @@ import java.util.UUID;
 public interface CommentRepository extends CassandraRepository<Comment, UUID> {
     Optional<Comment> findCommentById(UUID id);
     List<Comment> findAllCommentsById(Iterable<UUID> id);
-    void deleteByIdAndTimestamp(UUID id, String timestamp);
+    void deleteByIdAndTimestampAndBookId(UUID id, Instant timestamp, UUID bookId);
+
+    void deleteCommentById(UUID id);
 }

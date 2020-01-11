@@ -38,9 +38,13 @@ public class CommentService {
     }
 
     public void deleteComment(Comment comment) {
-        commentRepository.deleteByIdAndTimestamp(comment.getId(), comment.getTimestamp());
-        commentByUserNameRepository.deleteByUsernameAndCommentId(comment.getUsername(), comment.getId());
-        commentByBookRepository.deleteByBookIdAndCommentId(comment.getBookId(), comment.getId());
+        commentRepository.deleteCommentById(comment.getId());
+        commentByUserNameRepository.deleteByUsernameAndCommentIdAndTimestamp(
+                comment.getUsername(), comment.getId(), comment.getTimestamp()
+        );
+        commentByBookRepository.deleteByBookIdAndCommentIdAndTimestamp(
+                comment.getBookId(), comment.getId(), comment.getTimestamp()
+        );
     }
 
     public boolean deleteAllBookComments(UUID bookId) {
@@ -53,7 +57,9 @@ public class CommentService {
             commentRepository.deleteAll(comments);
             commentByBookRepository.deleteAllByBookId(bookId);
             comments.forEach(comment ->
-                    commentByUserNameRepository.deleteByUsernameAndCommentId(comment.getUsername(), comment.getId()));
+                    commentByUserNameRepository.deleteByUsernameAndCommentIdAndTimestamp(
+                            comment.getUsername(), comment.getId(), comment.getTimestamp())
+            );
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,7 +76,9 @@ public class CommentService {
         commentRepository.deleteAll(comments);
         commentByUserNameRepository.deleteAllByUsername(username);
         comments.forEach(comment ->
-                commentByBookRepository.deleteByBookIdAndCommentId(comment.getBookId(), comment.getId()));
+                commentByBookRepository.deleteByBookIdAndCommentIdAndTimestamp(
+                        comment.getBookId(), comment.getId(), comment.getTimestamp())
+        );
     }
 //endregion
 
@@ -82,6 +90,7 @@ public class CommentService {
 
         List<Comment> comments = new LinkedList<>();
         commentIds.forEach(id -> commentRepository.findCommentById(id).ifPresent(comments::add));
+//        comments.sort((Comparator.comparing(Comment::getTimestamp)));
         return comments;
     }
 
@@ -93,6 +102,7 @@ public class CommentService {
 
         List<Comment> comments = new LinkedList<>();
         commentIds.forEach(id -> commentRepository.findCommentById(id).ifPresent(comments::add));
+//        comments.sort((Comparator.comparing(Comment::getTimestamp)));
         return comments;
     }
 }

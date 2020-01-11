@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {UserDto} from '../model/user-dto';
 import {User} from '../model/user';
 import {Observable} from 'rxjs';
-import {BookByUserLibrary} from '../model/BookByUserLibrary';
+import {BookByUserLibrary} from '../model/book-by-user-library';
 
 @Injectable({
   providedIn: 'root'

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UserLibraryComponent } from './user-library.component';
+import { PublisherPageComponent } from './publisher-page.component';
 
-describe('UserLibraryComponent', () => {
-  let component: UserLibraryComponent;
-  let fixture: ComponentFixture<UserLibraryComponent>;
+describe('PublisherPageComponent', () => {
+  let component: PublisherPageComponent;
+  let fixture: ComponentFixture<PublisherPageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UserLibraryComponent ]
+      declarations: [ PublisherPageComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UserLibraryComponent);
+    fixture = TestBed.createComponent(PublisherPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

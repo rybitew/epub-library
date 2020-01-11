@@ -30,8 +30,14 @@ public class CommentByBook {
     )
     private UUID commentId;
 
+    @PrimaryKeyColumn(
+            type = PrimaryKeyType.CLUSTERED
+    )
+    private Instant timestamp;
+
     public CommentByBook(Comment comment) {
         this.bookId = comment.getBookId();
         this.commentId = comment.getId();
+        this.timestamp = comment.getTimestamp();
     }
 }

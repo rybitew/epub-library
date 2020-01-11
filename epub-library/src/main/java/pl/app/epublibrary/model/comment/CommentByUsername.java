@@ -29,8 +29,14 @@ public class CommentByUsername {
     )
     private UUID commentId;
 
+    @PrimaryKeyColumn(
+            type = PrimaryKeyType.CLUSTERED
+    )
+    private Instant timestamp;
+
     public CommentByUsername(Comment comment) {
         this.username = comment.getUsername();
         this.commentId = comment.getId();
+        this.timestamp = comment.getTimestamp();
     }
 }

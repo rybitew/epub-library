@@ -1,0 +1,25 @@
+h1 {
+  text-transform: capitalize;
+}
+button {
+  margin: 10px;
+  text-transform: capitalize;
+  outline: none;
+  font-weight: bold;
+  font-size: 25px;
+}
+.error {
+  background-color: indianred;
+  font-size: 20px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+mat-card-content {
+  text-transform: capitalize;
+  font-weight: bold;
+  font-size: 25px;
+}
+mat-card {
+  margin: 10px;
+}
+

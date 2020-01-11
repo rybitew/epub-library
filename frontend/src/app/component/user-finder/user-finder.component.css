@@ -1,0 +1,25 @@
+.mat-form-field {
+  margin-right: 20px;
+}
+.mat-table {
+  overflow: auto;
+  width: 100%;
+  border: 1px solid lightgray;
+}
+.error {
+  background-color: indianred;
+  font-size: 20px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+button {
+  outline: none;
+}
+.title {
+  text-transform: capitalize;
+  font-weight: bolder;
+}
+.results {
+  margin-bottom: 4%;
+}
+

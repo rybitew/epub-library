@@ -3,15 +3,12 @@
     <mat-list-item id="books" [routerLink]="'/book'">
       <h3>BOOKS</h3>
     </mat-list-item>
-    <mat-list-item id="authors" [routerLink]="'/author'">
-      <h3>AUTHORS</h3>
+    <mat-list-item id="activity" (click)="goToUser()">
+      <h3>MY ACTIVITY</h3>
     </mat-list-item>
-    <mat-list-item id="library" (click)="checkIfLoggedIn()" [routerLink]="'/user/library'">
-      <h3>MY LIBRARY</h3>
-    </mat-list-item>
-    <mat-list-item id="account" (click)="checkIfLoggedIn()" [routerLink]="'/user/account'">
-      <h3>MY ACCOUNT</h3>
-    </mat-list-item>
+<!--    <mat-list-item id="account" (click)="checkIfLoggedIn()" [routerLink]="'/user/account'">-->
+<!--      <h3>MY ACCOUNT</h3>-->
+<!--    </mat-list-item>-->
     <mat-list-item id="upload" (click)="file.click()">
       <input hidden type="file" name="file" #file (change)="upload(file.files)" accept=".epub">
       <h3>UPLOAD E-BOOK</h3>

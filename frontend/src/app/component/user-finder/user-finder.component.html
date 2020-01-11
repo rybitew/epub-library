@@ -1,1 +1,28 @@
-<p>user-finder works!</p>
+<div class="row">
+  <mat-card class="error" *ngIf="error" (click)="error = false">
+    <mat-card-header>
+      {{errorMessage}}
+    </mat-card-header>
+  </mat-card>
+</div>
+<div class="row">
+  <p class="title">Find user</p>
+</div>
+<div class="row">
+  <form>
+    <mat-form-field>
+      <mat-label>User</mat-label>
+      <input matInput #user>
+    </mat-form-field>
+    <button mat-raised-button (click)="findUser(user)">Search</button>
+  </form>
+</div>
+<div class="row">
+  <p class="results">Results:</p>
+</div>
+<div class="row">
+  <button mat-raised-button class="result" *ngIf="result" (click)="goToUser()">
+      {{result.username}}
+  </button>
+  <p *ngIf="!result">No user with such username</p>
+</div>

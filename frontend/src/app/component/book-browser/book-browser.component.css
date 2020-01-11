@@ -39,3 +39,9 @@ button {
 .results {
   margin-bottom: 4%;
 }
+.mat-button {
+  margin: 10px;
+  font-size: 20px;
+  text-transform: capitalize;
+  outline: none;
+}

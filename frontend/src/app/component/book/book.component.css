@@ -32,3 +32,11 @@ button {
   margin-right: 10px;
   width: 100%;
 }
+.bDeleteComment {
+}
+.mat-button {
+  margin: 10px;
+  font-size: 20px;
+  text-transform: capitalize;
+  outline: none;
+}

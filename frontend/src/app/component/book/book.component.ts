@@ -14,6 +14,7 @@ import {Comment} from '../../model/comment';
 })
 export class BookComponent implements OnInit {
 
+  private currentUser: string;
   private bookInfo: Book;
   //image
   private showImage: boolean;
@@ -39,8 +40,10 @@ export class BookComponent implements OnInit {
     });
     this.commentService.getBookComments(this.route.snapshot.params.id).subscribe(comments => {
       this.comments = comments;
-      // this.comments.sort((b, a) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
     });
+    if(sessionStorage.getItem('user')) {
+      this.currentUser = sessionStorage.getItem('user');
+    }
   }
 
   private addToLibrary() {
@@ -61,6 +64,14 @@ export class BookComponent implements OnInit {
     }
   }
 
+  private deleteComment(comment: Comment) {
+    this.commentService.deleteComment(comment).subscribe(res => console.log(res),
+      error => this.handleError(error));
+    if (this.error === false) {
+      location.reload();
+    }
+  }
+
   private publish() {
     if (sessionStorage.getItem('authenticated') === 'true' && sessionStorage.getItem('user')) {
       if (this.commentContent.trim()) {
@@ -68,21 +79,23 @@ export class BookComponent implements OnInit {
         this.commentService.addComment(this.bookInfo.id, this.commentContent)
           .subscribe(res => console.log(res), error => this.handleError(error));
         this.commentContent = '';
-        this.router.navigateByUrl(location.pathname, { skipLocationChange: true }).then(() => {
-          this.router.navigate([location.pathname]);
-        });
+        location.reload();
       }
     } else {
       this.router.navigate(['login']);
     }
   }
 
+  private goToUser(user: string) {
+    this.router.navigate([`user/activity/${user}`])
+  }
+
   private goToAuthor(author: string) {
-    this.router.navigate(['author/page/'], {queryParams: {'author': author}});
+    this.router.navigate([`author/${author}`])
   }
 
   private goToPublisher(publisher: string) {
-    this.router.navigate(['publisher/page/'], {queryParams: {'author': publisher}});
+    this.router.navigate([`publisher/${publisher}`])
   }
 
 //region Book cover recovering

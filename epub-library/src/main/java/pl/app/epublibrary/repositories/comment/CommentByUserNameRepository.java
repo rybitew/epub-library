@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import pl.app.epublibrary.model.comment.CommentByUsername;
 import pl.app.epublibrary.model.comment.CommentId;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -18,4 +19,6 @@ public interface CommentByUserNameRepository extends CassandraRepository<Comment
 
     void deleteAllByUsername(String username);
     void deleteByUsernameAndCommentId(String username, UUID commentId);
+
+    void deleteByUsernameAndCommentIdAndTimestamp(String username, UUID id, Instant timestamp);
 }

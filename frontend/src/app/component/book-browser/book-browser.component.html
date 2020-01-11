@@ -30,26 +30,34 @@
 </div>
 
 <div class="row">
-  <table mat-table #table [dataSource]="result">
+  <table mat-table #table [dataSource]="result" *ngIf="result.length > 0">
     <!-- Id Column -->
     <ng-container matColumnDef="index">
-      <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
-      <mat-cell *matCellDef="let i = index; "> {{i+1}} </mat-cell>
+      <mat-header-cell *matHeaderCellDef> No.</mat-header-cell>
+      <mat-cell *matCellDef="let i = index; "> {{i + 1}} </mat-cell>
     </ng-container>
     <!-- Title Column -->
     <ng-container matColumnDef="title">
-      <mat-header-cell *matHeaderCellDef> Title </mat-header-cell>
-      <mat-cell *matCellDef="let book"> {{book?.title}} </mat-cell>
+      <mat-header-cell *matHeaderCellDef> Title</mat-header-cell>
+      <mat-cell *matCellDef="let book">
+        <button mat-button (click)="goToBook(book)">
+          {{book?.title}}
+        </button>
+      </mat-cell>
     </ng-container>
 
     <!-- Author Column -->
     <ng-container matColumnDef="authors">
-      <mat-header-cell *matHeaderCellDef> Authors </mat-header-cell>
-      <mat-cell *matCellDef="let book"> {{book?.authors}} </mat-cell>
+      <mat-header-cell *matHeaderCellDef> Authors</mat-header-cell>
+      <mat-cell *matCellDef="let book">
+        <button mat-button *ngFor="let author of book?.authors"
+                (click)="goToAuthor(author)">{{author}}</button>
+      </mat-cell>
     </ng-container>
 
     <!--    Header-->
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row (click)="goToBook(book)" *matRowDef="let book; let i = dataIndex; columns: displayedColumns;"></mat-row>
+    <mat-row *matRowDef="let book; let i = dataIndex; columns: displayedColumns;"></mat-row>
   </table>
+  <p *ngIf="!(result.length > 0)">No results</p>
 </div>

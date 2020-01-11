@@ -1,11 +1,13 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTable} from '@angular/material';
 import {BookByAuthor} from '../../model/book-by-author';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
 import {throwError} from 'rxjs';
 import {UserService} from '../../service/user.service';
-import {BookByUserLibrary} from '../../model/BookByUserLibrary';
+import {BookByUserLibrary} from '../../model/book-by-user-library';
+import {CommentService} from '../../service/comment.service';
+import {Comment} from '../../model/comment';
 
 @Component({
   selector: 'app-my-library',
@@ -16,21 +18,29 @@ export class UserPageComponent implements OnInit {
 
   @ViewChild('table', {static: false}) table: MatTable<BookByUserLibrary>;
 
+  private username: string;
+  private currentUser: string;
+  //error
   private error = false;
   private errorMessage: string;
-  private username: string;
+  //library
   private result: BookByUserLibrary[] = [];
   private displayedColumns = ['index', 'title', 'authors'];
+  //comments
+  private comments: Comment[] = [];
 
-  constructor(private router: Router, private userService: UserService) {
+  constructor(private router: Router, private route: ActivatedRoute, private userService: UserService, private commentService: CommentService) {
   }
 
   ngOnInit() {
     // if (sessionStorage.getItem('authenticated') !== 'true') {
     //
     // }
-    this.username = sessionStorage.getItem('user');
-    console.log(sessionStorage.getItem('user'));
+    this.username = this.route.snapshot.params.username;
+    this.currentUser = sessionStorage.getItem('user');
+    this.commentService.getUserComments(this.username).subscribe(comments => {
+      this.comments = comments;
+    });
     this.showResults();
   }
 
@@ -42,8 +52,20 @@ export class UserPageComponent implements OnInit {
     this.result = [];
   }
 
-  private goToBook(book: BookByAuthor): void {
-    this.router.navigate([`book/${book.bookId}`]);
+  private deleteComment(comment: Comment) {
+    this.commentService.deleteComment(comment).subscribe(res => console.log(res),
+      error => this.handleError(error));
+    if (this.error === false) {
+      location.reload();
+    }
+  }
+
+  private goToBook(id: string): void {
+    this.router.navigate([`book/${id}`]);
+  }
+
+  private goToAuthor(author: string) {
+    this.router.navigate([`author/${author}`])
   }
 
   private handleError(error: HttpErrorResponse) {

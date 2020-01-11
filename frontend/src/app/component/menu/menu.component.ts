@@ -15,6 +15,11 @@ export class MenuComponent implements OnInit {
   ngOnInit() {
   }
 
+  private goToUser() {
+    this.checkIfLoggedIn();
+    this.router.navigate([`user/activity/${sessionStorage.getItem('user')}`])
+  }
+
   private checkIfLoggedIn() {
     if (sessionStorage.getItem('authenticated') !== 'true') {
       this.router.navigate(['login']);

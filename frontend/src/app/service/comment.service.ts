@@ -21,24 +21,25 @@ export class CommentService {
     return this.http.post<Comment>(this.addCommentUrl, new Comment(sessionStorage.getItem('user'), bookId, comment));
   }
 
-  public deleteComment(bookId: string, comment: string): Observable<any> {
+  public deleteComment(comment: Comment): Observable<any> {
     const options = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
       }),
       body: {
-        id: null,
-        username: sessionStorage.getItem('username'),
-        bookId: bookId,
-        timestamp: null,
-        comment: comment,
+        id: comment.id,
+        username: comment.username,
+        bookId: comment.bookId,
+        timestamp: comment.timestamp,
+        comment: null,
       },
     };
+    console.log('delete');
     return this.http.delete(this.deleteCommentUrl, options);
   }
 
-  public getUserComments(): Observable<Comment[]> {
-    return this.http.get<Comment[]>(this.getUserCommentsUrl + '?username=' + sessionStorage.getItem('user'));
+  public getUserComments(username: string): Observable<Comment[]> {
+    return this.http.get<Comment[]>(this.getUserCommentsUrl + '?username=' + username);
   }
   public getBookComments(bookId: string): Observable<Comment[]> {
     return this.http.get<Comment[]>(this.getBookCommentsUrl + '?id=' + bookId);

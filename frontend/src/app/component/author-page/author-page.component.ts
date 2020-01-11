@@ -1,36 +1,33 @@
 import { Component, OnInit } from '@angular/core';
+import {BookByAuthor} from '../../model/book-by-author';
+import {ActivatedRoute, Router} from '@angular/router';
+import {BookService} from '../../service/book.service';
 import {HttpErrorResponse} from '@angular/common/http';
 import {throwError} from 'rxjs';
-import {User} from '../../model/user';
-import {UserService} from '../../service/user.service';
-import {Router} from '@angular/router';
 
 @Component({
-  selector: 'app-user-finder',
-  templateUrl: './user-finder.component.html',
-  styleUrls: ['./user-finder.component.css']
+  selector: 'app-author-page',
+  templateUrl: './author-page.component.html',
+  styleUrls: ['./author-page.component.css']
 })
-export class UserFinderComponent implements OnInit {
+export class AuthorPageComponent implements OnInit {
 
+  private author: string;
   //error
   private error = false;
   private errorMessage: string;
-  private result: User;
+  private result: BookByAuthor[] = [];
 
-  constructor(private router: Router, private userService: UserService) { }
+  constructor(private router: Router, private route: ActivatedRoute, private bookService: BookService) { }
 
   ngOnInit() {
+    this.author = this.route.snapshot.params.author;
+    this.bookService.findByAuthor(this.author).subscribe(book => this.result = book,
+      error => this.handleError(error));
   }
 
-  private findUser(username) {
-    if (username) {
-      this.userService.getUser(username.value.trim()).subscribe(user => this.result = user,
-        error => this.handleError(error));
-    }
-  }
-
-  private goToUser() {
-    this.router.navigate([`user/activity/${this.result.username}`])
+  public goToBook(book: BookByAuthor): void {
+    this.router.navigate([`book/${book.bookId}`]);
   }
 
   private handleError(error: HttpErrorResponse) {

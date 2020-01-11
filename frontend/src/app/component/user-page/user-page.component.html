@@ -9,9 +9,6 @@
   <p class="title">{{username}}'s library:</p>
 </div>
 <div class="row">
-  <!--  <h1>{{title.value}}</h1>-->
-  <!--  <h1>{{publisher.value}}</h1>-->
-  <!--  <h1>{{author.value}}</h1>-->
   <table mat-table #table [dataSource]="result">
     <!-- Id Column -->
     <ng-container matColumnDef="index">
@@ -21,21 +18,44 @@
     <!-- Title Column -->
     <ng-container matColumnDef="title">
       <mat-header-cell *matHeaderCellDef> Title</mat-header-cell>
-      <mat-cell *matCellDef="let book"> {{book?.title}} </mat-cell>
+      <mat-cell *matCellDef="let book">
+        <button mat-button (click)="goToBook(book?.bookId)">
+          {{book?.title}}
+        </button>
+      </mat-cell>
     </ng-container>
 
     <!-- Author Column -->
     <ng-container matColumnDef="authors">
       <mat-header-cell *matHeaderCellDef> Authors</mat-header-cell>
-      <mat-cell *matCellDef="let book"> {{book?.authors}} </mat-cell>
+      <mat-cell *matCellDef="let book">
+        <button mat-button *ngFor="let author of book?.authors"
+                (click)="goToAuthor(author)">{{author}}</button>
+      </mat-cell>
     </ng-container>
 
     <!--    Header-->
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row (click)="goToBook(book)" *matRowDef="let book; let i = dataIndex; columns: displayedColumns;"></mat-row>
+    <mat-row *matRowDef="let book; let i = dataIndex; columns: displayedColumns;"></mat-row>
   </table>
 </div>
 
 <div class="row">
-
+  <p class="title-comment">{{username}}'s comments:</p>
+</div>
+<div class="row" id="comments">
+  <mat-card class="comment" *ngFor="let comment of comments">
+    <mat-card-header>
+      <mat-card-title>
+        <button mat-raised-button class="bDeleteComment"
+                *ngIf="comment.username === currentUser" (click)="deleteComment(comment)">
+          <i class="material-icons">delete</i>
+        </button>
+      </mat-card-title>
+      <mat-card-subtitle>{{comment.timestamp | date: 'yyyy-MM-dd HH:mm'}}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content (click)="goToBook(comment.bookId)">
+      {{comment.comment}}
+    </mat-card-content>
+  </mat-card>
 </div>

@@ -66,10 +66,11 @@ export class BookBrowserComponent implements OnInit {
   }
 
   public goToBook(book: BookByAuthor): void {
-    const success = this.router.navigate([`book/${book.bookId}`]);
-    if (!success) {
-      error('Could not redirect.');
-    }
+    this.router.navigate([`book/${book.bookId}`]);
+  }
+
+  private goToAuthor(author: string) {
+    this.router.navigate([`author/${author}`]);
   }
 
   ngOnInit() {

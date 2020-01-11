@@ -1,0 +1,22 @@
+<div class="row">
+  <mat-card class="error" *ngIf="error" (click)="error = false">
+    <mat-card-header>
+      {{errorMessage}}
+    </mat-card-header>
+  </mat-card>
+</div>
+<div class="row">
+  <h1>Books published by {{publisher}}:</h1>
+</div>
+<div class="row">
+  <mat-card class="books" *ngFor="let book of result" (click)="goToBook(book)">
+    <mat-card-content>
+      <button mat-button>
+        {{book.title}}
+      </button>
+      <button mat-button *ngFor="let author of book.authors">
+        {{author}}
+      </button>
+    </mat-card-content>
+  </mat-card>
+</div>

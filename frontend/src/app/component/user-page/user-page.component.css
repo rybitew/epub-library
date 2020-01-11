@@ -33,3 +33,24 @@
 .mat-column-authors {
   flex: 0 0 45%;
 }
+.comment {
+  margin-top: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 100%;
+}
+.title-comment {
+  text-transform: capitalize;
+  font-weight: bolder;
+  margin-bottom: 4%;
+  margin-top: 4%;
+}
+button {
+  outline: none;
+}
+.mat-button {
+  margin: 10px;
+  font-size: 20px;
+  text-transform: capitalize;
+  outline: none;
+}

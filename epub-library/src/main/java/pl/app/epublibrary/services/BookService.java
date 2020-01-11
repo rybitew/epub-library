@@ -57,13 +57,15 @@ public class BookService {
 //            savedAuthors.put(author.getId(), author.getName());
 //        });
         //book.setAuthors(saveBookAuthors(book.getAuthors(), book.getTitle()));
-        book = convertToLower(book);
-        Book existingBook = this.getExistingBook(book);
-        if (existingBook == null || !existingBook.equals(book)) {
-            bookRepository.save(book);
-            this.saveAllBookTables(book);
-        } else {
-            throw new BookAlreadyExistsException();
+        if (book.getTitle() != null && book.getAuthors() != null) {
+            book = convertToLower(book);
+            Book existingBook = this.getExistingBook(book);
+            if (existingBook == null || !existingBook.equals(book)) {
+                bookRepository.save(book);
+                this.saveAllBookTables(book);
+            } else {
+                throw new BookAlreadyExistsException();
+            }
         }
     }
 
