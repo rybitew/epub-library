@@ -40,11 +40,12 @@ public class FileController {
     }
 
     @PostMapping("/book/upload/")
-    public void uploadFile(@RequestParam("file") MultipartFile file) {
+    public String uploadFile(@RequestParam(value = "file") MultipartFile file) {
         try {
             Book book = fileStorageService.storeFile(file);
             bookId = book.getId();
             bookService.saveBook(book);
+            return "OK";
 //        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
 //                .path("/downloadFile/")
 //                .path(fileName)
@@ -63,11 +64,14 @@ public class FileController {
         } catch (BookAlreadyExistsException e) {
             try {
                 fileStorageService.deleteCover(bookId);
+                return "Book exists";
             } catch (IOException ex) {
                 e.printStackTrace();
+                return "Book exists";
             }
         } catch (Exception e) {
             e.printStackTrace();
+
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Unknown Error", e);

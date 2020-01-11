@@ -1,0 +1,41 @@
+.mat-form-field {
+  margin-right: 20px;
+}
+.mat-table {
+  overflow: auto;
+  width: 100%;
+  border: 1px solid lightgray;
+}
+.mat-header-cell {
+  width: 100%;
+}
+.mat-cell {
+  text-transform: capitalize;
+  font-size: 16px;
+  font-weight: bold;
+}
+.error {
+  background-color: indianred;
+  font-size: 20px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+.mat-column-index {
+  flex: 0 0 20%;
+}
+.mat-column-title {
+  flex: 0 0 35%;
+}
+.mat-column-authors {
+  flex: 0 0 45%;
+}
+button {
+  outline: none;
+}
+.title {
+  text-transform: capitalize;
+  font-weight: bolder;
+}
+.results {
+  margin-bottom: 4%;
+}

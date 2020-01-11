@@ -8,6 +8,7 @@ import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -31,4 +32,6 @@ public class BookByUserLibrary {
     private UUID bookId;
 
     private String title;
+
+    private List<String> authors;
 }

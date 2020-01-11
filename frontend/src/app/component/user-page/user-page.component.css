@@ -1,0 +1,35 @@
+.mat-table {
+  overflow: auto;
+  width: 100%;
+  background-color: #f5f5f5;
+  padding: 5px;
+  border: 1px solid lightgray;
+}
+.mat-header-cell {
+  width: 100%;
+}
+.mat-cell {
+  text-transform: capitalize;
+  font-size: 16px;
+  font-weight: bold;
+}
+.error {
+  background-color: indianred;
+  font-size: 20px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+.title {
+  text-transform: capitalize;
+  font-weight: bolder;
+  margin-bottom: 4%;
+}
+.mat-column-index {
+  flex: 0 0 20%;
+}
+.mat-column-title {
+  flex: 0 0 35%;
+}
+.mat-column-authors {
+  flex: 0 0 45%;
+}

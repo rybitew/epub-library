@@ -14,7 +14,7 @@ import java.util.UUID;
 public interface CommentByUserNameRepository extends CassandraRepository<CommentByUsername, String> {
 
     @Query(value = "SELECT comment_id FROM comments_by_username WHERE username = ?0")
-    Set<CommentId> findAllCommentsByUsername(String username);
+    List<CommentId> findAllCommentsByUsername(String username);
 
     void deleteAllByUsername(String username);
     void deleteByUsernameAndCommentId(String username, UUID commentId);

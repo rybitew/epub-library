@@ -1,0 +1,62 @@
+<div class="row">
+  <mat-card class="error" *ngIf="error" (click)="error = false">
+    <mat-card-header>
+      {{errorMessage}}
+    </mat-card-header>
+  </mat-card>
+</div>
+<div class="row" #title>
+  <div class="col-5">
+    <h1>{{bookInfo?.title}}</h1>
+  </div>
+  <div class="col-5">
+    <button mat-raised-button (click)="addToLibrary()">
+      <i class="material-icons">add_box</i>
+    </button>
+    <button mat-raised-button (click)="deleteBook()">
+      <i class="material-icons">delete_sweep</i>
+    </button>
+  </div>
+  <div class="col-2">
+
+  </div>
+  <hr>
+</div>
+<div class="row">
+  <div class="col-5">
+    <img [src]="imageToShow" alt="cover">
+  </div>
+  <div class="col-7">
+    <div class="authors">
+      <p>Authors:
+        <button mat-raised-button *ngFor="let author of bookInfo?.authors"
+                (click)="goToAuthor(author)">{{author}}</button>
+      </p>
+    </div>
+    <div class="publisher">
+      <p>Publisher:
+        <button mat-raised-button (click)="goToPublisher(bookInfo.publisher)">{{bookInfo?.publisher}}</button>
+      </p>
+    </div>
+    <p>Release date: {{bookInfo?.releaseDate |  date:'dd/MM/yyyy'}}</p>
+
+    <div class="row">
+      <mat-form-field class="comment-box">
+        <textarea mat-autosize name="text" maxlength="300"
+                  matInput [(ngModel)]="commentContent" placeholder="Leave a comment"></textarea>
+      </mat-form-field>
+      <button mat-raised-button class="bComment" (click)="publish()">Comment</button>
+    </div>
+    <div class="row" id="comments">
+      <mat-card class="comment" *ngFor="let comment of comments">
+        <mat-card-header>
+          <mat-card-title>{{comment.username}}</mat-card-title>
+          <mat-card-subtitle>{{comment.timestamp | date: 'yyyy-MM-dd HH:mm'}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          {{comment.comment}}
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

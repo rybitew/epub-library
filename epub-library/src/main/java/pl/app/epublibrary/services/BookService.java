@@ -159,10 +159,10 @@ public class BookService {
 
     //TODO add paging
     public Set<String> findAllAuthors() {
-        Set<String> authors = new HashSet<>();
-        bookByAuthorRepository.findAllAuthors().forEach(author -> authors.add(author.getAuthor()));
+//        Set<String> authors = new HashSet<>();
+//        bookByAuthorRepository.findAllAuthors().forEach(author -> authors.add(author.getAuthors()));
 
-        return authors;
+        return bookByAuthorRepository.findAllAuthors().stream().map(BookAuthor::getAuthors).collect(Collectors.toSet());
     }
 
     //TODO add paging
@@ -173,8 +173,9 @@ public class BookService {
         return publishers;
     }
 
-    public void addToUserLibrary(String username, UUID bookId, String title) {
-        bookByUserLibraryRepository.save(new BookByUserLibrary(username, bookId, title.toLowerCase()));
+    public void addToUserLibrary(String username, UUID bookId, String title, List<String> authors) {
+        bookByUserLibraryRepository.save(new BookByUserLibrary(username, bookId, title.toLowerCase(), authors));
+//        userLibraryByBookRepository.save(new UserLibraryByBook(username, bookId));
     }
 
 /*    public Map<String, Integer> findAllAuthorsAndBookCount() {

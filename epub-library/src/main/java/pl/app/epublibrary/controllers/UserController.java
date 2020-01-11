@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import pl.app.epublibrary.dto.UserDto;
 import pl.app.epublibrary.exception.InvalidEmailException;
 import pl.app.epublibrary.exception.InvalidUsernameException;
 import pl.app.epublibrary.exception.InvalidUsernameOrBookIdException;
@@ -25,23 +26,46 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping(value = "/user/add/")
-    public void addUser(@RequestBody User user) {
+    @PostMapping(value = "/user/register")
+    public boolean addUser(@RequestBody User user) {
         try {
             userService.saveUser(user);
+            return true;
         } catch (InvalidEmailException e) {
             throw new ResponseStatusException(
                     HttpStatus.UNPROCESSABLE_ENTITY,
-                    "User with given email already exists", e);
+                    "User with given email already exists.", e);
         } catch (InvalidUsernameException e) {
             throw new ResponseStatusException(
                     HttpStatus.UNPROCESSABLE_ENTITY,
-                    "User with given username already exists", e);
+                    "User with given username already exists.", e);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Unknown Error", e);
+                    "Unknown Error.", e);
+        }
+    }
+
+    @PostMapping(value = "user/login")
+    public boolean login(@RequestBody UserDto userDto) {
+        try {
+            User user = userService.findUserByUsername(userDto.getUsername());
+            if (user != null && user.getPassword().equals(userDto.getPassword())) {
+                return true;
+            }
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Invalid username or password.");
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Invalid username or password.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Unknown Error.", e);
         }
     }
 
@@ -52,12 +76,12 @@ public class UserController {
         } catch (InvalidUsernameOrBookIdException e) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
-                    "User does not exist", e);
+                    "User does not exist.", e);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Unknown Error", e);
+                    "Unknown Error.", e);
         }
     }
 
@@ -70,7 +94,7 @@ public class UserController {
             e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Unknown Error", e);
+                    "Unknown Error.", e);
         }
     }
 
@@ -81,12 +105,12 @@ public class UserController {
             User user = userService.findUserByUsername(username);
             if (user != null)
                 return user;
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist.");
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Unknown Error", e);
+                    "Unknown Error.", e);
         }
     }
 
@@ -99,7 +123,7 @@ public class UserController {
             e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Unknown Error", e);
+                    "Unknown Error.", e);
         }
     }
 }

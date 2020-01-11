@@ -1,0 +1,59 @@
+<div class="row">
+  <mat-card class="error" *ngIf="error" (click)="error = false">
+    <mat-card-header>
+      {{errorMessage}}
+    </mat-card-header>
+  </mat-card>
+</div>
+<div class="row">
+  <div class="col-4"></div>
+  <div class="col-4">
+    <mat-card class="login">
+      <mat-card-header>
+        <mat-card-title>Login</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form class="example-form">
+          <table class="example-full-width" cellspacing="0">
+            <tr>
+              <td>
+                <mat-form-field class="example-full-width">
+                  <input matInput placeholder="Username" [(ngModel)]="username" name="username" required>
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <mat-form-field class="example-full-width">
+                  <input matInput placeholder="Password" [(ngModel)]="password" type="password" name="password"
+                         required>
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <mat-form-field class="example-full-width" *ngIf="!isLogin">
+                  <input matInput placeholder="E-mail" [(ngModel)]="email" name="email"
+                         required>
+                </mat-form-field>
+              </td>
+            </tr>
+          </table>
+        </form>
+        <div class="row">
+          <div class="col-6">
+            <button mat-raised-button class="bLogin" (click)="login()">
+              Login
+            </button>
+          </div>
+          <div class="col-6">
+            <button mat-raised-button class="bRegister" (click)="register()">
+              Register
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="col-4"></div>
+</div>

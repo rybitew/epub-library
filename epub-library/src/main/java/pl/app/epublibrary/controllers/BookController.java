@@ -106,7 +106,8 @@ public class BookController {
     @PostMapping(value = "/books/add-to-library/", params = {"id", "user", "title"})
     public void addToUserLibrary(@RequestParam(value = "id") String bookId,
                                  @RequestParam(value = "user") String username,
-                                 @RequestParam(value = "title") String title) {
-        bookService.addToUserLibrary(username, UUID.fromString(bookId), title);
+                                 @RequestParam(value = "title") String title,
+                                 @RequestBody List<String> authors) {
+        bookService.addToUserLibrary(username, UUID.fromString(bookId), title, authors);
     }
 }

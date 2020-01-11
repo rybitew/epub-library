@@ -21,6 +21,6 @@ public interface BookByAuthorRepository extends CassandraRepository<BookByAuthor
 
     List<BookByAuthor> findAllByAuthors(String author);
 
-    @Query(value = "SELECT DISTINCT authors FROM books_by_author")
+    @Query(value = "SELECT DISTINCT author FROM books_by_author")
     Set<BookAuthor> findAllAuthors();
 }

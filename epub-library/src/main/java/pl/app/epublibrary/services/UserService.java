@@ -39,7 +39,7 @@ public class UserService {
 //region CRUD
     public void saveUser(User user) throws InvalidEmailException, InvalidUsernameException, UnexpectedErrorException {
         if (findUserByUsername(user.getUsername()) == null) {
-            if (findUserByUsernameAndEmailAddress(user.getUsername(), user.getEmail()) == null) {
+            if (findUserByEmail(user.getEmail()) == null) {
                 userRepository.save(user);
                 roleService.saveRole(new UserRole(user.getUsername(), "user"));
             } else {
@@ -88,7 +88,7 @@ public class UserService {
     }
 //endregion
 
-    private User findUserByUsernameAndEmailAddress(String username, String email) {
-        return userRepository.findByUsernameAndEmail(username, email);
+    private User findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }

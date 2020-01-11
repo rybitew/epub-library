@@ -13,5 +13,7 @@ public interface UserRepository extends CassandraRepository<User, UUID> {
 
     User findByUsername(String username);
 
+    User findByEmail(String email);
+
     void deleteByUsername(String username);
 }

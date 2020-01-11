@@ -1,7 +1,5 @@
 import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material';
-import {LoginDialogComponent} from './login-dialog/login-dialog.component';
-import {OktaAuthService} from '@okta/okta-angular';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -10,27 +8,25 @@ import {OktaAuthService} from '@okta/okta-angular';
 })
 export class AppComponent {
   title = 'E-Book Library';
-  isAuthenticated: boolean;
 
-  constructor(public oktaAuth: OktaAuthService) {
-    // Subscribe to authentication state changes
-    this.oktaAuth.$authenticationState.subscribe(
-      (isAuthenticated: boolean)  => this.isAuthenticated = isAuthenticated
-    );
+  constructor(private router: Router) {
   }
 
-  async ngOnInit() {
-    // Get the authentication state for immediate use
-    this.isAuthenticated = await this.oktaAuth.isAuthenticated();
+  ngOnInit() {
   }
 
-  login() {
-    this.oktaAuth.loginRedirect();
-  }
-  logout() {
-    this.oktaAuth.logout('/home');
+  check() {
+    if (sessionStorage.getItem('authenticated') === null) {
+      this.router.navigate(['login']);
+    } else if (sessionStorage.getItem('authenticated') === 'true') {
+      sessionStorage.removeItem('authenticated');
+      this.router.navigate(['home']);
+    } else if (sessionStorage.getItem('authenticated') === 'false') {
+      this.router.navigate(['login']);
+    }
   }
 }
+
 // username: string;
 // password: string;
 //

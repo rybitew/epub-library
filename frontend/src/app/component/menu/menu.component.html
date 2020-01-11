@@ -1,0 +1,23 @@
+<mat-toolbar class="nav" id="menu">
+  <mat-nav-list class="list">
+    <mat-list-item id="books" [routerLink]="'/book'">
+      <h3>BOOKS</h3>
+    </mat-list-item>
+    <mat-list-item id="authors" [routerLink]="'/author'">
+      <h3>AUTHORS</h3>
+    </mat-list-item>
+    <mat-list-item id="library" (click)="checkIfLoggedIn()" [routerLink]="'/user/library'">
+      <h3>MY LIBRARY</h3>
+    </mat-list-item>
+    <mat-list-item id="account" (click)="checkIfLoggedIn()" [routerLink]="'/user/account'">
+      <h3>MY ACCOUNT</h3>
+    </mat-list-item>
+    <mat-list-item id="upload" (click)="file.click()">
+      <input hidden type="file" name="file" #file (change)="upload(file.files)" accept=".epub">
+      <h3>UPLOAD E-BOOK</h3>
+    </mat-list-item>
+    <mat-list-item id="find" [routerLink]="'/user'">
+      <h3>FIND USER</h3>
+    </mat-list-item>
+  </mat-nav-list>
+</mat-toolbar>

@@ -8,6 +8,8 @@ import pl.app.epublibrary.model.comment.Comment;
 import pl.app.epublibrary.services.CommentService;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -24,7 +26,8 @@ public class CommentController {
     @PostMapping(value = "/book/comment/add/")
     public void addComment(@RequestBody Comment comment) {
         try {
-            comment.setTimestamp(Instant.now());
+            comment.setTimestamp(LocalDateTime.now().toString());
+            comment.setId(UUID.randomUUID());
             commentService.saveComment(comment);
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,7 +50,7 @@ public class CommentController {
     }
 
     @GetMapping(value = "/user/comment/get/", params = {"username"})
-    public Set<Comment> getUserComments(@RequestParam(value = "username") String username) {
+    public List<Comment> getUserComments(@RequestParam(value = "username") String username) {
         try {
             return commentService.findAllCommentsByUser(username);
         } catch (Exception e) {
@@ -59,7 +62,7 @@ public class CommentController {
     }
 
     @GetMapping(value = "/book/comment/get/", params = {"id"})
-    public Set<Comment> getBookComments(@RequestParam(value = "id") String bookId) {
+    public List<Comment> getBookComments(@RequestParam(value = "id") String bookId) {
         try {
             return commentService.findAllCommentsByBook(UUID.fromString(bookId));
         } catch (Exception e) {

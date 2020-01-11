@@ -1,0 +1,55 @@
+<div class="row">
+  <mat-card class="error" *ngIf="error" (click)="error = false">
+    <mat-card-header>
+      {{errorMessage}}
+    </mat-card-header>
+  </mat-card>
+</div>
+<div class="row">
+  <p class="title">Find book</p>
+</div>
+<div class="row">
+  <form>
+    <mat-form-field>
+      <mat-label>Title</mat-label>
+      <input matInput #title>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Author</mat-label>
+      <input matInput #author>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Publisher</mat-label>
+      <input matInput #publisher>
+    </mat-form-field>
+    <button mat-raised-button (click)="showResults(title, author, publisher)">Search</button>
+  </form>
+</div>
+<div class="row">
+  <p class="results">Results:</p>
+</div>
+
+<div class="row">
+  <table mat-table #table [dataSource]="result">
+    <!-- Id Column -->
+    <ng-container matColumnDef="index">
+      <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
+      <mat-cell *matCellDef="let i = index; "> {{i+1}} </mat-cell>
+    </ng-container>
+    <!-- Title Column -->
+    <ng-container matColumnDef="title">
+      <mat-header-cell *matHeaderCellDef> Title </mat-header-cell>
+      <mat-cell *matCellDef="let book"> {{book?.title}} </mat-cell>
+    </ng-container>
+
+    <!-- Author Column -->
+    <ng-container matColumnDef="authors">
+      <mat-header-cell *matHeaderCellDef> Authors </mat-header-cell>
+      <mat-cell *matCellDef="let book"> {{book?.authors}} </mat-cell>
+    </ng-container>
+
+    <!--    Header-->
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row (click)="goToBook(book)" *matRowDef="let book; let i = dataIndex; columns: displayedColumns;"></mat-row>
+  </table>
+</div>

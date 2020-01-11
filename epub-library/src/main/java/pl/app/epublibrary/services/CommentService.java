@@ -10,10 +10,7 @@ import pl.app.epublibrary.repositories.comment.CommentByBookRepository;
 import pl.app.epublibrary.repositories.comment.CommentByUserNameRepository;
 import pl.app.epublibrary.repositories.comment.CommentRepository;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,13 +30,15 @@ public class CommentService {
 
 //region CRUD
     public void saveComment(Comment comment) {
-        commentRepository.save(comment);
-        commentByBookRepository.save(new CommentByBook(comment));
-        commentByUserNameRepository.save(new CommentByUsername(comment));
+        if (!comment.getComment().isEmpty()) {
+            commentRepository.save(comment);
+            commentByBookRepository.save(new CommentByBook(comment));
+            commentByUserNameRepository.save(new CommentByUsername(comment));
+        }
     }
 
     public void deleteComment(Comment comment) {
-        commentRepository.deleteById(comment.getId());
+        commentRepository.deleteByIdAndTimestamp(comment.getId(), comment.getTimestamp());
         commentByUserNameRepository.deleteByUsernameAndCommentId(comment.getUsername(), comment.getId());
         commentByBookRepository.deleteByBookIdAndCommentId(comment.getBookId(), comment.getId());
     }
@@ -50,7 +49,7 @@ public class CommentService {
                     .stream()
                     .map(CommentId::getCommentId)
                     .collect(Collectors.toSet());
-            List<Comment> comments = commentRepository.findAllById(commentsByBook);
+            List<Comment> comments = commentRepository.findAllCommentsById(commentsByBook);
             commentRepository.deleteAll(comments);
             commentByBookRepository.deleteAllByBookId(bookId);
             comments.forEach(comment ->
@@ -67,7 +66,7 @@ public class CommentService {
                 .stream()
                 .map(CommentId::getCommentId)
                 .collect(Collectors.toSet());
-        List<Comment> comments = commentRepository.findAllById(commentsByUsername);
+        List<Comment> comments = commentRepository.findAllCommentsById(commentsByUsername);
         commentRepository.deleteAll(comments);
         commentByUserNameRepository.deleteAllByUsername(username);
         comments.forEach(comment ->
@@ -75,25 +74,25 @@ public class CommentService {
     }
 //endregion
 
-    public Set<Comment> findAllCommentsByUser(String username) {
-        Set<UUID> commentIds = commentByUserNameRepository.findAllCommentsByUsername(username)
+    public List<Comment> findAllCommentsByUser(String username) {
+        List<UUID> commentIds = commentByUserNameRepository.findAllCommentsByUsername(username)
                 .stream()
                 .map(CommentId::getCommentId)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
 
-        Set<Comment> comments = new HashSet<>();
-        commentIds.forEach(id -> commentRepository.findById(id).ifPresent(comments::add));
+        List<Comment> comments = new LinkedList<>();
+        commentIds.forEach(id -> commentRepository.findCommentById(id).ifPresent(comments::add));
         return comments;
     }
 
-    public Set<Comment> findAllCommentsByBook(UUID bookId) {
-        Set<UUID> commentIds = commentByBookRepository.findAllCommentsByBookId(bookId)
+    public List<Comment> findAllCommentsByBook(UUID bookId) {
+        List<UUID> commentIds = commentByBookRepository.findAllCommentsByBookId(bookId)
                 .stream()
                 .map(CommentId::getCommentId)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
 
-        Set<Comment> comments = new HashSet<>();
-        commentIds.forEach(id -> commentRepository.findById(id).ifPresent(comments::add));
+        List<Comment> comments = new LinkedList<>();
+        commentIds.forEach(id -> commentRepository.findCommentById(id).ifPresent(comments::add));
         return comments;
     }
 }

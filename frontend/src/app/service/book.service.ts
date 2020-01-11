@@ -51,19 +51,20 @@ export class BookService {
     return this.http.get(this.bookUrl.concat('/cover/?path=', imageUrl), {responseType: 'blob'});
   }
 
-  // set
-  public changeAuthors(id: string, authors: string[]): void {
+  // post
+  public changeAuthors(id: string, authors: string[]): Observable<any> {
     let authorList = authors.toString();
     authorList.replace(' ', '%20');
-    this.http.post(this.bookUrl.concat('/?id=', id, '&author=', authorList), null);
+    return this.http.post(this.bookUrl.concat('/?id=', id, '&author=', authorList), null);
   }
 
-  public addToUserLibrary(id: string, user: string, title: string): void {
-    this.http.post(this.bookUrl.concat('/add-to-library/?id=', id, '&user=', user, '&title=', title), null);
+  public addToUserLibrary(id: string, title: string, authors: string[]): Observable<any> {
+    return this.http.post(this.bookUrl.concat(
+      '/add-to-library/?id=', id, '&user=', sessionStorage.getItem('user'), '&title=', title), authors);
   }
 
   // delete
-  public deleteBook(id: string): void {
-    this.http.delete(this.bookUrl.concat('/delete/?id=', id));
+  public deleteBook(id: string): Observable<any> {
+    return this.http.delete(this.bookUrl.concat('/delete/?id=', id));
   }
 }

@@ -1,16 +1,15 @@
 <mat-sidenav-container class="sidenav">
   <mat-sidenav mode="side" opened class="menu">
-    <button mat-raised-button class="login" *ngIf="!isAuthenticated" (click)="login()">
+    <button mat-raised-button class="login" (click)="check()">
       <i class="material-icons">
         exit_to_app
       </i>
     </button>
-    <button mat-raised-button class="logout" *ngIf="isAuthenticated" (click)="logout()">
-      <i class="material-icons">
-        exit_to_app
-      </i>
-    </button>
-    <p></p>
+<!--    <button mat-raised-button class="logout" *ngIf="isAuthenticated" (click)="check()" [routerLink]="'/home'">-->
+<!--      <i class="material-icons">-->
+<!--        exit_to_app-->
+<!--      </i>-->
+<!--    </button>-->
     <app-menu id="menu"></app-menu>
   </mat-sidenav>
   <mat-sidenav-content class="content">

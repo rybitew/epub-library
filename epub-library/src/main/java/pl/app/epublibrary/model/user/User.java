@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
+import org.springframework.data.cassandra.core.mapping.Indexed;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
@@ -26,8 +27,6 @@ public class User {
     private String password;
 
     @Email
-    @PrimaryKeyColumn(
-            type = PrimaryKeyType.CLUSTERED
-    )
+    @Indexed
     private String email;
 }
