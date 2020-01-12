@@ -1,0 +1,11 @@
+p {
+  font-size: 16px;
+}
+.bConfirm {
+  background-color: #f01720;
+}
+button {
+  outline: none;
+  width: 40%;
+  margin: 5px;
+}

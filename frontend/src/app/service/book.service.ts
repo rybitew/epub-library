@@ -39,6 +39,10 @@ export class BookService {
     return this.http.get<BookByAuthor[]>(this.bookUrl.concat('/?author=', author, '&title=', title));
   }
 
+  public checkIfInLibrary(bookId: string): Observable<boolean> {
+    return this.http.get<boolean>(this.bookUrl.concat('/library/?id=', bookId, '&username=', sessionStorage.getItem('user')));
+  }
+
   public findAllAuthors(): Observable<string[]> {
     return this.http.get<string[]>(this.authorUrl.concat('/all'));
   }

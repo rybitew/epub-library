@@ -40,7 +40,7 @@
     <ng-container matColumnDef="title">
       <mat-header-cell *matHeaderCellDef> Title</mat-header-cell>
       <mat-cell *matCellDef="let book">
-        <button mat-button (click)="goToBook(book)">
+        <button mat-button (click)="goToBook(book?.bookId)">
           {{book?.title}}
         </button>
       </mat-cell>

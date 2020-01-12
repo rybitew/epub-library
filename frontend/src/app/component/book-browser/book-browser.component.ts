@@ -48,9 +48,12 @@ export class BookBrowserComponent implements OnInit {
         error => this.handleError(error));
       // author
     } else if (author) {
-      console.log('author');
+      console.log(author);
       author = author.trim();
-      this.bookService.findByAuthor(author).subscribe(book => this.result = book,
+      this.bookService.findByAuthor(author).subscribe(book => {
+          this.result = book;
+          console.log(this.result);
+        },
         error => this.handleError(error));
       // publisher
     } else if (publisher) {
@@ -65,8 +68,8 @@ export class BookBrowserComponent implements OnInit {
     this.result = [];
   }
 
-  public goToBook(book: BookByAuthor): void {
-    this.router.navigate([`book/${book.bookId}`]);
+  public goToBook(id: string): void {
+    this.router.navigate([`book/${id}`]);
   }
 
   private goToAuthor(author: string) {

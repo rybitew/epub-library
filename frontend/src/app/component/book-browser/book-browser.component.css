@@ -31,6 +31,8 @@
 }
 button {
   outline: none;
+  overflow-x: hidden !important;
+  white-space: pre-wrap !important;
 }
 .title {
   text-transform: capitalize;

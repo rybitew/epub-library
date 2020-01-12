@@ -11,7 +11,7 @@
 <div class="row">
   <mat-card class="books" *ngFor="let book of result">
     <mat-card-content>
-      <button mat-button (click)="goToBook(book)">
+      <button mat-button (click)="goToBook(book?.bookId)">
         {{book.title}}
       </button>
     </mat-card-content>

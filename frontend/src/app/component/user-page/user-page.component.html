@@ -5,6 +5,9 @@
     </mat-card-header>
   </mat-card>
 </div>
+<div class="row" *ngIf="authenticated">
+  <button mat-raised-button class="bDelete" (click)="openDeleteConfirmationDialog()">Delete account</button>
+</div>
 <div class="row">
   <p class="title">{{username}}'s library:</p>
 </div>
@@ -33,6 +36,15 @@
                 (click)="goToAuthor(author)">{{author}}</button>
       </mat-cell>
     </ng-container>
+    <!-- Delete Column -->
+    <ng-container matColumnDef="delete" *ngIf="authenticated">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let book">
+        <button mat-button (click)="deleteFromLibrary(book?.bookId)">
+          <i class="material-icons">delete</i>
+        </button>
+      </mat-cell>
+    </ng-container>
 
     <!--    Header-->
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -47,6 +59,9 @@
   <mat-card class="comment" *ngFor="let comment of comments">
     <mat-card-header>
       <mat-card-title>
+        <button mat-button class="book-title" (click)="goToBook(comment?.bookId)">
+          {{comment.title}}
+        </button>
         <button mat-raised-button class="bDeleteComment"
                 *ngIf="comment.username === currentUser" (click)="deleteComment(comment)">
           <i class="material-icons">delete</i>
@@ -54,7 +69,7 @@
       </mat-card-title>
       <mat-card-subtitle>{{comment.timestamp | date: 'yyyy-MM-dd HH:mm'}}</mat-card-subtitle>
     </mat-card-header>
-    <mat-card-content (click)="goToBook(comment.bookId)">
+    <mat-card-content>
       {{comment.comment}}
     </mat-card-content>
   </mat-card>

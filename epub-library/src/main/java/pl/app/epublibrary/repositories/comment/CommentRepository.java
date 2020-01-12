@@ -12,8 +12,6 @@ import java.util.UUID;
 @Repository
 public interface CommentRepository extends CassandraRepository<Comment, UUID> {
     Optional<Comment> findCommentById(UUID id);
-    List<Comment> findAllCommentsById(Iterable<UUID> id);
-    void deleteByIdAndTimestampAndBookId(UUID id, Instant timestamp, UUID bookId);
 
     void deleteCommentById(UUID id);
 }

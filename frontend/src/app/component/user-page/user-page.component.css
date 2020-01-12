@@ -25,13 +25,16 @@
   margin-bottom: 4%;
 }
 .mat-column-index {
-  flex: 0 0 20%;
+  flex: 0 0 10%;
 }
 .mat-column-title {
   flex: 0 0 35%;
 }
 .mat-column-authors {
   flex: 0 0 45%;
+}
+.mat-column-delete {
+  flex: 0 0 10%;
 }
 .comment {
   margin-top: 5px;
@@ -53,4 +56,15 @@ button {
   font-size: 20px;
   text-transform: capitalize;
   outline: none;
+}
+.bDelete {
+  margin: 10px;
+  background-color: #f01720;
+  font-size: 20px;
+  font-family: 'Open Sans', sans-serif;
+}
+.book-title {
+  font-size: 20px;
+  font-family: 'Open Sans', sans-serif;
+  margin-left: 0;
 }

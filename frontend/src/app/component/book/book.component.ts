@@ -6,6 +6,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {throwError} from 'rxjs';
 import {CommentService} from '../../service/comment.service';
 import {Comment} from '../../model/comment';
+import {UserService} from '../../service/user.service';
 
 @Component({
   selector: 'app-book',
@@ -16,6 +17,7 @@ export class BookComponent implements OnInit {
 
   private currentUser: string;
   private bookInfo: Book;
+  private isInLibrary = false;
   //image
   private showImage: boolean;
   private imageLoaded: boolean;
@@ -30,28 +32,47 @@ export class BookComponent implements OnInit {
   private comments: Comment[] = [];
 
   constructor(private route: ActivatedRoute, private bookService: BookService,
-              private router: Router, private commentService: CommentService) {
+              private router: Router, private commentService: CommentService,
+              private userService: UserService) {
   }
 
   ngOnInit() {
     this.bookService.findById(this.route.snapshot.params.id).subscribe(book => {
-      this.bookInfo = book;
-      this.getBookCover();
-    });
-    this.commentService.getBookComments(this.route.snapshot.params.id).subscribe(comments => {
-      this.comments = comments;
-    });
-    if(sessionStorage.getItem('user')) {
-      this.currentUser = sessionStorage.getItem('user');
+        this.bookInfo = book;
+        this.getBookCover();
+      },
+      error => this.handleError(error));
+    this.commentService.getBookComments(this.route.snapshot.params.id).subscribe(comments => this.comments = comments,
+      error => this.handleError(error));
+    if (sessionStorage.getItem('authenticated')) {
+      if (sessionStorage.getItem('user')) {
+        this.currentUser = sessionStorage.getItem('user');
+        this.bookService.checkIfInLibrary(this.route.snapshot.params.id).subscribe(res => {
+            if (res) {
+              this.isInLibrary = res;
+            }
+          },
+          error => this.handleError(error));
+      }
     }
+    console.log(this.isInLibrary);
   }
 
   private addToLibrary() {
     if (sessionStorage.getItem('authenticated') === 'true' && sessionStorage.getItem('user')) {
       this.bookService.addToUserLibrary(this.bookInfo.id, this.bookInfo.title, this.bookInfo.authors)
         .subscribe(res => console.log(res), error => this.handleError(error));
+      this.isInLibrary = true;
     } else {
       this.router.navigate(['login']);
+    }
+  }
+
+  private removeFromLibrary() {
+    if (this.isInLibrary) {
+      this.userService.deleteBookFromLibrary(this.bookInfo.id)
+        .subscribe(res => console.log(res), error => this.handleError(error));
+      this.isInLibrary = false;
     }
   }
 
@@ -76,7 +97,7 @@ export class BookComponent implements OnInit {
     if (sessionStorage.getItem('authenticated') === 'true' && sessionStorage.getItem('user')) {
       if (this.commentContent.trim()) {
         console.log('commented');
-        this.commentService.addComment(this.bookInfo.id, this.commentContent)
+        this.commentService.addComment(this.bookInfo.id, this.commentContent, this.bookInfo.title)
           .subscribe(res => console.log(res), error => this.handleError(error));
         this.commentContent = '';
         location.reload();
@@ -87,15 +108,15 @@ export class BookComponent implements OnInit {
   }
 
   private goToUser(user: string) {
-    this.router.navigate([`user/activity/${user}`])
+    this.router.navigate([`user/activity/${user}`]);
   }
 
   private goToAuthor(author: string) {
-    this.router.navigate([`author/${author}`])
+    this.router.navigate([`author/${author}`]);
   }
 
   private goToPublisher(publisher: string) {
-    this.router.navigate([`publisher/${publisher}`])
+    this.router.navigate([`publisher/${publisher}`]);
   }
 
 //region Book cover recovering

@@ -17,8 +17,8 @@ export class CommentService {
   constructor(private http: HttpClient) {
   }
 
-  public addComment(bookId: string, comment: string): Observable<any> {
-    return this.http.post<Comment>(this.addCommentUrl, new Comment(sessionStorage.getItem('user'), bookId, comment));
+  public addComment(bookId: string, comment: string, title: string): Observable<any> {
+    return this.http.post<Comment>(this.addCommentUrl, new Comment(sessionStorage.getItem('user'), bookId, comment, title));
   }
 
   public deleteComment(comment: Comment): Observable<any> {

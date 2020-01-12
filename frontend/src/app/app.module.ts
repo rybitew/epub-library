@@ -28,6 +28,7 @@ import {BookComponent} from './component/book/book.component';
 import {UserLoginComponent} from './component/user-login/user-login.component';
 import {AuthorPageComponent} from './component/author-page/author-page.component';
 import {PublisherPageComponent} from './component/publisher-page/publisher-page.component';
+import { DeleteConfirmationDialog } from './component/user-page/delete-confirmation/delete-confirmation-dialog.component';
 
 const appRoutes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -55,6 +56,7 @@ const appRoutes: Routes = [
     UserLoginComponent,
     AuthorPageComponent,
     PublisherPageComponent,
+    DeleteConfirmationDialog,
   ],
   imports: [
     BrowserModule,
@@ -71,6 +73,9 @@ const appRoutes: Routes = [
     MatFormFieldModule,
     MatInputModule,
     MatTableModule
+  ],
+  entryComponents: [
+    DeleteConfirmationDialog
   ],
   providers: [
     MatDialog

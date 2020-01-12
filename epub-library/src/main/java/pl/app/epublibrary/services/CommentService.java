@@ -53,7 +53,8 @@ public class CommentService {
                     .stream()
                     .map(CommentId::getCommentId)
                     .collect(Collectors.toSet());
-            List<Comment> comments = commentRepository.findAllCommentsById(commentsByBook);
+            List<Comment> comments = new LinkedList<>();
+            commentsByBook.forEach(id -> commentRepository.findCommentById(id).ifPresent(comments::add));
             commentRepository.deleteAll(comments);
             commentByBookRepository.deleteAllByBookId(bookId);
             comments.forEach(comment ->
@@ -72,7 +73,8 @@ public class CommentService {
                 .stream()
                 .map(CommentId::getCommentId)
                 .collect(Collectors.toSet());
-        List<Comment> comments = commentRepository.findAllCommentsById(commentsByUsername);
+        List<Comment> comments = new LinkedList<>();
+        commentsByUsername.forEach(id -> commentRepository.findCommentById(id).ifPresent(comments::add));
         commentRepository.deleteAll(comments);
         commentByUserNameRepository.deleteAllByUsername(username);
         comments.forEach(comment ->

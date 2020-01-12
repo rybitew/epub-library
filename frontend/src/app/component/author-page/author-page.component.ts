@@ -26,8 +26,8 @@ export class AuthorPageComponent implements OnInit {
       error => this.handleError(error));
   }
 
-  public goToBook(book: BookByAuthor): void {
-    this.router.navigate([`book/${book.bookId}`]);
+  public goToBook(id: string): void {
+    this.router.navigate([`book/${id}`]);
   }
 
   private handleError(error: HttpErrorResponse) {

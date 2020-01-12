@@ -9,15 +9,18 @@
   <div class="col-5">
     <h1>{{bookInfo?.title}}</h1>
   </div>
-  <div class="col-5">
-    <button mat-raised-button (click)="addToLibrary()">
-      <i class="material-icons">add_box</i>
+  <div class="col-6">
+    <button mat-raised-button *ngIf="isInLibrary === false" (click)="addToLibrary()">
+      Add to library
+    </button>
+    <button mat-raised-button *ngIf="isInLibrary === true" (click)="removeFromLibrary()">
+      Delete from library
     </button>
     <button mat-raised-button (click)="deleteBook()">
       <i class="material-icons">delete</i>
     </button>
   </div>
-  <div class="col-2">
+  <div class="col-1">
 
   </div>
   <hr>
@@ -51,7 +54,7 @@
       <mat-card class="comment" *ngFor="let comment of comments">
         <mat-card-header>
           <mat-card-title>
-            <span (click)="goToUser(comment.username)">{{comment.username}}</span>
+            <button mat-button (click)="goToUser(comment.username)">{{comment.username}}</button>
             <button mat-raised-button class="bDeleteComment"
                     *ngIf="comment.username===currentUser" (click)="deleteComment(comment)">
               <i class="material-icons">delete</i>

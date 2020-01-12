@@ -2,6 +2,7 @@ package pl.app.epublibrary.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.app.epublibrary.dto.BookByAuthorDto;
 import pl.app.epublibrary.exception.BookAlreadyExistsException;
 import pl.app.epublibrary.exception.InvalidBookIdException;
 import pl.app.epublibrary.model.book.*;
@@ -139,8 +140,11 @@ public class BookService {
 
 //region ENDPOINT
 
-    public List<BookByAuthor> findAllBooksByAuthor(String author) {
-        return bookByAuthorRepository.findAllByAuthors(author.toLowerCase());
+    public List<BookByAuthorDto> findAllBooksByAuthor(String author) {
+        return bookByAuthorRepository.findAllByAuthors(author.toLowerCase())
+                .stream()
+                .map(BookByAuthorDto::new)
+                .collect(Collectors.toList());
     }
 
     public Book findBookById(UUID id) {
@@ -167,6 +171,10 @@ public class BookService {
         return bookByAuthorRepository.findAllAuthors().stream().map(BookAuthor::getAuthors).collect(Collectors.toSet());
     }
 
+    public boolean findIfInLibrary(UUID bookId, String username) {
+        return userLibraryByBookRepository.findByBookIdAndUsername(bookId, username) != null;
+    }
+
     //TODO add paging
     public Set<String> findAllPublishers() {
         Set<String> publishers = new HashSet<>();
@@ -177,7 +185,7 @@ public class BookService {
 
     public void addToUserLibrary(String username, UUID bookId, String title, List<String> authors) {
         bookByUserLibraryRepository.save(new BookByUserLibrary(username, bookId, title.toLowerCase(), authors));
-//        userLibraryByBookRepository.save(new UserLibraryByBook(username, bookId));
+        userLibraryByBookRepository.save(new UserLibraryByBook(username, bookId));
     }
 
 /*    public Map<String, Integer> findAllAuthorsAndBookCount() {
