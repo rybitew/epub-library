@@ -5,8 +5,9 @@
     </mat-card-header>
   </mat-card>
 </div>
-<div class="row" *ngIf="authenticated">
+<div class="row" *ngIf="isElevated()">
   <button mat-raised-button class="bDelete" (click)="openDeleteConfirmationDialog()">Delete account</button>
+  <button mat-raised-button class="bElevate" *ngIf="elevated === false" (click)="elevateUser()">Elevate account</button>
 </div>
 <div class="row">
   <p class="title">{{username}}'s library:</p>

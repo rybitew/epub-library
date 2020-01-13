@@ -20,8 +20,8 @@ export class UserService {
   constructor(private http: HttpClient) {
   }
 
-  public validateUser(user: UserDto): Observable<boolean> {
-    return this.http.post<boolean>(this.loginUrl, user);
+  public validateUser(user: UserDto): Observable<number> {
+    return this.http.post<number>(this.loginUrl, user);
   }
 
   public registerUser(user: User): Observable<boolean> {
@@ -32,6 +32,13 @@ export class UserService {
     return this.http.delete(this.deleteUrl + '?username=' + sessionStorage.getItem('user'));
   }
 
+  public elevateUser(username: string): Observable<any> {
+    return this.http.post(this.userUrl + '/elevate/', username);
+  }
+
+  public isUserElevated(username: string): Observable<boolean> {
+    return this.http.get<boolean>(this.userUrl + '/elevated/?username=' + username);
+  }
   public deleteBookFromLibrary(id: string): Observable<any> {
     return this.http.delete(this.deleteLibraryBookUrl + '?username=' + sessionStorage.getItem('user') + '&id=' + id);
   }

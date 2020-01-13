@@ -1,9 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import {DialogData} from '../user-page.component';
 import {UserService} from '../../../service/user.service';
-import {log} from 'util';
 import {Router} from '@angular/router';
+import {DeleteConfirmationDialogData} from '../../user-page/user-page.component';
 
 @Component({
   selector: 'app-delete-confirmation',
@@ -13,20 +12,19 @@ import {Router} from '@angular/router';
 export class DeleteConfirmationDialog implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<DeleteConfirmationDialog>,
-              private userSevice: UserService,
+              @Inject(MAT_DIALOG_DATA) public data: DeleteConfirmationDialogData,
+              private userService: UserService,
               private router: Router) {
   }
 
-  onNoClick(): void {
-    this.dialogRef.close();
+  onNoClick() {
+    this.data.actionResult = false;
+    this.dialogRef.close({actionResult: false});
   }
 
-  deleteAccount() {
-    this.userSevice.deleteUser().subscribe(res => console.log(res));
-    sessionStorage.removeItem('user');
-    sessionStorage.removeItem('authenticated');
-    this.onNoClick();
-    this.router.navigate(['home']);
+  onConfirmClick() {
+    this.data.actionResult = true;
+    this.dialogRef.close({actionResult: true});
   }
 
   ngOnInit() {

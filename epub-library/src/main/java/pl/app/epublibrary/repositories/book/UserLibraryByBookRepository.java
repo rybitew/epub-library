@@ -10,5 +10,7 @@ public interface UserLibraryByBookRepository extends CassandraRepository<UserLib
 
     Set<UserLibraryByBook> findAllByBookId(UUID id);
 
+    UserLibraryByBook findByBookIdAndUsername(UUID id, String username);
+
     void deleteByUsernameAndBookId(String username, UUID bookId);
 }

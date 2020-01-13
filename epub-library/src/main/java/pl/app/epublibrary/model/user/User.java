@@ -26,7 +26,8 @@ public class User {
 
     private String password;
 
-    @Email
     @Indexed
     private String email;
+
+    private boolean elevated;
 }

@@ -4,13 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import pl.app.epublibrary.dto.BookByAuthorDto;
 import pl.app.epublibrary.exception.InvalidBookIdException;
 import pl.app.epublibrary.model.book.*;
 import pl.app.epublibrary.services.BookService;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 public class BookController {
@@ -24,7 +24,7 @@ public class BookController {
 
     @GetMapping(value = "/authors/", params = {"author"})
     public @ResponseBody
-    List<BookByAuthor> getBooksByAuthor(@RequestParam(value = "author") String author) {
+    List<BookByAuthorDto> getBooksByAuthor(@RequestParam(value = "author") String author) {
         return bookService.findAllBooksByAuthor(author);
     }
 
@@ -46,11 +46,19 @@ public class BookController {
         return bookService.findBooksByPublisher(publisher);
     }
 
-    @PostMapping(value = "books/change-author/", params = {"id", "authors"})
+    @GetMapping(value = "books/library/", params = {"id", "username"})
+    public boolean checkIfInLibrary(@RequestParam(value = "id") String bookId,
+                                    @RequestParam(value = "username") String username) {
+        return bookService.findIfInLibrary(UUID.fromString(bookId), username);
+    }
+
+    @PostMapping(value = "books/change-author/")
     public String changeAuthors(
-            @RequestParam(value = "id") String id, @RequestParam(value = "authors") List<String> authors) {
+//            @RequestParam(value = "id") String id, @RequestParam(value = "authors") List<String> authors) {
+    @RequestBody BookByAuthorDto book) {
         try {
-            bookService.updateAuthor(UUID.fromString(id), authors);
+            bookService.updateAuthor(UUID.fromString(book.getBookId().toString()),
+                    Arrays.stream(book.getAuthors()).map(String::toLowerCase).collect(Collectors.toList()));
             return "OK";
         } catch (InvalidBookIdException e) {
             throw new ResponseStatusException(

@@ -8,10 +8,10 @@ import {UserService} from '../../service/user.service';
 import {BookByUserLibrary} from '../../model/book-by-user-library';
 import {CommentService} from '../../service/comment.service';
 import {Comment} from '../../model/comment';
-import {DeleteConfirmationDialog} from './delete-confirmation/delete-confirmation-dialog.component';
+import {DeleteConfirmationDialog} from '../dialog/delete-confirmation/delete-confirmation-dialog.component';
 
-export interface DialogData {
-  username: string;
+export interface DeleteConfirmationDialogData {
+  actionResult: boolean;
 }
 
 @Component({
@@ -23,6 +23,8 @@ export class UserPageComponent implements OnInit {
 
   @ViewChild('table', {static: false}) table: MatTable<BookByUserLibrary>;
 
+  private elevated = false;
+  private deleteConfirmation = false;
   private authenticated: boolean;
   private username: string;
   private currentUser: string;
@@ -51,13 +53,17 @@ export class UserPageComponent implements OnInit {
       this.comments = comments;
     });
     this.showResults();
+    this.isUserElevated();
   }
 
   private showResults() {
-    this.userService.getUserLibrary(this.username.trim()).subscribe(book => this.result = book,
+    this.userService.getUserLibrary(this.username.trim()).subscribe(book => {
+        this.table.dataSource = book;
+        this.table.renderRows();
+      },
       error => this.handleError(error));
-    this.table.dataSource = this.result;
-    this.table.renderRows();
+    // this.table.dataSource = this.result;
+    // this.table.renderRows();
     this.result = [];
   }
 
@@ -79,10 +85,41 @@ export class UserPageComponent implements OnInit {
   }
 
   private openDeleteConfirmationDialog(): void {
-    const dialogRef = this.dialog.open(DeleteConfirmationDialog, {
-      width: '250px',
-      data: {username: this.currentUser}
-    });
+    if (sessionStorage.getItem('authenticated') === 'true' && sessionStorage.getItem('elevated') === 'true') {
+      const dialogRef = this.dialog.open(DeleteConfirmationDialog, {
+        width: '250px',
+        data: {actionResult: this.deleteConfirmation}
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(result.actionResult);
+        if (result.actionResult === true) {
+          this.deleteAccount();
+        }
+      });
+    }
+  }
+
+  private deleteAccount() {
+    this.userService.deleteUser().subscribe(res => console.log(res),
+      error => this.handleError(error));
+    this.router.navigate(['home']);
+  }
+
+  private elevateUser() {
+    this.userService.elevateUser(this.username).subscribe(res => console.log(res),
+      error => this.handleError(error));
+  }
+
+  private isUserElevated() {
+    this.userService.isUserElevated(this.username).subscribe(res => {
+        this.elevated = res;
+      },
+      error => this.handleError(error));
+  }
+
+  private isElevated() {
+    return sessionStorage.getItem('authenticated') === 'true' && sessionStorage.getItem('elevated') === 'true';
   }
 
   private goToBook(id: string): void {

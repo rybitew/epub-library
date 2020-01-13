@@ -8,7 +8,6 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HomeComponent} from './component/home/home.component';
 import {MenuComponent} from './component/menu/menu.component';
 import {RouterModule, Routes} from '@angular/router';
-import {UploadComponent} from './component/upload/upload.component';
 import {UserPageComponent} from './component/user-page/user-page.component';
 import {BookBrowserComponent} from './component/book-browser/book-browser.component';
 import {
@@ -22,17 +21,17 @@ import {
 } from '@angular/material';
 import {UserFinderComponent} from './component/user-finder/user-finder.component';
 import {AppComponent} from './app.component';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {BookComponent} from './component/book/book.component';
 import {UserLoginComponent} from './component/user-login/user-login.component';
 import {AuthorPageComponent} from './component/author-page/author-page.component';
 import {PublisherPageComponent} from './component/publisher-page/publisher-page.component';
-import { DeleteConfirmationDialog } from './component/user-page/delete-confirmation/delete-confirmation-dialog.component';
+import {DeleteConfirmationDialog} from './component/dialog/delete-confirmation/delete-confirmation-dialog.component';
+import {AuthorEditDialog} from './component/dialog/author-edit/author-edit-dialog.component';
 
 const appRoutes: Routes = [
   {path: 'home', component: HomeComponent},
-  {path: 'book/upload', component: UploadComponent},
   {path: 'user/activity/:username', component: UserPageComponent},
   {path: 'book', component: BookBrowserComponent},
   {path: 'book/:id', component: BookComponent},
@@ -48,7 +47,6 @@ const appRoutes: Routes = [
     AppComponent,
     HomeComponent,
     MenuComponent,
-    UploadComponent,
     UserPageComponent,
     BookBrowserComponent,
     UserFinderComponent,
@@ -57,6 +55,7 @@ const appRoutes: Routes = [
     AuthorPageComponent,
     PublisherPageComponent,
     DeleteConfirmationDialog,
+    AuthorEditDialog,
   ],
   imports: [
     BrowserModule,
@@ -65,17 +64,22 @@ const appRoutes: Routes = [
     MatButtonModule,
     MatDialogModule,
     BrowserAnimationsModule,
-    RouterModule.forRoot(appRoutes, {enableTracing: true}),
+    RouterModule.forRoot(appRoutes, {
+      enableTracing: true,
+      onSameUrlNavigation: 'reload'
+    }),
     MatListModule,
     MatSidenavModule,
     MatCardModule,
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatTableModule
+    MatTableModule,
+    ReactiveFormsModule
   ],
   entryComponents: [
-    DeleteConfirmationDialog
+    DeleteConfirmationDialog,
+    AuthorEditDialog
   ],
   providers: [
     MatDialog

@@ -3,7 +3,6 @@ import {UserService} from '../../service/user.service';
 import {UserDto} from '../../model/user-dto';
 import {Router} from '@angular/router';
 import {User} from '../../model/user';
-import {log} from 'util';
 import {throwError} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
 
@@ -32,9 +31,14 @@ export class UserLoginComponent implements OnInit {
       this.userService.validateUser(new UserDto(this.username, this.password))
         .subscribe(response => {
           console.log(response);
-          if (response === true) {
+          if (response === 0) {
             sessionStorage.setItem('user', this.username);
             sessionStorage.setItem('authenticated', 'true');
+            this.router.navigate(['home']);
+          } else if (response === 1) {
+            sessionStorage.setItem('user', this.username);
+            sessionStorage.setItem('authenticated', 'true');
+            sessionStorage.setItem('elevated', 'true');
             this.router.navigate(['home']);
           }
         },

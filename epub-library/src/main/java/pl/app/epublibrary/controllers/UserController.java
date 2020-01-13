@@ -5,10 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pl.app.epublibrary.dto.UserDto;
-import pl.app.epublibrary.exception.InvalidEmailException;
-import pl.app.epublibrary.exception.InvalidUsernameException;
-import pl.app.epublibrary.exception.InvalidUsernameOrBookIdException;
-import pl.app.epublibrary.exception.UnexpectedErrorException;
+import pl.app.epublibrary.exception.*;
 import pl.app.epublibrary.model.book.BookByUserLibrary;
 import pl.app.epublibrary.model.user.User;
 import pl.app.epublibrary.services.UserService;
@@ -21,6 +18,21 @@ public class UserController {
 
     private UserService userService;
 
+    private enum roles {
+        USER(0), ADMIN(1);
+
+        private final int value;
+
+        roles(int value) {
+            this.value = value;
+        }
+
+        int getValue() {
+            return value;
+        }
+    }
+
+
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
@@ -29,8 +41,12 @@ public class UserController {
     @PostMapping(value = "/user/register")
     public boolean addUser(@RequestBody User user) {
         try {
-            userService.saveUser(user);
-            return true;
+            if (user != null) {
+                user.setElevated(false);
+                userService.saveUser(user);
+                return true;
+            }
+            throw new InvalidUsernameException();
         } catch (InvalidEmailException e) {
             throw new ResponseStatusException(
                     HttpStatus.UNPROCESSABLE_ENTITY,
@@ -39,6 +55,10 @@ public class UserController {
             throw new ResponseStatusException(
                     HttpStatus.UNPROCESSABLE_ENTITY,
                     "User with given username already exists.", e);
+        } catch (InvalidEmailFormatException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    "Invalid e-mail format.", e);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(
@@ -47,12 +67,37 @@ public class UserController {
         }
     }
 
+    @PostMapping(value = "user/elevate/")
+    public void elevateUser(@RequestBody String username) {
+        try {
+            userService.elevateUser(username);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Unknown Error.", e);
+        }
+    }
+
+    @GetMapping(value = "user/elevated/", params = {"username"})
+    public boolean isElevated(@RequestParam(value = "username") String username) {
+        try {
+            return userService.isUserElevated(username);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Unknown Error.", e);
+        }
+    }
+
+
     @PostMapping(value = "user/login")
-    public boolean login(@RequestBody UserDto userDto) {
+    public int login(@RequestBody UserDto userDto) {
         try {
             User user = userService.findUserByUsername(userDto.getUsername());
             if (user != null && user.getPassword().equals(userDto.getPassword())) {
-                return true;
+                return user.isElevated() ? roles.ADMIN.value : roles.USER.value;
             }
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
@@ -103,8 +148,10 @@ public class UserController {
     User getUserByUsername(@RequestParam(value = "username") String username) {
         try {
             User user = userService.findUserByUsername(username);
-            if (user != null)
+            if (user != null) {
+                user.setPassword(null);
                 return user;
+            }
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist.");
         } catch (Exception e) {
             e.printStackTrace();

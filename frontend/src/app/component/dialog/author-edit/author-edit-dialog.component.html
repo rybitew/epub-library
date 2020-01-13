@@ -1,0 +1,25 @@
+<h1 mat-dialog-title>Edit authors         <button mat-button class="button" (click)="onEnter()">
+  <i class="material-icons">add</i>
+</button></h1>
+<div mat-dialog-content>
+  <form [formGroup]="myForm">
+    <form formArrayName="things">
+      <div class="inputs" *ngFor="let thing of things.controls; let i=index">
+        <mat-form-field>
+          <input matInput type="text" [formControlName]="i" [name]="'input' + i" [id]="'input' + i"/>
+        </mat-form-field>
+        <button mat-button class="button" *ngIf="i > 0" (click)="delete(i)">
+          <i class="material-icons">clear</i>
+        </button>
+      </div>
+    </form>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <div class="col-6">
+    <button mat-raised-button class="bCancel" (click)="onNoClick()">Cancel</button>
+  </div>
+  <div class="col-6">
+    <button mat-raised-button class="bConfirm" (click)="onConfirmClick()">Save</button>
+  </div>
+</div>

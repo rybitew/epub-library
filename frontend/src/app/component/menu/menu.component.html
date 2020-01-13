@@ -6,11 +6,11 @@
     <mat-list-item id="activity" (click)="goToUser()">
       <h3>MY ACTIVITY</h3>
     </mat-list-item>
-<!--    <mat-list-item id="account" (click)="checkIfLoggedIn()" [routerLink]="'/user/account'">-->
-<!--      <h3>MY ACCOUNT</h3>-->
-<!--    </mat-list-item>-->
-    <mat-list-item id="upload" (click)="checkIfAuthenticated()">
-      <input hidden type="file" name="file" #file (click)="upload(file.files)" accept=".epub">
+    <mat-list-item id="upload" *ngIf="checkIfAuthenticated() === true" (click)="file.click()">
+      <input hidden type="file" name="file" #file (change)="upload(file.files)" accept=".epub">
+      <h3>UPLOAD E-BOOK</h3>
+    </mat-list-item>
+    <mat-list-item *ngIf="checkIfAuthenticated() === false" [routerLink]="'/login'">
       <h3>UPLOAD E-BOOK</h3>
     </mat-list-item>
     <mat-list-item id="find" [routerLink]="'/user'">

@@ -9,14 +9,32 @@
   <h1>Books published by {{publisher}}:</h1>
 </div>
 <div class="row">
-  <mat-card class="books" *ngFor="let book of result" (click)="goToBook(book)">
+  <mat-card class="books" *ngFor="let book of result">
     <mat-card-content>
-      <button mat-button>
-        {{book.title}}
-      </button>
-      <button mat-button *ngFor="let author of book.authors">
-        {{author}}
-      </button>
+      <div class="row" #content>
+        <div class="col-5">
+          <mat-card class="title">
+            <mat-card-subtitle>Title:
+              <hr>
+            </mat-card-subtitle>
+            <mat-card-content>
+              <button mat-button (click)="goToBook(book)">{{book.title}}</button>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div class="col-7">
+          <mat-card class="authors">
+            <mat-card-subtitle>Authors:
+              <hr>
+            </mat-card-subtitle>
+            <mat-card-content>
+              <button mat-button *ngFor="let author of book.authors" (click)="goToAuthor(author)">
+                {{author}}
+              </button>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
     </mat-card-content>
   </mat-card>
 </div>

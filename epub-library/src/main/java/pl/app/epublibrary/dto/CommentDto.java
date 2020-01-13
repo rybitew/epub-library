@@ -29,6 +29,8 @@ public class CommentDto {
 
     private String timestamp;
 
+    private String title;
+
     private String comment;
 
     public CommentDto(Comment comment) {
@@ -37,5 +39,6 @@ public class CommentDto {
         this.bookId = comment.getBookId();
         this.timestamp = LocalDateTime.ofInstant(comment.getTimestamp(), ZoneId.of("Europe/Warsaw")).toString();
         this.comment = comment.getComment();
+        this.title = comment.getTitle();
     }
 }

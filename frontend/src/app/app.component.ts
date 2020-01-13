@@ -21,6 +21,7 @@ export class AppComponent {
     } else if (sessionStorage.getItem('authenticated') === 'true') {
       sessionStorage.removeItem('user');
       sessionStorage.removeItem('authenticated');
+      sessionStorage.removeItem('elevated');
       this.router.navigate(['home']);
     } else if (sessionStorage.getItem('authenticated') === 'false') {
       this.router.navigate(['login']);

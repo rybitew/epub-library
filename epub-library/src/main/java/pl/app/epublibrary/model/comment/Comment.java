@@ -43,6 +43,8 @@ public class Comment {
     )
     private Instant timestamp;
 
+    private String title;
+
     private  String comment;
 
     public Comment(CommentDto commentDto) {
@@ -50,5 +52,6 @@ public class Comment {
         this.bookId = commentDto.getBookId();
         this.username = commentDto.getUsername();
         this.timestamp = LocalDateTime.parse(commentDto.getTimestamp()).atZone(ZoneId.of("Europe/Warsaw")).toInstant();
+        this.title = commentDto.getTitle();
     }
 }

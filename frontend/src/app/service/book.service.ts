@@ -57,9 +57,13 @@ export class BookService {
 
   // post
   public changeAuthors(id: string, authors: string[]): Observable<any> {
-    let authorList = authors.toString();
-    authorList.replace(' ', '%20');
-    return this.http.post(this.bookUrl.concat('/?id=', id, '&author=', authorList), null);
+    let book: BookByPublisher = new BookByPublisher();
+    book.bookId = id;
+    book.authors = authors;
+    console.log(book);
+
+    return this.http.post(this.bookUrl.concat('/change-author/'), book);
+    // return new Observable();
   }
 
   public addToUserLibrary(id: string, title: string, authors: string[]): Observable<any> {

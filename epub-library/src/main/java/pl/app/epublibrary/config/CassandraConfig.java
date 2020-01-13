@@ -73,45 +73,4 @@ public class CassandraConfig extends AbstractCassandraConfiguration{
     protected List<DropKeyspaceSpecification> getKeyspaceDrops() {
         return Arrays.asList(DropKeyspaceSpecification.dropKeyspace((KEYSPACE)));
     }
-//    @Bean
-//    public CassandraClusterFactoryBean cluster() {
-//
-//        CassandraClusterFactoryBean cluster = new CassandraClusterFactoryBean();
-//        cluster.setContactPoints("localhost");
-//        cluster.setUsername("admin");
-//        cluster.setPassword("admin");
-//
-//        return cluster;
-//    }
-//
-//    @Override
-//    public SchemaAction getSchemaAction() {
-//        return SchemaAction.CREATE_IF_NOT_EXISTS;
-//    }
-//
-//    @Override
-//    protected List<CreateKeyspaceSpecification> getKeyspaceCreations() {
-//        CreateKeyspaceSpecification specification = CreateKeyspaceSpecification.createKeyspace(KEYSPACE)
-//                .ifNotExists()
-//                .withSimpleReplication(3)
-//                .with(KeyspaceOption.DURABLE_WRITES, true);
-//        List<CreateKeyspaceSpecification> specifications = new ArrayList<>();
-//        specifications.add(specification);
-//        return specifications;
-//    }
-//
-//    @Override
-//    protected List<DropKeyspaceSpecification> getKeyspaceDrops() {
-//        return Arrays.asList(DropKeyspaceSpecification.dropKeyspace((KEYSPACE)));
-//    }
-//
-//    @Override
-//    protected String getKeyspaceName() {
-//        return KEYSPACE;
-//    }
-//
-//    @Override
-//    public String[] getEntityBasePackages() {
-//        return new String[] {"pl.app.epublibrary.entities"};
-//    }
 }

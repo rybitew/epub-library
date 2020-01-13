@@ -1,0 +1,35 @@
+button {
+  margin: 10px;
+  text-transform: capitalize;
+  outline: none;
+  font-size: 16px;
+  font-family: 'Open Sans', sans-serif;
+}
+.button {
+margin: 10px;
+padding: 0;
+}
+input {
+  font-family: 'Open Sans', sans-serif;
+  text-transform: capitalize;
+}
+h1 {
+  font-size: 20px;
+  font-family: 'Open Sans', sans-serif;
+}
+mat-form-field {
+  width: 100%;
+}
+.inputs {
+  display: inline-flex;
+}
+.bConfirm {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+.bCancel {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}

@@ -1,12 +1,19 @@
 import {Component, OnInit} from '@angular/core';
 import {Book} from '../../model/book';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {BookService} from '../../service/book.service';
 import {HttpErrorResponse} from '@angular/common/http';
 import {throwError} from 'rxjs';
 import {CommentService} from '../../service/comment.service';
 import {Comment} from '../../model/comment';
 import {UserService} from '../../service/user.service';
+import {DeleteConfirmationDialog} from '../dialog/delete-confirmation/delete-confirmation-dialog.component';
+import {MatDialog} from '@angular/material';
+import {AuthorEditDialog} from '../dialog/author-edit/author-edit-dialog.component';
+
+export interface EditAuthorsDialogData {
+  authors: string[];
+}
 
 @Component({
   selector: 'app-book',
@@ -33,7 +40,19 @@ export class BookComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private bookService: BookService,
               private router: Router, private commentService: CommentService,
-              private userService: UserService) {
+              private userService: UserService, public dialog: MatDialog) {
+    this.router.routeReuseStrategy.shouldReuseRoute = function() {
+      return false;
+    };
+
+    this.router.events.subscribe((evt) => {
+      if (evt instanceof NavigationEnd) {
+        // trick the Router into believing it's last link wasn't previously loaded
+        this.router.navigated = false;
+        // if you need to scroll back to top, here is the right place
+        // window.scrollTo(0, 0);
+      }
+    });
   }
 
   ngOnInit() {
@@ -77,12 +96,9 @@ export class BookComponent implements OnInit {
   }
 
   private deleteBook() {
-    if (sessionStorage.getItem('authenticated') === 'true') {
-      this.bookService.deleteBook(this.bookInfo.id).subscribe(res => console.log(res), error => this.handleError(error));
-      this.router.navigate(['book']);
-    } else {
-      this.router.navigate(['login']);
-    }
+
+    this.bookService.deleteBook(this.bookInfo.id).subscribe(res => console.log(res), error => this.handleError(error));
+    this.router.navigate(['book']);
   }
 
   private deleteComment(comment: Comment) {
@@ -92,6 +108,51 @@ export class BookComponent implements OnInit {
       location.reload();
     }
   }
+
+  private isElevated() {
+    return sessionStorage.getItem('authenticated') === 'true' && sessionStorage.getItem('elevated') === 'true';
+
+  }
+
+//region Dialogs
+  private openDeleteConfirmationDialog(): void {
+    if (sessionStorage.getItem('authenticated') === 'true' && sessionStorage.getItem('elevated') === 'true') {
+      const dialogRef = this.dialog.open(DeleteConfirmationDialog, {
+        width: '250px',
+        data: {actionResult: false}
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(result.actionResult);
+        if (result.actionResult === true) {
+          this.deleteBook();
+        }
+      });
+    } else {
+      this.router.navigate(['login']);
+    }
+  }
+
+  private openEditDialog() {
+    if (sessionStorage.getItem('authenticated') === 'true' && sessionStorage.getItem('elevated') === 'true') {
+      const dialogRef = this.dialog.open(AuthorEditDialog, {
+        width: '290px',
+        data: {authors: []}
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result.authors.authors.length > 0) {
+          this.bookService.changeAuthors(this.route.snapshot.params.id, result.authors.authors)
+            .subscribe(res => console.log(res), error => this.handleError(error));
+          location.reload();
+        }
+      });
+    } else {
+      this.router.navigate(['login']);
+    }
+  }
+
+//endregion
 
   private publish() {
     if (sessionStorage.getItem('authenticated') === 'true' && sessionStorage.getItem('user')) {
@@ -120,14 +181,6 @@ export class BookComponent implements OnInit {
   }
 
 //region Book cover recovering
-  private show() {
-    this.showImage = true;
-    if (!this.imageLoaded) {
-      this.getBookCover();
-    }
-    console.log(this.bookInfo.releaseDate);
-  }
-
   private getBookCover() {
     console.log(this.bookInfo);
     this.isImageLoading = true;
