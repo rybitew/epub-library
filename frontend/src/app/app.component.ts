@@ -9,7 +9,7 @@ import {Router} from '@angular/router';
 export class AppComponent {
   title = 'E-Book Library';
 
-  constructor(private router: Router) {
+  constructor(public router: Router) {
   }
 
   ngOnInit() {

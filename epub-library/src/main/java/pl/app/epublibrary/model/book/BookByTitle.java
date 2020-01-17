@@ -26,7 +26,14 @@ public class BookByTitle {
 
     @PrimaryKeyColumn(
             type = PrimaryKeyType.CLUSTERED,
-            name = "book_id"
+            ordinal = 0
+    )
+    private String publisher;
+
+    @PrimaryKeyColumn(
+            type = PrimaryKeyType.CLUSTERED,
+            name = "book_id",
+            ordinal = 1
     )
     private UUID bookId;
 

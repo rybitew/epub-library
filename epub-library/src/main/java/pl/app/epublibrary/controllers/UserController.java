@@ -41,12 +41,8 @@ public class UserController {
     @PostMapping(value = "/user/register")
     public boolean addUser(@RequestBody User user) {
         try {
-            if (user != null) {
-                user.setElevated(false);
                 userService.saveUser(user);
                 return true;
-            }
-            throw new InvalidUsernameException();
         } catch (InvalidEmailException e) {
             throw new ResponseStatusException(
                     HttpStatus.UNPROCESSABLE_ENTITY,
@@ -71,6 +67,10 @@ public class UserController {
     public void elevateUser(@RequestBody String username) {
         try {
             userService.elevateUser(username);
+        } catch (InvalidUsernameException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    "Username is null.", e);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(
@@ -83,6 +83,10 @@ public class UserController {
     public boolean isElevated(@RequestParam(value = "username") String username) {
         try {
             return userService.isUserElevated(username);
+        } catch (InvalidUsernameException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    "Username is null.", e);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(
@@ -97,7 +101,7 @@ public class UserController {
         try {
             User user = userService.findUserByUsername(userDto.getUsername());
             if (user != null && user.getPassword().equals(userDto.getPassword())) {
-                return user.isElevated() ? roles.ADMIN.value : roles.USER.value;
+                return user.getElevated() != null ? roles.ADMIN.value : roles.USER.value;
             }
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
@@ -118,10 +122,14 @@ public class UserController {
     public void deleteUser(@RequestParam(name = "username") String username) {
         try {
             userService.deleteUser(username);
+        } catch (InvalidUsernameException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Username is null.", e);
         } catch (InvalidUsernameOrBookIdException e) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
-                    "User does not exist.", e);
+                    "Invalid username. Error deleting user's library.", e);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(
@@ -135,6 +143,10 @@ public class UserController {
                                       @RequestParam(value = "username") String username) {
         try {
             userService.deleteFromUserLibrary(username, UUID.fromString(bookId));
+        } catch (InvalidUsernameException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    "Username or Book ID is null.", e);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(
@@ -150,9 +162,16 @@ public class UserController {
             User user = userService.findUserByUsername(username);
             if (user != null) {
                 user.setPassword(null);
-                return user;
             }
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist.");
+            return user;
+        } catch (UserNotFoundException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "User with given username does not exist.");
+        } catch (InvalidUsernameException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    "Username is null.", e);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(

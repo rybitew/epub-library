@@ -29,5 +29,5 @@ public class User {
     @Indexed
     private String email;
 
-    private boolean elevated;
+    private Boolean elevated;
 }

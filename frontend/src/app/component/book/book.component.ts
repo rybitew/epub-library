@@ -22,25 +22,22 @@ export interface EditAuthorsDialogData {
 })
 export class BookComponent implements OnInit {
 
-  private currentUser: string;
-  private bookInfo: Book;
-  private isInLibrary = false;
+  public currentUser: string;
+  public bookInfo: Book;
+  public isInLibrary = false;
   //image
-  private showImage: boolean;
-  private imageLoaded: boolean;
-  private imageToShow: any;
-  private isImageLoading: boolean;
+  public imageLoaded: boolean;
+  public imageToShow: any;
+  public isImageLoading: boolean;
   //error
-  private error = false;
-  private errorMessage: string;
-  private errorImg = 'assets/images/default.png';
+  public errorImg = 'assets/images/default.png';
   //comment
-  private commentContent: string;
-  private comments: Comment[] = [];
+  public commentContent: string;
+  public comments: Comment[] = [];
 
-  constructor(private route: ActivatedRoute, private bookService: BookService,
-              private router: Router, private commentService: CommentService,
-              private userService: UserService, public dialog: MatDialog) {
+  constructor(public route: ActivatedRoute, public bookService: BookService,
+              public router: Router, public commentService: CommentService,
+              public userService: UserService, public dialog: MatDialog) {
     this.router.routeReuseStrategy.shouldReuseRoute = function() {
       return false;
     };
@@ -59,10 +56,8 @@ export class BookComponent implements OnInit {
     this.bookService.findById(this.route.snapshot.params.id).subscribe(book => {
         this.bookInfo = book;
         this.getBookCover();
-      },
-      error => this.handleError(error));
-    this.commentService.getBookComments(this.route.snapshot.params.id).subscribe(comments => this.comments = comments,
-      error => this.handleError(error));
+      });
+    this.commentService.getBookComments(this.route.snapshot.params.id).subscribe(comments => this.comments = comments);
     if (sessionStorage.getItem('authenticated')) {
       if (sessionStorage.getItem('user')) {
         this.currentUser = sessionStorage.getItem('user');
@@ -70,52 +65,48 @@ export class BookComponent implements OnInit {
             if (res) {
               this.isInLibrary = res;
             }
-          },
-          error => this.handleError(error));
+          });
       }
     }
     console.log(this.isInLibrary);
   }
 
-  private addToLibrary() {
+  public addToLibrary() {
     if (sessionStorage.getItem('authenticated') === 'true' && sessionStorage.getItem('user')) {
       this.bookService.addToUserLibrary(this.bookInfo.id, this.bookInfo.title, this.bookInfo.authors)
-        .subscribe(res => console.log(res), error => this.handleError(error));
+        .subscribe(res => console.log(res));
       this.isInLibrary = true;
     } else {
       this.router.navigate(['login']);
     }
   }
 
-  private removeFromLibrary() {
+  public removeFromLibrary() {
     if (this.isInLibrary) {
       this.userService.deleteBookFromLibrary(this.bookInfo.id)
-        .subscribe(res => console.log(res), error => this.handleError(error));
+        .subscribe(res => console.log(res));
       this.isInLibrary = false;
     }
   }
 
-  private deleteBook() {
+  public deleteBook() {
 
-    this.bookService.deleteBook(this.bookInfo.id).subscribe(res => console.log(res), error => this.handleError(error));
+    this.bookService.deleteBook(this.bookInfo.id).subscribe(res => console.log(res));
     this.router.navigate(['book']);
   }
 
-  private deleteComment(comment: Comment) {
-    this.commentService.deleteComment(comment).subscribe(res => console.log(res),
-      error => this.handleError(error));
-    if (this.error === false) {
-      location.reload();
-    }
+  public deleteComment(comment: Comment) {
+    this.commentService.deleteComment(comment).subscribe(res => console.log(res));
+    location.reload();
   }
 
-  private isElevated() {
+  public isElevated() {
     return sessionStorage.getItem('authenticated') === 'true' && sessionStorage.getItem('elevated') === 'true';
 
   }
 
 //region Dialogs
-  private openDeleteConfirmationDialog(): void {
+  public openDeleteConfirmationDialog(): void {
     if (sessionStorage.getItem('authenticated') === 'true' && sessionStorage.getItem('elevated') === 'true') {
       const dialogRef = this.dialog.open(DeleteConfirmationDialog, {
         width: '250px',
@@ -133,7 +124,7 @@ export class BookComponent implements OnInit {
     }
   }
 
-  private openEditDialog() {
+  public openEditDialog() {
     if (sessionStorage.getItem('authenticated') === 'true' && sessionStorage.getItem('elevated') === 'true') {
       const dialogRef = this.dialog.open(AuthorEditDialog, {
         width: '290px',
@@ -143,7 +134,7 @@ export class BookComponent implements OnInit {
       dialogRef.afterClosed().subscribe(result => {
         if (result.authors.authors.length > 0) {
           this.bookService.changeAuthors(this.route.snapshot.params.id, result.authors.authors)
-            .subscribe(res => console.log(res), error => this.handleError(error));
+            .subscribe(res => console.log(res));
           location.reload();
         }
       });
@@ -154,12 +145,12 @@ export class BookComponent implements OnInit {
 
 //endregion
 
-  private publish() {
+  public publish() {
     if (sessionStorage.getItem('authenticated') === 'true' && sessionStorage.getItem('user')) {
       if (this.commentContent.trim()) {
         console.log('commented');
         this.commentService.addComment(this.bookInfo.id, this.commentContent, this.bookInfo.title)
-          .subscribe(res => console.log(res), error => this.handleError(error));
+          .subscribe(res => console.log(res));
         this.commentContent = '';
         location.reload();
       }
@@ -168,20 +159,20 @@ export class BookComponent implements OnInit {
     }
   }
 
-  private goToUser(user: string) {
+  public goToUser(user: string) {
     this.router.navigate([`user/activity/${user}`]);
   }
 
-  private goToAuthor(author: string) {
+  public goToAuthor(author: string) {
     this.router.navigate([`author/${author}`]);
   }
 
-  private goToPublisher(publisher: string) {
+  public goToPublisher(publisher: string) {
     this.router.navigate([`publisher/${publisher}`]);
   }
 
 //region Book cover recovering
-  private getBookCover() {
+  public getBookCover() {
     console.log(this.bookInfo);
     this.isImageLoading = true;
     this.bookService.getImage(this.bookInfo.coverUrl).subscribe(data => {
@@ -195,7 +186,7 @@ export class BookComponent implements OnInit {
     });
   }
 
-  private createImageFromBlob(image: Blob) {
+  public createImageFromBlob(image: Blob) {
     let reader = new FileReader();
     reader.addEventListener('load', () => {
       this.imageToShow = reader.result;
@@ -204,31 +195,6 @@ export class BookComponent implements OnInit {
     if (image) {
       reader.readAsDataURL(image);
     }
-  }
-
-//endregion
-
-//region Error handling
-  private showError(msg: string) {
-    this.error = true;
-    this.errorMessage = msg;
-  }
-
-  private handleError(error: HttpErrorResponse) {
-    if (error.error instanceof ErrorEvent) {
-      // A client-side or network error occurred. Handle it accordingly.
-      this.error = true;
-      this.errorMessage = error.error.message;
-      console.error('An error occurred:', error.error.message);
-    } else {
-      // The backend returned an unsuccessful response code.
-      // The response body may contain clues as to what went wrong,
-      this.error = true;
-      this.errorMessage = error.error.message;
-      // return an observable with a user-facing error message
-    }
-    return throwError(
-      'Something bad happened; please try again later.');
   }
 
 //endregion

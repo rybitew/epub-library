@@ -16,7 +16,9 @@ public interface BookByPublisherRepository extends CassandraRepository<BookByPub
 
     List<BookByPublisher> findAllByPublisherName(String publisher);
 
-    void deleteByBookIdAndPublisherName(UUID id, String publisher);
+    List<BookByPublisher> findAllByPublisherNameAndTitle(String publisher, String title);
+
+    void deleteByBookIdAndPublisherNameAndTitle(UUID id, String publisher, String title);
 
     @Query(value = "SELECT DISTINCT publisher_name FROM books_by_publisher")
     Set<BookPublisher> findAllPublishers();

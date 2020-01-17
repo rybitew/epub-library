@@ -23,22 +23,21 @@ export class UserPageComponent implements OnInit {
 
   @ViewChild('table', {static: false}) table: MatTable<BookByUserLibrary>;
 
-  private elevated = false;
-  private deleteConfirmation = false;
-  private authenticated: boolean;
-  private username: string;
-  private currentUser: string;
+  public elevated = false;
+  public deleteConfirmation = false;
+  public authenticated: boolean;
+  public username: string;
+  public currentUser: string;
   //error
-  private error = false;
-  private errorMessage: string;
+  public error = false;
   //library
-  private result: BookByUserLibrary[] = [];
-  private displayedColumns = ['index', 'title', 'authors', 'delete'];
+  public result: BookByUserLibrary[] = [];
+  public displayedColumns = ['index', 'title', 'authors', 'delete'];
   //comments
-  private comments: Comment[] = [];
+  public comments: Comment[] = [];
 
-  constructor(private router: Router, private route: ActivatedRoute,
-              private userService: UserService, private commentService: CommentService,
+  constructor(public router: Router, public route: ActivatedRoute,
+              public userService: UserService, public commentService: CommentService,
               public dialog: MatDialog) {
   }
 
@@ -56,35 +55,28 @@ export class UserPageComponent implements OnInit {
     this.isUserElevated();
   }
 
-  private showResults() {
+  public showResults() {
     this.userService.getUserLibrary(this.username.trim()).subscribe(book => {
-        this.table.dataSource = book;
-        this.table.renderRows();
-      },
-      error => this.handleError(error));
+      this.table.dataSource = book;
+      this.table.renderRows();
+    });
     // this.table.dataSource = this.result;
     // this.table.renderRows();
     this.result = [];
   }
 
-  private deleteComment(comment: Comment) {
-    this.commentService.deleteComment(comment).subscribe(res => console.log(res),
-      error => this.handleError(error));
-    if (this.error === false) {
-      location.reload();
-    }
+  public deleteComment(comment: Comment) {
+    this.commentService.deleteComment(comment).subscribe(res => console.log(res));
+    location.reload();
   }
 
-  private deleteFromLibrary(id: string) {
+  public deleteFromLibrary(id: string) {
     console.log(id);
-    this.userService.deleteBookFromLibrary(id).subscribe(res => console.log(res),
-      error => this.handleError(error));
-    if (this.error === false) {
-      location.reload();
-    }
+    this.userService.deleteBookFromLibrary(id).subscribe(res => console.log(res));
+    location.reload();
   }
 
-  private openDeleteConfirmationDialog(): void {
+  public openDeleteConfirmationDialog(): void {
     if (sessionStorage.getItem('authenticated') === 'true' && sessionStorage.getItem('elevated') === 'true') {
       const dialogRef = this.dialog.open(DeleteConfirmationDialog, {
         width: '250px',
@@ -100,50 +92,30 @@ export class UserPageComponent implements OnInit {
     }
   }
 
-  private deleteAccount() {
-    this.userService.deleteUser().subscribe(res => console.log(res),
-      error => this.handleError(error));
+  public deleteAccount() {
+    this.userService.deleteUser().subscribe(res => console.log(res));
     this.router.navigate(['home']);
   }
 
-  private elevateUser() {
-    this.userService.elevateUser(this.username).subscribe(res => console.log(res),
-      error => this.handleError(error));
+  public elevateUser() {
+    this.userService.elevateUser(this.username).subscribe(res => console.log(res));
   }
 
-  private isUserElevated() {
+  public isUserElevated() {
     this.userService.isUserElevated(this.username).subscribe(res => {
-        this.elevated = res;
-      },
-      error => this.handleError(error));
+      this.elevated = res;
+    });
   }
 
-  private isElevated() {
+  public isElevated() {
     return sessionStorage.getItem('authenticated') === 'true' && sessionStorage.getItem('elevated') === 'true';
   }
 
-  private goToBook(id: string): void {
+  public goToBook(id: string): void {
     this.router.navigate([`book/${id}`]);
   }
 
-  private goToAuthor(author: string) {
+  public goToAuthor(author: string) {
     this.router.navigate([`author/${author}`]);
-  }
-
-  private handleError(error: HttpErrorResponse) {
-    if (error.error instanceof ErrorEvent) {
-      // A client-side or network error occurred. Handle it accordingly.
-      this.error = true;
-      this.errorMessage = error.error.message;
-      console.error('An error occurred:', error.error.message);
-    } else {
-      // The backend returned an unsuccessful response code.
-      // The response body may contain clues as to what went wrong,
-      this.error = true;
-      this.errorMessage = error.error.message;
-      // return an observable with a user-facing error message
-    }
-    return throwError(
-      'Something bad happened; please try again later.');
   }
 }

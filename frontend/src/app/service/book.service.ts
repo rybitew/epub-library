@@ -62,7 +62,7 @@ export class BookService {
     book.authors = authors;
     console.log(book);
 
-    return this.http.post(this.bookUrl.concat('/change-author/'), book);
+    return this.http.put(this.bookUrl.concat('/change-author/'), book);
     // return new Observable();
   }
 

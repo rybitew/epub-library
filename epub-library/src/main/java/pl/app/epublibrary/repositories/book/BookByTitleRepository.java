@@ -12,5 +12,5 @@ public interface BookByTitleRepository extends CassandraRepository<BookByTitle, 
 
     List<BookByTitle> findAllByTitle(String title);
 
-    void deleteByBookIdAndTitle(UUID id, String title);
+    void deleteByBookIdAndTitleAndPublisher(UUID id, String title, String publisher);
 }

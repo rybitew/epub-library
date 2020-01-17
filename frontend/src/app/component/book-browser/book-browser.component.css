@@ -21,13 +21,16 @@
   margin-bottom: 20px;
 }
 .mat-column-index {
-  flex: 0 0 20%;
+  flex: 0 0 10%;
 }
 .mat-column-title {
-  flex: 0 0 35%;
+  flex: 0 0 25%;
 }
 .mat-column-authors {
-  flex: 0 0 45%;
+  flex: 0 0 40%;
+}
+.mat-column-publisher {
+  flex: 0 0 25%;
 }
 button {
   outline: none;

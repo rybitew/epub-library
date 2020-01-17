@@ -35,15 +35,17 @@ public class UserService {
         this.userLibraryByBookRepository = userLibraryByBookRepository;
     }
 
-//region CRUD
+    //region CRUD
     public void saveUser(User user)
-            throws InvalidEmailException, InvalidUsernameException, InvalidEmailFormatException {
-        if (user.getUsername() == null) {
+            throws InvalidEmailException, InvalidUsernameException, InvalidEmailFormatException, UserNotFoundException {
+        if (user == null || user.getUsername() == null) {
             throw new InvalidUsernameException();
         }
         if (!user.getEmail().matches(EMAIL_PATTERN)) {
             throw new InvalidEmailFormatException();
         }
+        user.setUsername(user.getUsername().toLowerCase());
+        user.setEmail(user.getEmail().toLowerCase());
         if (findUserByUsername(user.getUsername()) == null) {
             if (findUserByEmail(user.getEmail()) == null) {
                 userRepository.save(user);
@@ -55,8 +57,10 @@ public class UserService {
         }
     }
 
-    public void deleteUser(String username) throws InvalidUsernameOrBookIdException {
-
+    public void deleteUser(String username) throws InvalidUsernameOrBookIdException, InvalidUsernameException {
+        if (username == null) {
+            throw new InvalidUsernameException();
+        }
         userRepository.deleteByUsername(username);
         Set<BookByUserLibrary> books = bookByUserLibraryRepository.findAllByUsername(username);
         for (BookByUserLibrary book : books) {
@@ -70,23 +74,47 @@ public class UserService {
 
     }
 
-    public void elevateUser(String username) {
+    public void elevateUser(String username) throws InvalidUsernameException {
+        if (username == null) {
+            throw new InvalidUsernameException();
+        }
         User user = userRepository.findByUsername(username);
-        user.setElevated(true);
-        userRepository.save(user);
+        if (user != null) {
+            user.setElevated(true);
+            userRepository.save(user);
+        }
     }
 //endregion
 
 //region ENDPOINT
 
-    public boolean isUserElevated(String username) {
-        return userRepository.findIfElevated(username);
+    public Boolean isUserElevated(String username) throws InvalidUsernameException {
+        if (username == null) {
+            throw new InvalidUsernameException();
+        }
+
+        Boolean isElevated = userRepository.findIfElevated(username);
+        return isElevated == null? false : isElevated;
     }
-    public User findUserByUsername(String username) {
+
+    public User findUserByUsername(String username) throws InvalidUsernameException, UserNotFoundException {
+        if (username == null) {
+            throw new InvalidUsernameException();
+        }
         return userRepository.findByUsername(username);
     }
 
-    public void deleteFromUserLibrary(String username, UUID bookId) throws UnexpectedErrorException {
+    public User findUserByEmail(String email) throws InvalidEmailException {
+        if (email == null) {
+            throw new InvalidEmailException();
+        }
+        return userRepository.findByEmail(email);
+    }
+
+    public void deleteFromUserLibrary(String username, UUID bookId) throws UnexpectedErrorException, InvalidUsernameException {
+        if (username == null || bookId == null) {
+            throw new InvalidUsernameException();
+        }
         try {
             bookByUserLibraryRepository.deleteByUsernameAndBookId(username, bookId);
             userLibraryByBookRepository.deleteByUsernameAndBookId(username, bookId);
@@ -96,12 +124,11 @@ public class UserService {
     }
 
     //TODO: add paging
-    public Set<BookByUserLibrary> findAllUserLibraryBooks(String username) {
+    public Set<BookByUserLibrary> findAllUserLibraryBooks(String username) throws InvalidUsernameException {
+        if (username == null) {
+            throw new InvalidUsernameException();
+        }
         return bookByUserLibraryRepository.findAllByUsername(username);
     }
 //endregion
-
-    private User findUserByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
 }

@@ -1,11 +1,4 @@
 <div class="row">
-  <mat-card class="error" *ngIf="error" (click)="error = false">
-    <mat-card-header>
-      {{errorMessage}}
-    </mat-card-header>
-  </mat-card>
-</div>
-<div class="row">
   <p class="title">Find book</p>
 </div>
 <div class="row">
@@ -52,6 +45,16 @@
       <mat-cell *matCellDef="let book">
         <button mat-button *ngFor="let author of book?.authors"
                 (click)="goToAuthor(author)">{{author}}</button>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Title Column -->
+    <ng-container matColumnDef="publisher">
+      <mat-header-cell *matHeaderCellDef> Publisher</mat-header-cell>
+      <mat-cell *matCellDef="let book">
+        <button mat-button (click)="goToPublisher(book?.publisher)">
+          {{book?.publisher}}
+        </button>
       </mat-cell>
     </ng-container>
 

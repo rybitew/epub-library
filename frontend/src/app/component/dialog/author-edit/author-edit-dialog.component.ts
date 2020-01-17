@@ -17,9 +17,9 @@ export class AuthorEditDialog implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<AuthorEditDialog>,
               @Inject(MAT_DIALOG_DATA) public data: EditAuthorsDialogData,
-              private userService: UserService,
-              private router: Router,
-              private fb: FormBuilder) {
+              public userService: UserService,
+              public router: Router,
+              public fb: FormBuilder) {
     this.createForm();
   }
 
@@ -48,7 +48,7 @@ export class AuthorEditDialog implements OnInit {
     return this.myForm.get('things') as FormArray;
   }
 
-  private createForm() {
+  public createForm() {
     this.myForm = this.fb.group({
       things: this.fb.array([
         this.fb.control('')
@@ -56,11 +56,11 @@ export class AuthorEditDialog implements OnInit {
     });
   }
 
-  private addThing() {
+  public addThing() {
     this.things.push(this.fb.control(''));
   }
 
-  private delete(index) {
+  public delete(index) {
     this.things.removeAt(index);
   }
 

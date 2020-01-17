@@ -9,10 +9,10 @@ import {NavigationEnd, Router} from '@angular/router';
 })
 export class MenuComponent implements OnInit {
 
-  private authenticated = false;
+  public authenticated = false;
   @ViewChild('file', {static: false}) file: ElementRef;
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(public http: HttpClient, public router: Router) {
     this.router.routeReuseStrategy.shouldReuseRoute = function() {
       return false;
     };
@@ -50,14 +50,13 @@ export class MenuComponent implements OnInit {
   }
 
   upload(fileList: FileList) {
-    console.log('file1 ' + fileList.length);
     if (fileList.length > 0) {
-      console.log('file2');
       let file: File = fileList[0];
       let formData: FormData = new FormData();
       formData.append('file', file);
-      this.http.post<any>('http://localhost:8082/book/upload/', formData).subscribe(
-        response => console.log(response)
+      this.http.post<any>('http://localhost:8082/book/upload/', formData).subscribe(res => {
+          throw new Error('Uploaded');
+        }
       );
     }
   }

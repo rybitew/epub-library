@@ -18,10 +18,12 @@ public class BookByAuthorDto {
     private String[] authors;
     private UUID bookId;
     private String title;
+    private String publisher;
 
     public BookByAuthorDto(BookByAuthor book) {
         this.authors = new String[]{book.getAuthors()};
         this.bookId = book.getBookId();
         this.title = book.getTitle();
+        this.publisher = book.getPublisher();
     }
 }

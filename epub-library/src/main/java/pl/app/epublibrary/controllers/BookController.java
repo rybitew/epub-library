@@ -52,7 +52,7 @@ public class BookController {
         return bookService.findIfInLibrary(UUID.fromString(bookId), username);
     }
 
-    @PostMapping(value = "books/change-author/")
+    @PutMapping(value = "books/change-author/")
     public String changeAuthors(
 //            @RequestParam(value = "id") String id, @RequestParam(value = "authors") List<String> authors) {
     @RequestBody BookByAuthorDto book) {

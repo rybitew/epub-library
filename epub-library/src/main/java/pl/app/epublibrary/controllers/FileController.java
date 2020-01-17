@@ -9,10 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-import pl.app.epublibrary.exception.BookAlreadyExistsException;
-import pl.app.epublibrary.exception.FileSaveErrorException;
-import pl.app.epublibrary.exception.InvalidFileException;
-import pl.app.epublibrary.exception.UnexpectedErrorException;
+import pl.app.epublibrary.exception.*;
 import pl.app.epublibrary.model.book.Book;
 import pl.app.epublibrary.services.BookService;
 import pl.app.epublibrary.services.FileStorageService;
@@ -46,13 +43,10 @@ public class FileController {
             bookId = book.getId();
             bookService.saveBook(book);
             return "OK";
-//        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-//                .path("/downloadFile/")
-//                .path(fileName)
-//                .toUriString();
-//
-//        return new UploadFileResponse(fileName, fileDownloadUri,
-//                file.getContentType(), file.getSize());
+        } catch (InsufficientBookDataException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    "Uploaded file does not contain author or title.", e);
         } catch (FileSaveErrorException e) {
             throw new ResponseStatusException(
                     HttpStatus.SERVICE_UNAVAILABLE,
@@ -64,7 +58,9 @@ public class FileController {
         } catch (BookAlreadyExistsException e) {
             try {
                 fileStorageService.deleteCover(bookId);
-                return "Book exists";
+                throw new ResponseStatusException(
+                        HttpStatus.CONFLICT,
+                        "Book already exists.", e);
             } catch (IOException ex) {
                 e.printStackTrace();
                 return "Book exists";

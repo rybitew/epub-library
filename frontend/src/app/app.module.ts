@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {ErrorHandler, NgModule} from '@angular/core';
 
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
@@ -17,7 +17,7 @@ import {
   MatFormFieldModule,
   MatInputModule,
   MatListModule,
-  MatSidenavModule, MatTableModule
+  MatSidenavModule, MatSnackBar, MatSnackBarContainer, MatSnackBarModule, MatTableModule
 } from '@angular/material';
 import {UserFinderComponent} from './component/user-finder/user-finder.component';
 import {AppComponent} from './app.component';
@@ -29,6 +29,7 @@ import {AuthorPageComponent} from './component/author-page/author-page.component
 import {PublisherPageComponent} from './component/publisher-page/publisher-page.component';
 import {DeleteConfirmationDialog} from './component/dialog/delete-confirmation/delete-confirmation-dialog.component';
 import {AuthorEditDialog} from './component/dialog/author-edit/author-edit-dialog.component';
+import {ErrorHandlerComponent} from './component/error-handler/error-handler.component';
 
 const appRoutes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -56,6 +57,7 @@ const appRoutes: Routes = [
     PublisherPageComponent,
     DeleteConfirmationDialog,
     AuthorEditDialog,
+    ErrorHandlerComponent,
   ],
   imports: [
     BrowserModule,
@@ -75,16 +77,24 @@ const appRoutes: Routes = [
     MatFormFieldModule,
     MatInputModule,
     MatTableModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatSnackBarModule
   ],
   entryComponents: [
     DeleteConfirmationDialog,
     AuthorEditDialog
   ],
   providers: [
-    MatDialog
+    MatDialog,
+    {
+      provide: ErrorHandler,
+      useClass: ErrorHandlerComponent
+    }
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [
+    AppComponent,
+    ErrorHandlerComponent
+  ],
 })
 export class AppModule {
 }

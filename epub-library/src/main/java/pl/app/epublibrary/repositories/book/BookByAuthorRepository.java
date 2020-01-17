@@ -13,11 +13,9 @@ import java.util.UUID;
 @Repository
 public interface BookByAuthorRepository extends CassandraRepository<BookByAuthor, String> {
 
-    BookByAuthor findByAuthorsAndBookId(String author, UUID bookId);
-
     BookByAuthor findByAuthorsAndTitle(String author, String title);
 
-    void deleteByBookIdAndAuthors(UUID id, String author);
+    void deleteByTitleAndAuthors(String title, String author);
 
     List<BookByAuthor> findAllByAuthors(String author);
 

@@ -32,17 +32,12 @@ public class CassandraConfig extends AbstractCassandraConfiguration{
         bean.setPassword(PASSWORD);
         return bean;
     }
-    /*
-     * Provide a keyspace name to the configuration.
-     */
+
     @Override
     public String getKeyspaceName() {
         return KEYSPACE;
     }
 
-    /*
-     * Automatically creates a Keyspace if it doesn't exist
-     */
     @Override
     protected List<CreateKeyspaceSpecification> getKeyspaceCreations() {
         CreateKeyspaceSpecification specification = CreateKeyspaceSpecification
@@ -51,19 +46,11 @@ public class CassandraConfig extends AbstractCassandraConfiguration{
         return Arrays.asList(specification);
     }
 
-
-    /*
-     * Automatically configure a table if doesn't exist
-     */
     @Override
     public SchemaAction getSchemaAction() {
         return SchemaAction.CREATE_IF_NOT_EXISTS;
     }
 
-
-    /*
-     * Get the entity package (where the entity class has the @Table annotation)
-     */
     @Override
     public String[] getEntityBasePackages() {
         return new String[] { "pl.app.epublibrary.model.*" };

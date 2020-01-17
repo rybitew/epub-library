@@ -12,13 +12,13 @@ import {throwError} from 'rxjs';
 })
 export class AuthorPageComponent implements OnInit {
 
-  private author: string;
+  public author: string;
   //error
-  private error = false;
-  private errorMessage: string;
-  private result: BookByAuthor[] = [];
+  public error = false;
+  public errorMessage: string;
+  public result: BookByAuthor[] = [];
 
-  constructor(private router: Router, private route: ActivatedRoute, private bookService: BookService) { }
+  constructor(public router: Router, public route: ActivatedRoute, public bookService: BookService) { }
 
   ngOnInit() {
     this.author = this.route.snapshot.params.author;
@@ -30,7 +30,7 @@ export class AuthorPageComponent implements OnInit {
     this.router.navigate([`book/${id}`]);
   }
 
-  private handleError(error: HttpErrorResponse) {
+  public handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
       this.error = true;

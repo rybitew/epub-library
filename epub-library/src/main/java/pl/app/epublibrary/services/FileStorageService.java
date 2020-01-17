@@ -75,7 +75,11 @@ public class FileStorageService {
     }
 
     public void deleteCover(UUID bookId) throws IOException {
-        Files.deleteIfExists(Paths.get("./covers/" + bookId.toString() + ".png"));
+        try {
+            Files.deleteIfExists(Paths.get("./covers/" + bookId.toString() + ".png"));
+        } catch (IOException e) {
+            deleteCover(bookId);
+        }
     }
 
     private void deleteFile(Path location) {

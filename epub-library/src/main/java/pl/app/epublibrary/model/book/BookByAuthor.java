@@ -25,12 +25,23 @@ public class BookByAuthor {
             name = "author"
     )
     private String authors;
+
     @PrimaryKeyColumn(
             type = PrimaryKeyType.CLUSTERED,
+            ordinal = 0
+    )
+    private String title;
+
+    @PrimaryKeyColumn(
+            type = PrimaryKeyType.CLUSTERED,
+            ordinal = 1
+    )
+    private String publisher;
+
+    @PrimaryKeyColumn(
+            type = PrimaryKeyType.CLUSTERED,
+            ordinal = 2,
             name = "book_id"
     )
     private UUID bookId;
-
-    @Indexed
-    private String title;
 }
