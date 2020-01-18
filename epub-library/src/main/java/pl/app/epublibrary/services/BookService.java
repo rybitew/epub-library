@@ -3,11 +3,11 @@ package pl.app.epublibrary.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.app.epublibrary.dto.BookByAuthorDto;
-import pl.app.epublibrary.exception.BookAlreadyExistsException;
-import pl.app.epublibrary.exception.InsufficientBookDataException;
-import pl.app.epublibrary.exception.InvalidBookIdException;
+import pl.app.epublibrary.exceptions.BookAlreadyExistsException;
+import pl.app.epublibrary.exceptions.InsufficientBookDataException;
+import pl.app.epublibrary.exceptions.InsufficientParametersException;
+import pl.app.epublibrary.exceptions.InvalidBookIdException;
 import pl.app.epublibrary.model.book.*;
-import pl.app.epublibrary.repositories.book.BookRepository;
 import pl.app.epublibrary.repositories.book.*;
 
 import java.io.IOException;
@@ -57,7 +57,7 @@ public class BookService {
             Book existingBook = this.getExistingBook(book);
             if (existingBook == null || !existingBook.equals(book)) {
                 bookRepository.save(book);
-                this.saveAllBookTables(book);
+                saveAllBookTables(book);
             } else {
                 throw new BookAlreadyExistsException();
             }
@@ -135,8 +135,10 @@ public class BookService {
 //endregion
 
 //region ENDPOINT
-    //TODO: add getters to the new repos
-    public List<BookByAuthorDto> findAllBooksByAuthor(String author) {
+    public List<BookByAuthorDto> findAllBooksByAuthor(String author) throws InsufficientParametersException {
+        if (author == null || author.isEmpty()) {
+            throw new InsufficientParametersException();
+        }
         return bookByAuthorRepository.findAllByAuthors(author.toLowerCase())
                 .stream()
                 .map(BookByAuthorDto::new)
@@ -147,23 +149,71 @@ public class BookService {
         return bookRepository.findById(id).orElse(null);
     }
 
-    public List<BookByTitle> findBooksByTitle(String title) {
+    public List<BookByTitle> findBooksByTitle(String title) throws InsufficientParametersException {
+        if (title == null || title.isEmpty()) {
+            throw new InsufficientParametersException();
+        }
         return bookByTitleRepository.findAllByTitle(title.toLowerCase());
     }
 
-    public List<BookByPublisher> findBooksByPublisher(String publisher) {
+    public List<BookByPublisher> findBooksByPublisher(String publisher) throws InsufficientParametersException {
+        if (publisher == null || publisher.isEmpty()) {
+            throw new InsufficientParametersException();
+        }
         return bookByPublisherRepository.findAllByPublisherName(publisher.toLowerCase());
     }
 
-    public BookByAuthor findBookByTitleAndAuthor(String title, String author) {
-        return bookByAuthorRepository.findByAuthorsAndTitle(author.toLowerCase(), title.toLowerCase());
+    public List<BookByAuthorDto> findBookByTitleAndAuthor(String title, String author)
+            throws InsufficientParametersException {
+        if (title == null || title.isEmpty() || author == null || author.isEmpty()) {
+            throw new InsufficientParametersException();
+        }
+        BookByAuthor entity = bookByAuthorRepository.findByAuthorsAndTitle(author.toLowerCase(), title.toLowerCase());
+        if (entity != null) {
+            return List.of(new BookByAuthorDto(entity));
+        }
+        return null;
+    }
+
+    public List<BookByPublisher> findBooksByTitleAndPublisher(String title, String publisher)
+            throws InsufficientParametersException {
+        if (title == null || title.isEmpty() || publisher == null || publisher.isEmpty()) {
+            throw new InsufficientParametersException();
+        }
+        return bookByPublisherRepository.findAllByPublisherNameAndTitle(publisher, title);
+    }
+    public List<BookByAuthorDto> findBooksByAuthorAndPublisher(String author, String publisher)
+            throws InsufficientParametersException {
+        if (author == null || author.isEmpty() || publisher == null || publisher.isEmpty()) {
+            throw new InsufficientParametersException();
+        }
+        return bookByAuthorPublisherRepository.findAllByAuthorsAndPublisher(author, publisher)
+                .stream()
+                .map(BookByAuthorDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<BookByAuthorDto> findBookByTitleAuthorAndPublisher(String title, String author, String publisher)
+            throws InsufficientParametersException {
+        if (title == null || title.isEmpty() || publisher == null || publisher.isEmpty()
+            || author == null || author.isEmpty()) {
+            throw new InsufficientParametersException();
+        }
+        BookByAuthor entity = bookByAuthorRepository.findByAuthorsAndPublisherAndTitle(author, publisher, title);
+        if (entity != null) {
+            return List.of(new BookByAuthorDto(entity));
+        }
+        return null;
     }
 
     public Set<String> findAllAuthors() {
         return bookByAuthorRepository.findAllAuthors().stream().map(BookAuthor::getAuthors).collect(Collectors.toSet());
     }
 
-    public boolean findIfInLibrary(UUID bookId, String username) {
+    public boolean findIfInLibrary(UUID bookId, String username) throws InsufficientParametersException {
+        if (bookId == null || username == null || username.isEmpty()) {
+            throw new InsufficientParametersException();
+        }
         return userLibraryByBookRepository.findByBookIdAndUsername(bookId, username) != null;
     }
 
@@ -174,7 +224,12 @@ public class BookService {
         return publishers;
     }
 
-    public void addToUserLibrary(String username, UUID bookId, String title, List<String> authors) {
+    public void addToUserLibrary(String username, UUID bookId, String title, List<String> authors)
+            throws InsufficientParametersException {
+        if (bookId == null || username == null || username.isEmpty() || title == null || title.isEmpty()
+            || authors.isEmpty()) {
+            throw new InsufficientParametersException();
+        }
         bookByUserLibraryRepository.save(new BookByUserLibrary(username, bookId, title.toLowerCase(), authors));
         userLibraryByBookRepository.save(new UserLibraryByBook(username, bookId));
     }

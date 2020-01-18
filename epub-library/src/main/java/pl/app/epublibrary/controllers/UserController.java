@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pl.app.epublibrary.dto.UserDto;
-import pl.app.epublibrary.exception.*;
+import pl.app.epublibrary.exceptions.*;
 import pl.app.epublibrary.model.book.BookByUserLibrary;
 import pl.app.epublibrary.model.user.User;
 import pl.app.epublibrary.services.UserService;
@@ -164,10 +164,6 @@ public class UserController {
                 user.setPassword(null);
             }
             return user;
-        } catch (UserNotFoundException e) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "User with given username does not exist.");
         } catch (InvalidUsernameException e) {
             throw new ResponseStatusException(
                     HttpStatus.UNPROCESSABLE_ENTITY,

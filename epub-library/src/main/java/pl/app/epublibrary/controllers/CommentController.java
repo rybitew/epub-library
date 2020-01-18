@@ -9,9 +9,7 @@ import pl.app.epublibrary.model.comment.Comment;
 import pl.app.epublibrary.services.CommentService;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 

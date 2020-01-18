@@ -5,10 +5,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import pl.app.epublibrary.config.FileStorageProperties;
-import pl.app.epublibrary.exception.CannotCreateDirectoryException;
-import pl.app.epublibrary.exception.FileSaveErrorException;
-import pl.app.epublibrary.exception.InvalidFileException;
-import pl.app.epublibrary.exception.InvalidFileNameException;
+import pl.app.epublibrary.exceptions.CannotCreateDirectoryException;
+import pl.app.epublibrary.exceptions.FileSaveErrorException;
+import pl.app.epublibrary.exceptions.InvalidFileException;
+import pl.app.epublibrary.exceptions.InvalidFileNameException;
 import pl.app.epublibrary.model.book.Book;
 import pl.app.epublibrary.util.MetadataReader;
 
@@ -23,7 +23,6 @@ import java.util.UUID;
 public class FileStorageService {
 
     private final Path fileStorageLocation;
-
     private MetadataReader metadataReader;
 
     @Autowired
@@ -42,8 +41,6 @@ public class FileStorageService {
     }
 
     public Book storeFile(MultipartFile file) throws FileSaveErrorException, InvalidFileException {
-        // Normalize file name
-
         try {
             String fileName = StringUtils.cleanPath(file.getOriginalFilename());
             // Check if the file's name contains invalid characters
@@ -89,18 +86,5 @@ public class FileStorageService {
             e.printStackTrace();
         }
     }
-//    public Resource loadFileAsResource(String fileName) {
-//        try {
-//            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
-//            Resource resource = new UrlResource(filePath.toUri());
-//            if(resource.exists()) {
-//                return resource;
-//            } else {
-//                throw new MyFileNotFoundException("File not found " + fileName);
-//            }
-//        } catch (MalformedURLException ex) {
-//            throw new MyFileNotFoundException("File not found " + fileName, ex);
-//        }
-//    }
 }
 

@@ -5,7 +5,6 @@ import org.springframework.data.cassandra.repository.Query;
 import org.springframework.stereotype.Repository;
 import pl.app.epublibrary.model.user.User;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository

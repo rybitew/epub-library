@@ -2,10 +2,9 @@ package pl.app.epublibrary.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.app.epublibrary.exception.*;
+import pl.app.epublibrary.exceptions.*;
 import pl.app.epublibrary.model.book.BookByUserLibrary;
 import pl.app.epublibrary.model.user.User;
-import pl.app.epublibrary.model.user.UserRole;
 import pl.app.epublibrary.repositories.book.BookByUserLibraryRepository;
 import pl.app.epublibrary.repositories.book.UserLibraryByBookRepository;
 import pl.app.epublibrary.repositories.user.UserRepository;
@@ -18,7 +17,6 @@ public class UserService {
 
     private UserRepository userRepository;
     private CommentService commentService;
-    private RoleService roleService;
     private BookByUserLibraryRepository bookByUserLibraryRepository;
     private UserLibraryByBookRepository userLibraryByBookRepository;
 
@@ -26,11 +24,10 @@ public class UserService {
 
     @Autowired
     public UserService(UserRepository userRepository, CommentService commentService,
-                       RoleService roleService, BookByUserLibraryRepository bookByUserLibraryRepository,
+                       BookByUserLibraryRepository bookByUserLibraryRepository,
                        UserLibraryByBookRepository userLibraryByBookRepository) {
         this.userRepository = userRepository;
         this.commentService = commentService;
-        this.roleService = roleService;
         this.bookByUserLibraryRepository = bookByUserLibraryRepository;
         this.userLibraryByBookRepository = userLibraryByBookRepository;
     }
@@ -97,7 +94,7 @@ public class UserService {
         return isElevated == null? false : isElevated;
     }
 
-    public User findUserByUsername(String username) throws InvalidUsernameException, UserNotFoundException {
+    public User findUserByUsername(String username) throws InvalidUsernameException {
         if (username == null) {
             throw new InvalidUsernameException();
         }
@@ -111,7 +108,8 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-    public void deleteFromUserLibrary(String username, UUID bookId) throws UnexpectedErrorException, InvalidUsernameException {
+    public void deleteFromUserLibrary(String username, UUID bookId)
+            throws UnexpectedErrorException, InvalidUsernameException {
         if (username == null || bookId == null) {
             throw new InvalidUsernameException();
         }
@@ -123,7 +121,6 @@ public class UserService {
         }
     }
 
-    //TODO: add paging
     public Set<BookByUserLibrary> findAllUserLibraryBooks(String username) throws InvalidUsernameException {
         if (username == null) {
             throw new InvalidUsernameException();

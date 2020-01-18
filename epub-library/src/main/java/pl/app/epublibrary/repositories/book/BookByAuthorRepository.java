@@ -8,12 +8,13 @@ import pl.app.epublibrary.model.book.BookByAuthor;
 
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 @Repository
 public interface BookByAuthorRepository extends CassandraRepository<BookByAuthor, String> {
 
     BookByAuthor findByAuthorsAndTitle(String author, String title);
+
+    BookByAuthor findByAuthorsAndPublisherAndTitle(String author, String publisher, String title);
 
     void deleteByTitleAndAuthors(String title, String author);
 

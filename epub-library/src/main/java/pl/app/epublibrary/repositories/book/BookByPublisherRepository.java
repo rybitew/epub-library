@@ -7,7 +7,6 @@ import pl.app.epublibrary.model.book.BookByPublisher;
 import pl.app.epublibrary.model.book.BookPublisher;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 

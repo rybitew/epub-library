@@ -9,9 +9,6 @@ import org.springframework.data.cassandra.core.mapping.Indexed;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
-import javax.validation.constraints.Email;
-import java.util.UUID;
-
 @Getter
 @Setter
 @NoArgsConstructor

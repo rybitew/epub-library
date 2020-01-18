@@ -1,5 +1,6 @@
 package pl.app.epublibrary.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.cassandra.config.AbstractCassandraConfiguration;
@@ -17,10 +18,14 @@ import java.util.List;
 @EnableCassandraRepositories(basePackages = "pl.app.epublibrary.repositories.*")
 public class CassandraConfig extends AbstractCassandraConfiguration{
 
-    private static final String KEYSPACE = "librarydb";
-    private static final String CONTACT_POINTS = "localhost";
-    private static final String USERNAME = "admin";
-    private static final String PASSWORD = "admin";
+    @Value("${cassandra.keyspace}")
+    private String KEYSPACE;
+    @Value("${cassandra.contactpoints}")
+    private String CONTACT_POINTS;
+    @Value("${cassandra.username}")
+    private String USERNAME;
+    @Value("${cassandra.password}")
+    private String PASSWORD;
 
     @Bean
     @Override

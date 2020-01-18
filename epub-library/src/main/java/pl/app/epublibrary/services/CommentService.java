@@ -10,7 +10,10 @@ import pl.app.epublibrary.repositories.comment.CommentByBookRepository;
 import pl.app.epublibrary.repositories.comment.CommentByUserNameRepository;
 import pl.app.epublibrary.repositories.comment.CommentRepository;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -92,7 +95,6 @@ public class CommentService {
 
         List<Comment> comments = new LinkedList<>();
         commentIds.forEach(id -> commentRepository.findCommentById(id).ifPresent(comments::add));
-//        comments.sort((Comparator.comparing(Comment::getTimestamp)));
         return comments;
     }
 
@@ -104,7 +106,6 @@ public class CommentService {
 
         List<Comment> comments = new LinkedList<>();
         commentIds.forEach(id -> commentRepository.findCommentById(id).ifPresent(comments::add));
-//        comments.sort((Comparator.comparing(Comment::getTimestamp)));
         return comments;
     }
 }

@@ -1,4 +1,4 @@
-package pl.app.epublibrary.exception;
+package pl.app.epublibrary.exceptions;
 
 public class InvalidBookIdException extends Exception {
 

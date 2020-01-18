@@ -1,25 +1,21 @@
 package pl.app.epublibrary.controllers;
 
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-import pl.app.epublibrary.exception.*;
+import pl.app.epublibrary.exceptions.BookAlreadyExistsException;
+import pl.app.epublibrary.exceptions.FileSaveErrorException;
+import pl.app.epublibrary.exceptions.InsufficientBookDataException;
+import pl.app.epublibrary.exceptions.InvalidFileException;
 import pl.app.epublibrary.model.book.Book;
 import pl.app.epublibrary.services.BookService;
 import pl.app.epublibrary.services.FileStorageService;
-import pl.app.epublibrary.util.MetadataReader;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Path;
 import java.util.UUID;
 
 @RestController

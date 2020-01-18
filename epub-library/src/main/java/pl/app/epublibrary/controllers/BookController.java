@@ -5,11 +5,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pl.app.epublibrary.dto.BookByAuthorDto;
-import pl.app.epublibrary.exception.InvalidBookIdException;
+import pl.app.epublibrary.exceptions.InsufficientParametersException;
+import pl.app.epublibrary.exceptions.InvalidBookIdException;
 import pl.app.epublibrary.model.book.*;
 import pl.app.epublibrary.services.BookService;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -25,7 +29,13 @@ public class BookController {
     @GetMapping(value = "/authors/", params = {"author"})
     public @ResponseBody
     List<BookByAuthorDto> getBooksByAuthor(@RequestParam(value = "author") String author) {
-        return bookService.findAllBooksByAuthor(author);
+        try {
+            return bookService.findAllBooksByAuthor(author);
+        } catch (InsufficientParametersException e) {
+                        throw new ResponseStatusException(
+                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    "One of the parameters is empty.", e);
+        }
     }
 
     @GetMapping(value = "/books/", params = {"id"})
@@ -37,24 +47,41 @@ public class BookController {
     @GetMapping(value = "/books/", params = {"title"})
     public @ResponseBody
     List<BookByTitle> getBooksByTitle(@RequestParam(value = "title") String title) {
-        return bookService.findBooksByTitle(title);
+        try {
+            return bookService.findBooksByTitle(title);
+        } catch (InsufficientParametersException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    "One of the parameters is empty.", e);
+        }
     }
 
     @GetMapping(value = "/books/", params = {"publisher"})
     public @ResponseBody
     List<BookByPublisher> getBooksByPublisher(@RequestParam(value = "publisher") String publisher) {
-        return bookService.findBooksByPublisher(publisher);
+        try {
+            return bookService.findBooksByPublisher(publisher);
+        } catch (InsufficientParametersException e) {
+                        throw new ResponseStatusException(
+                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    "One of the parameters is empty.", e);
+        }
     }
 
     @GetMapping(value = "books/library/", params = {"id", "username"})
     public boolean checkIfInLibrary(@RequestParam(value = "id") String bookId,
                                     @RequestParam(value = "username") String username) {
-        return bookService.findIfInLibrary(UUID.fromString(bookId), username);
+        try {
+            return bookService.findIfInLibrary(UUID.fromString(bookId), username);
+        } catch (InsufficientParametersException e) {
+                        throw new ResponseStatusException(
+                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    "One of the parameters is empty.", e);
+        }
     }
 
     @PutMapping(value = "books/change-author/")
     public String changeAuthors(
-//            @RequestParam(value = "id") String id, @RequestParam(value = "authors") List<String> authors) {
     @RequestBody BookByAuthorDto book) {
         try {
             bookService.updateAuthor(UUID.fromString(book.getBookId().toString()),
@@ -74,9 +101,52 @@ public class BookController {
 
     @GetMapping(value = "/books/", params = {"title", "author"})
     public @ResponseBody
-    List<BookByAuthor> getBookByTitleAndAuthor(
+    List<BookByAuthorDto> getBookByTitleAndAuthor(
             @RequestParam(value = "title") String title, @RequestParam(value = "author") String author) {
-        return List.of(bookService.findBookByTitleAndAuthor(title, author));
+        try {
+            return bookService.findBookByTitleAndAuthor(title, author);
+        } catch (InsufficientParametersException e) {
+                        throw new ResponseStatusException(
+                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    "One of the parameters is empty.", e);
+        }
+    }
+    @GetMapping(value = "/books/", params = {"title", "publisher"})
+    public @ResponseBody
+    List<BookByPublisher> getBookByTitleAndPublisher(
+            @RequestParam(value = "title") String title, @RequestParam(value = "publisher") String publisher) {
+        try {
+            return bookService.findBooksByTitleAndPublisher(title, publisher);
+        } catch (InsufficientParametersException e) {
+                        throw new ResponseStatusException(
+                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    "One of the parameters is empty.", e);
+        }
+    }
+    @GetMapping(value = "/books/", params = {"author", "publisher"})
+    public @ResponseBody
+    List<BookByAuthorDto> getBookByAuthorAndPublisher(
+             @RequestParam(value = "author") String author, @RequestParam(value = "publisher") String publisher) {
+        try {
+            return bookService.findBooksByAuthorAndPublisher(author, publisher);
+        } catch (InsufficientParametersException e) {
+                        throw new ResponseStatusException(
+                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    "One of the parameters is empty.", e);
+        }
+    }
+    @GetMapping(value = "/books/", params = {"title", "author", "publisher"})
+    public @ResponseBody
+    List<BookByAuthorDto> getBookByTitleAuthorAndPublisher(@RequestParam(value = "title") String title,
+                                                        @RequestParam(value = "author") String author,
+                                                        @RequestParam(value = "publisher") String publisher) {
+        try {
+            return bookService.findBookByTitleAuthorAndPublisher(title, author, publisher);
+        } catch (InsufficientParametersException e) {
+                        throw new ResponseStatusException(
+                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    "One of the parameters is empty.", e);
+        }
     }
 
     @GetMapping(value = "/authors/all")
@@ -116,6 +186,12 @@ public class BookController {
                                  @RequestParam(value = "user") String username,
                                  @RequestParam(value = "title") String title,
                                  @RequestBody List<String> authors) {
-        bookService.addToUserLibrary(username, UUID.fromString(bookId), title, authors);
+        try {
+            bookService.addToUserLibrary(username, UUID.fromString(bookId), title, authors);
+        } catch (InsufficientParametersException e) {
+                        throw new ResponseStatusException(
+                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    "One of the parameters is empty.", e);
+        }
     }
 }
