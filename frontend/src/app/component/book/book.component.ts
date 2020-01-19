@@ -2,8 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {Book} from '../../model/book';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {BookService} from '../../service/book.service';
-import {HttpErrorResponse} from '@angular/common/http';
-import {throwError} from 'rxjs';
 import {CommentService} from '../../service/comment.service';
 import {Comment} from '../../model/comment';
 import {UserService} from '../../service/user.service';

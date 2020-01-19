@@ -11,7 +11,7 @@ import pl.app.epublibrary.model.user.User;
 import pl.app.epublibrary.repositories.user.UserRepository;
 import pl.app.epublibrary.services.UserService;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -89,9 +89,10 @@ public class ServiceTest {
     }
 
     @Test
-    void elevateUserInvalid() {
+    void elevateUserInvalid() throws InvalidUsernameException {
         assertThrows(InvalidUsernameException.class,
                 () -> userService.elevateUser(null));
+        userService.elevateUser("not found");
     }
 
     @Test
@@ -99,7 +100,63 @@ public class ServiceTest {
         when(userRepository.findByUsername("test")).thenReturn(new User());
         when(userRepository.findByEmail("test")).thenReturn(new User());
         userService.elevateUser("test");
+    }
 
-        userService.elevateUser("not found");
+    @Test
+    void isUserElevatedInvalid() throws InvalidUsernameException {
+        when(userRepository.findIfElevated("test")).thenReturn(true);
+
+        userService.isUserElevated("not");
+        userService.isUserElevated("");
+        assertThrows(InvalidUsernameException.class, () -> userService.isUserElevated(null));
+    }
+
+    @Test
+    void isUserElevatedValid() throws InvalidUsernameException {
+        when(userRepository.findIfElevated("validated")).thenReturn(true);
+        when(userRepository.findIfElevated("not_validated")).thenReturn(false);
+
+        userService.isUserElevated("validated");
+        userService.isUserElevated("not_validated");
+    }
+
+    @Test
+    void findByUsernameInvalid() throws InvalidUsernameException {
+        when(userRepository.findByEmail("")).thenReturn(null);
+        when(userRepository.findByEmail("not_valid")).thenReturn(null);
+
+        assertNull(userService.findUserByUsername("not_valid"));
+        assertNull(userService.findUserByUsername(""));
+        assertThrows(InvalidUsernameException.class, () -> userService.findUserByUsername(null));
+    }
+
+    @Test
+    void findByUsernameValid() throws InvalidUsernameException {
+        User user = new User();
+        when(userRepository.findByUsername("validated")).thenReturn(user);
+        when(userRepository.findByUsername("not_validated")).thenReturn(null);
+
+        assertEquals(userService.findUserByUsername("validated"), user);
+        assertNull(userService.findUserByUsername("not_validated"));
+    }
+
+    @Test
+    void findByEmailInvalid() throws InvalidEmailException {
+        when(userRepository.findByEmail("")).thenReturn(null);
+        when(userRepository.findByEmail("not_valid")).thenReturn(null);
+
+        assertNull(userService.findUserByEmail(""));
+        assertNull(userService.findUserByEmail("not_valid"));
+        assertThrows(InvalidEmailException.class, () -> userService.findUserByEmail(null));
+    }
+
+    @Test
+    void findByEmailValid() throws InvalidEmailException {
+        User returnedUser = new User();
+        when(userRepository.findByEmail("valid")).thenReturn(returnedUser);
+        when(userRepository.findByEmail("not_valid")).thenReturn(null);
+
+        assertEquals(userService.findUserByEmail("valid"), returnedUser);
+        assertNull(userService.findUserByEmail("not_valid"));
     }
 }

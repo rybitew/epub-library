@@ -2,22 +2,33 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {UserDto} from '../model/user-dto';
 import {User} from '../model/user';
-import {Observable} from 'rxjs';
 import {BookByUserLibrary} from '../model/book-by-user-library';
+import {Observable} from 'rxjs';
+// @ts-ignore
+import ServerAddress from '../../assets/server-address.json';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  private userUrl = 'http://localhost:8082/user/';
-  private loginUrl = this.userUrl + 'login';
-  private registerUrl = this.userUrl + 'register';
-  private deleteUrl = this.userUrl + 'delete/';
-  private deleteLibraryBookUrl = this.userUrl + 'library/delete/';
-  private libraryUrl = this.userUrl + 'library/';
+  private serverUrl: string;
+  private userUrl: string;
+  private loginUrl: string;
+  private registerUrl: string;
+  private deleteUrl: string;
+  private deleteLibraryBookUrl: string;
+  private libraryUrl: string;
 
   constructor(private http: HttpClient) {
+    this.serverUrl = ServerAddress.http;
+    console.log(this.serverUrl);
+    this.userUrl = this.serverUrl + 'user/';
+    this.loginUrl = this.userUrl + 'login';
+    this.registerUrl = this.userUrl + 'register';
+    this.deleteUrl = this.userUrl + 'delete/';
+    this.deleteLibraryBookUrl = this.userUrl + 'library/delete/';
+    this.libraryUrl = this.userUrl + 'library/';
   }
 
   public validateUser(user: UserDto): Observable<number> {

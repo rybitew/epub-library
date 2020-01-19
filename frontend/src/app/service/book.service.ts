@@ -1,21 +1,27 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Observable} from 'rxjs';
 import {Book} from '../model/book';
 import {BookByAuthor} from '../model/book-by-author';
 import {BookByPublisher} from '../model/book-by-publisher';
-import {catchError} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+// @ts-ignore
+import ServerAddress from '../../assets/server-address.json';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BookService {
 
-  private authorUrl = 'http://localhost:8082/authors';
-  private publisherUrl = 'http://localhost:8082/publishers';
-  private bookUrl = 'http://localhost:8082/books';
+  public serverUrl: string;
+  private authorUrl: string;
+  private publisherUrl: string;
+  private bookUrl: string;
 
   constructor(private http: HttpClient) {
+    this.serverUrl = ServerAddress.http;
+    this.authorUrl = this.serverUrl + 'authors';
+    this.publisherUrl = this.serverUrl + 'publishers';
+    this.bookUrl = this.serverUrl + 'books';
   }
 
   // get
@@ -37,6 +43,18 @@ export class BookService {
 
   public findByTitleAndAuthor(author, title): Observable<BookByAuthor[]> {
     return this.http.get<BookByAuthor[]>(this.bookUrl.concat('/?author=', author, '&title=', title));
+  }
+
+  public findByTitleAndPublisher(title, publisher): Observable<BookByAuthor[]> {
+    return this.http.get<BookByAuthor[]>(this.bookUrl.concat('/?publisher=', publisher, '&title=', title));
+  }
+
+  public findByAuthorAndPublisher(author, publisher): Observable<BookByAuthor[]> {
+    return this.http.get<BookByAuthor[]>(this.bookUrl.concat('/?author=', author, '&publisher=', publisher));
+  }
+
+  public findByTitleAuthorAndPublisher(title, author, publisher): Observable<BookByAuthor[]> {
+    return this.http.get<BookByAuthor[]>(this.bookUrl.concat('/?author=', author, '&title=', title, '&publisher=', publisher));
   }
 
   public checkIfInLibrary(bookId: string): Observable<boolean> {
@@ -63,7 +81,6 @@ export class BookService {
     console.log(book);
 
     return this.http.put(this.bookUrl.concat('/change-author/'), book);
-    // return new Observable();
   }
 
   public addToUserLibrary(id: string, title: string, authors: string[]): Observable<any> {

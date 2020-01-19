@@ -32,8 +32,22 @@ export class BookBrowserComponent implements OnInit {
     if (publisher) {
       publisher = publisher.value.trim();
     }
-    // title and author
-    if (title && author) {
+    if (title && author && publisher) {
+      if (title !== '' && author != '' && publisher != '') {
+        this.bookService.findByTitleAuthorAndPublisher(title, author, publisher).subscribe(book => this.result = book);
+      }
+      //title and publisher
+    } else if (title && publisher) {
+      if (title !== '' && publisher != '') {
+        this.bookService.findByTitleAndPublisher(title, publisher).subscribe(book => this.result = book);
+      }
+      //author and publisher
+    } else if (author && publisher) {
+      if (publisher !== '' && author != '') {
+        this.bookService.findByAuthorAndPublisher(author, publisher).subscribe(book => this.result = book);
+      }
+      // title and author
+    } else if (title && author) {
       if (title !== '' && author != '') {
         this.bookService.findByTitleAndAuthor(author, title).subscribe(book => this.result = book);
       }
@@ -57,7 +71,6 @@ export class BookBrowserComponent implements OnInit {
     }
     if (this.result !== undefined) {
       if (this.table) {
-        console.log(this.result);
         this.table.dataSource = this.result;
         this.table.renderRows();
         this.result = [];

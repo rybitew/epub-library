@@ -2,19 +2,26 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Comment} from '../model/comment';
+// @ts-ignore
+import ServerAddress from '../../assets/server-address.json';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommentService {
 
-  private serverUrl = 'http://localhost:8082/';
-  private addCommentUrl = this.serverUrl + 'book/comment/add/';
-  private deleteCommentUrl = this.serverUrl + 'book/comment/delete/';
-  private getUserCommentsUrl = this.serverUrl + 'user/comment/get/';
-  private getBookCommentsUrl = this.serverUrl + 'book/comment/get/';
+  private serverUrl: string;
+  private addCommentUrl: string;
+  private deleteCommentUrl: string;
+  private getUserCommentsUrl: string;
+  private getBookCommentsUrl: string;
 
   constructor(private http: HttpClient) {
+  this.serverUrl = ServerAddress.http;
+  this.addCommentUrl = this.serverUrl + 'book/comment/add/';
+  this.deleteCommentUrl = this.serverUrl + 'book/comment/delete/';
+  this.getUserCommentsUrl = this.serverUrl + 'user/comment/get/';
+  this.getBookCommentsUrl = this.serverUrl + 'book/comment/get/';
   }
 
   public addComment(bookId: string, comment: string, title: string): Observable<any> {

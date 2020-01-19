@@ -23,7 +23,7 @@
 </div>
 
 <div class="row">
-  <table mat-table #table [dataSource]="result" *ngIf="result.length > 0">
+  <table mat-table #table [dataSource]="result" *ngIf="result?.length > 0">
     <!-- Id Column -->
     <ng-container matColumnDef="index">
       <mat-header-cell *matHeaderCellDef> No.</mat-header-cell>
@@ -62,5 +62,5 @@
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
     <mat-row *matRowDef="let book; let i = dataIndex; columns: displayedColumns;"></mat-row>
   </table>
-  <p *ngIf="!(result.length > 0)">No results</p>
+  <p *ngIf="result === null || !(result?.length > 0)">No results</p>
 </div>
