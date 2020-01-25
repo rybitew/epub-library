@@ -41,19 +41,23 @@ public class UserController {
     @PostMapping(value = "/user/register")
     public boolean addUser(@RequestBody User user) {
         try {
-                userService.saveUser(user);
-                return true;
+            userService.saveUser(user);
+            return true;
+        } catch(InvalidPasswordException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Invalid password format.", e);
         } catch (InvalidEmailException e) {
             throw new ResponseStatusException(
-                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    HttpStatus.CONFLICT,
                     "User with given email already exists.", e);
         } catch (InvalidUsernameException e) {
             throw new ResponseStatusException(
-                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    HttpStatus.CONFLICT,
                     "User with given username already exists.", e);
         } catch (InvalidEmailFormatException e) {
             throw new ResponseStatusException(
-                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    HttpStatus.BAD_REQUEST,
                     "Invalid e-mail format.", e);
         } catch (Exception e) {
             e.printStackTrace();
@@ -63,13 +67,13 @@ public class UserController {
         }
     }
 
-    @PostMapping(value = "user/elevate/")
+    @PutMapping(value = "user/elevate/")
     public void elevateUser(@RequestBody String username) {
         try {
             userService.elevateUser(username);
         } catch (InvalidUsernameException e) {
             throw new ResponseStatusException(
-                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    HttpStatus.BAD_REQUEST,
                     "Username is null.", e);
         } catch (Exception e) {
             e.printStackTrace();
@@ -85,7 +89,7 @@ public class UserController {
             return userService.isUserElevated(username);
         } catch (InvalidUsernameException e) {
             throw new ResponseStatusException(
-                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    HttpStatus.BAD_REQUEST,
                     "Username is null.", e);
         } catch (Exception e) {
             e.printStackTrace();
@@ -124,7 +128,7 @@ public class UserController {
             userService.deleteUser(username);
         } catch (InvalidUsernameException e) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
+                    HttpStatus.BAD_REQUEST,
                     "Username is null.", e);
         } catch (InvalidUsernameOrBookIdException e) {
             throw new ResponseStatusException(
@@ -143,10 +147,10 @@ public class UserController {
                                       @RequestParam(value = "username") String username) {
         try {
             userService.deleteFromUserLibrary(username, UUID.fromString(bookId));
-        } catch (InvalidUsernameException e) {
+        } catch (InvalidUsernameOrBookIdException e) {
             throw new ResponseStatusException(
-                    HttpStatus.UNPROCESSABLE_ENTITY,
-                    "Username or Book ID is null.", e);
+                    HttpStatus.BAD_REQUEST,
+                    "Invalid username or book ID.", e);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(
@@ -166,7 +170,7 @@ public class UserController {
             return user;
         } catch (InvalidUsernameException e) {
             throw new ResponseStatusException(
-                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    HttpStatus.BAD_REQUEST,
                     "Username is null.", e);
         } catch (Exception e) {
             e.printStackTrace();

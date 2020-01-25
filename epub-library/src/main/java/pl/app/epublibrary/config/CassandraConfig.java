@@ -60,9 +60,4 @@ public class CassandraConfig extends AbstractCassandraConfiguration{
     public String[] getEntityBasePackages() {
         return new String[] { "pl.app.epublibrary.model.*" };
     }
-
-    @Override
-    protected List<DropKeyspaceSpecification> getKeyspaceDrops() {
-        return Arrays.asList(DropKeyspaceSpecification.dropKeyspace((KEYSPACE)));
-    }
 }

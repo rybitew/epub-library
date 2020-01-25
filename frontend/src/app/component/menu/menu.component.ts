@@ -1,6 +1,8 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {NavigationEnd, Router} from '@angular/router';
+// @ts-ignore
+import ServerAddress from '../../../assets/server-address.json';
 
 @Component({
   selector: 'app-menu',
@@ -9,6 +11,7 @@ import {NavigationEnd, Router} from '@angular/router';
 })
 export class MenuComponent implements OnInit {
 
+  private serverAddress: string;
   public authenticated = false;
   @ViewChild('file', {static: false}) file: ElementRef;
 
@@ -25,6 +28,7 @@ export class MenuComponent implements OnInit {
         // window.scrollTo(0, 0);
       }
     });
+    this.serverAddress = ServerAddress.http;
   }
 
   ngOnInit() {
@@ -54,7 +58,7 @@ export class MenuComponent implements OnInit {
       let file: File = fileList[0];
       let formData: FormData = new FormData();
       formData.append('file', file);
-      this.http.post<any>('http://localhost:8082/book/upload/', formData).subscribe(res => {
+      this.http.post<any>(this.serverAddress + 'book/upload/', formData).subscribe(res => {
           throw new Error('Uploaded');
         }
       );

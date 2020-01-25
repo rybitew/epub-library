@@ -31,7 +31,8 @@ public class Comment {
 
     @PrimaryKeyColumn(
             type = PrimaryKeyType.CLUSTERED,
-            ordinal = 2
+            ordinal = 2,
+            name = "book_id"
     )
     private UUID bookId;
 

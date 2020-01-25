@@ -9,7 +9,9 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -38,4 +40,21 @@ public class BookByTitle {
     private UUID bookId;
 
     private List<String> authors;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BookByTitle that = (BookByTitle) o;
+        return Objects.equals(title.toLowerCase(), that.title.toLowerCase()) &&
+                Objects.equals(publisher.toLowerCase(), that.publisher.toLowerCase()) &&
+                Objects.equals(bookId, that.bookId) &&
+                Objects.equals(authors.stream().map(String::toLowerCase).collect(Collectors.toList()),
+                        that.authors.stream().map(String::toLowerCase).collect(Collectors.toList()));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, publisher, bookId, authors);
+    }
 }

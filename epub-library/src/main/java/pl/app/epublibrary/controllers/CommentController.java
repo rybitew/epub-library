@@ -5,6 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pl.app.epublibrary.dto.CommentDto;
+import pl.app.epublibrary.exceptions.InvalidBookIdException;
+import pl.app.epublibrary.exceptions.InvalidEntityException;
+import pl.app.epublibrary.exceptions.InvalidUsernameException;
 import pl.app.epublibrary.model.comment.Comment;
 import pl.app.epublibrary.services.CommentService;
 
@@ -29,6 +32,10 @@ public class CommentController {
             comment.setTimestamp(Instant.now());
             comment.setId(UUID.randomUUID());
             commentService.saveComment(comment);
+        } catch (InvalidEntityException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Invalid comment data", e);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(
@@ -41,6 +48,10 @@ public class CommentController {
     public void deleteComment(@RequestBody CommentDto comment) {
         try {
             commentService.deleteComment(new Comment(comment));
+        } catch (InvalidEntityException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Invalid comment data", e);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(
@@ -56,6 +67,10 @@ public class CommentController {
                     .stream()
                     .map(CommentDto::new)
                     .collect(Collectors.toList());
+        } catch (InvalidUsernameException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Username is null", e);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(
@@ -71,6 +86,10 @@ public class CommentController {
                     .stream()
                     .map(CommentDto::new)
                     .collect(Collectors.toList());
+        } catch (InvalidBookIdException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Book ID is null", e);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(

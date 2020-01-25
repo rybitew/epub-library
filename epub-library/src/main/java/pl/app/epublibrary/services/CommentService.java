@@ -2,6 +2,9 @@ package pl.app.epublibrary.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.app.epublibrary.exceptions.InvalidBookIdException;
+import pl.app.epublibrary.exceptions.InvalidEntityException;
+import pl.app.epublibrary.exceptions.InvalidUsernameException;
 import pl.app.epublibrary.model.comment.Comment;
 import pl.app.epublibrary.model.comment.CommentByBook;
 import pl.app.epublibrary.model.comment.CommentByUsername;
@@ -32,7 +35,10 @@ public class CommentService {
     }
 
 //region CRUD
-    public void saveComment(Comment comment) {
+    public void saveComment(Comment comment) throws InvalidEntityException {
+        if (comment == null) {
+            throw new InvalidEntityException();
+        }
         if (!comment.getComment().isEmpty()) {
             commentRepository.save(comment);
             commentByBookRepository.save(new CommentByBook(comment));
@@ -40,7 +46,10 @@ public class CommentService {
         }
     }
 
-    public void deleteComment(Comment comment) {
+    public void deleteComment(Comment comment) throws InvalidEntityException {
+        if (comment == null) {
+            throw new InvalidEntityException();
+        }
         commentRepository.deleteCommentById(comment.getId());
         commentByUserNameRepository.deleteByUsernameAndCommentIdAndTimestamp(
                 comment.getUsername(), comment.getId(), comment.getTimestamp()
@@ -50,7 +59,10 @@ public class CommentService {
         );
     }
 
-    public boolean deleteAllBookComments(UUID bookId) {
+    public boolean deleteAllBookComments(UUID bookId) throws InvalidBookIdException {
+        if (bookId == null) {
+            throw new InvalidBookIdException();
+        }
         try {
             Set<UUID> commentsByBook = commentByBookRepository.findAllCommentsByBookId(bookId)
                     .stream()
@@ -71,7 +83,10 @@ public class CommentService {
         }
     }
 
-    public void deleteAllUserComments(String username) {
+    public void deleteAllUserComments(String username) throws InvalidUsernameException {
+        if (username == null) {
+            throw new InvalidUsernameException();
+        }
         Set<UUID> commentsByUsername = commentByUserNameRepository.findAllCommentsByUsername(username)
                 .stream()
                 .map(CommentId::getCommentId)
@@ -87,7 +102,10 @@ public class CommentService {
     }
 //endregion
 
-    public List<Comment> findAllCommentsByUser(String username) {
+    public List<Comment> findAllCommentsByUser(String username) throws InvalidUsernameException {
+        if (username == null) {
+            throw new InvalidUsernameException();
+        }
         List<UUID> commentIds = commentByUserNameRepository.findAllCommentsByUsername(username)
                 .stream()
                 .map(CommentId::getCommentId)
@@ -98,7 +116,10 @@ public class CommentService {
         return comments;
     }
 
-    public List<Comment> findAllCommentsByBook(UUID bookId) {
+    public List<Comment> findAllCommentsByBook(UUID bookId) throws InvalidBookIdException {
+        if (bookId == null) {
+            throw new InvalidBookIdException();
+        }
         List<UUID> commentIds = commentByBookRepository.findAllCommentsByBookId(bookId)
                 .stream()
                 .map(CommentId::getCommentId)

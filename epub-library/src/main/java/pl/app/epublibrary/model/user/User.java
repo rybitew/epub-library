@@ -9,6 +9,8 @@ import org.springframework.data.cassandra.core.mapping.Indexed;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,4 +29,20 @@ public class User {
     private String email;
 
     private Boolean elevated;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(username.toLowerCase(), user.username.toLowerCase()) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(elevated, user.elevated);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, password, email, elevated);
+    }
 }

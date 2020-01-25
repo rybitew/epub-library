@@ -10,6 +10,7 @@
     </parent>
     <groupId>pl.app</groupId>
     <artifactId>epub-library</artifactId>
+    <version>1.0</version>
     <name>epub-library</name>
     <description>Application for digital books management using column database</description>
 

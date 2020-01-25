@@ -34,13 +34,19 @@ public class UserService {
 
     //region CRUD
     public void saveUser(User user)
-            throws InvalidEmailException, InvalidUsernameException, InvalidEmailFormatException, UserNotFoundException {
-        if (user == null || user.getUsername() == null) {
+            throws InvalidEmailException, InvalidUsernameException, InvalidEmailFormatException, InvalidPasswordException {
+        if (user == null || user.getUsername() == null || user.getUsername().isEmpty()) {
             throw new InvalidUsernameException();
         }
-        if (!user.getEmail().matches(EMAIL_PATTERN)) {
+        if (user.getEmail() == null || user.getEmail().trim().isEmpty() || !user.getEmail().matches(EMAIL_PATTERN)) {
             throw new InvalidEmailFormatException();
         }
+        if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
+            throw new InvalidPasswordException();
+        }
+        user.setUsername(user.getUsername().trim());
+        user.setEmail(user.getEmail().trim());
+        user.setPassword(user.getPassword().trim());
         user.setUsername(user.getUsername().toLowerCase());
         user.setEmail(user.getEmail().toLowerCase());
         if (findUserByUsername(user.getUsername()) == null) {
@@ -55,9 +61,10 @@ public class UserService {
     }
 
     public void deleteUser(String username) throws InvalidUsernameOrBookIdException, InvalidUsernameException {
-        if (username == null) {
+        if (username == null || username.trim().isEmpty()) {
             throw new InvalidUsernameException();
         }
+        username = username.trim();
         userRepository.deleteByUsername(username);
         Set<BookByUserLibrary> books = bookByUserLibraryRepository.findAllByUsername(username);
         for (BookByUserLibrary book : books) {
@@ -72,9 +79,11 @@ public class UserService {
     }
 
     public void elevateUser(String username) throws InvalidUsernameException {
-        if (username == null) {
+        if (username == null || username.trim().isEmpty()) {
             throw new InvalidUsernameException();
         }
+        username = username.trim();
+
         User user = userRepository.findByUsername(username);
         if (user != null) {
             user.setElevated(true);
@@ -86,33 +95,37 @@ public class UserService {
 //region ENDPOINT
 
     public Boolean isUserElevated(String username) throws InvalidUsernameException {
-        if (username == null) {
+        if (username == null || username.trim().isEmpty()) {
             throw new InvalidUsernameException();
         }
+        username = username.trim();
 
         Boolean isElevated = userRepository.findIfElevated(username);
         return isElevated == null? false : isElevated;
     }
 
     public User findUserByUsername(String username) throws InvalidUsernameException {
-        if (username == null) {
+        if (username == null || username.trim().isEmpty()) {
             throw new InvalidUsernameException();
         }
+        username = username.trim();
         return userRepository.findByUsername(username);
     }
 
     public User findUserByEmail(String email) throws InvalidEmailException {
-        if (email == null) {
+        if (email == null || email.trim().isEmpty()) {
             throw new InvalidEmailException();
         }
+        email = email.trim();
         return userRepository.findByEmail(email);
     }
 
     public void deleteFromUserLibrary(String username, UUID bookId)
-            throws UnexpectedErrorException, InvalidUsernameException {
-        if (username == null || bookId == null) {
-            throw new InvalidUsernameException();
+            throws UnexpectedErrorException, InvalidUsernameOrBookIdException {
+        if (username == null || username.trim().isEmpty() || bookId == null) {
+            throw new InvalidUsernameOrBookIdException();
         }
+        username = username.trim();
         try {
             bookByUserLibraryRepository.deleteByUsernameAndBookId(username, bookId);
             userLibraryByBookRepository.deleteByUsernameAndBookId(username, bookId);
@@ -122,7 +135,7 @@ public class UserService {
     }
 
     public Set<BookByUserLibrary> findAllUserLibraryBooks(String username) throws InvalidUsernameException {
-        if (username == null) {
+        if (username == null || username.trim().isEmpty()) {
             throw new InvalidUsernameException();
         }
         return bookByUserLibraryRepository.findAllByUsername(username);

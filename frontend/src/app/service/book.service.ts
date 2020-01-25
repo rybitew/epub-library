@@ -12,7 +12,7 @@ import ServerAddress from '../../assets/server-address.json';
 })
 export class BookService {
 
-  public serverUrl: string;
+  private serverUrl: string;
   private authorUrl: string;
   private publisherUrl: string;
   private bookUrl: string;
@@ -59,14 +59,6 @@ export class BookService {
 
   public checkIfInLibrary(bookId: string): Observable<boolean> {
     return this.http.get<boolean>(this.bookUrl.concat('/library/?id=', bookId, '&username=', sessionStorage.getItem('user')));
-  }
-
-  public findAllAuthors(): Observable<string[]> {
-    return this.http.get<string[]>(this.authorUrl.concat('/all'));
-  }
-
-  public findAllPublishers(): Observable<string[]> {
-    return this.http.get<string[]>(this.publisherUrl.concat('/all'));
   }
 
   public getImage(imageUrl: string): Observable<Blob> {

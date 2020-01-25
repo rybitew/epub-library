@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {HttpErrorResponse} from '@angular/common/http';
-import {throwError} from 'rxjs';
 import {User} from '../../model/user';
 import {UserService} from '../../service/user.service';
 import {Router} from '@angular/router';

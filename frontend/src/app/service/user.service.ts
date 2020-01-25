@@ -44,7 +44,7 @@ export class UserService {
   }
 
   public elevateUser(username: string): Observable<any> {
-    return this.http.post(this.userUrl + '/elevate/', username);
+    return this.http.put(this.userUrl + '/elevate/', username);
   }
 
   public isUserElevated(username: string): Observable<boolean> {
