@@ -7,6 +7,8 @@ import lombok.Setter;
 import pl.app.epublibrary.model.book.BookByAuthor;
 import pl.app.epublibrary.model.book.BookByAuthorPublisher;
 
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.UUID;
 
 @Getter
@@ -32,5 +34,24 @@ public class BookByAuthorDto {
         this.bookId = book.getBookId();
         this.title = book.getTitle();
         this.publisher = book.getPublisher();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BookByAuthorDto that = (BookByAuthorDto) o;
+        return Arrays.equals(Arrays.stream(authors).map(author -> author.trim().toLowerCase()).toArray(),
+                Arrays.stream(that.authors).map(author -> author.trim().toLowerCase()).toArray()) &&
+                Objects.equals(bookId, that.bookId) &&
+                Objects.equals(title.trim().toLowerCase(), that.title.trim().toLowerCase()) &&
+                Objects.equals(publisher.trim().toLowerCase(), that.publisher.trim().toLowerCase());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(bookId, title, publisher);
+        result = 31 * result + Arrays.hashCode(authors);
+        return result;
     }
 }

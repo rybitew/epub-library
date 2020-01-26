@@ -3,10 +3,7 @@ package pl.app.epublibrary.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.app.epublibrary.dto.BookByAuthorDto;
-import pl.app.epublibrary.exceptions.BookAlreadyExistsException;
-import pl.app.epublibrary.exceptions.InsufficientBookDataException;
-import pl.app.epublibrary.exceptions.InsufficientParametersException;
-import pl.app.epublibrary.exceptions.InvalidBookIdException;
+import pl.app.epublibrary.exceptions.*;
 import pl.app.epublibrary.model.book.*;
 import pl.app.epublibrary.repositories.book.*;
 
@@ -66,7 +63,14 @@ public class BookService {
         }
     }
 
-    public void updateAuthor(UUID id, List<String> authors) throws InvalidBookIdException {
+    public void updateAuthor(UUID id, List<String> authors)
+            throws InvalidBookIdException, InsufficientParametersException {
+        if (id == null) {
+            throw new InvalidBookIdException();
+        }
+        if (authors == null || authors.isEmpty()) {
+            throw new InsufficientParametersException();
+        }
         Book bookToUpdate = bookRepository.findById(id).orElse(null);
 
         if (bookToUpdate != null) {
@@ -107,6 +111,9 @@ public class BookService {
      * @param id ID of the book to delete
      */
     public void deleteBook(UUID id) throws InvalidBookIdException, IOException {
+        if (id == null) {
+            throw new InvalidBookIdException();
+        }
         Book book = bookRepository.findById(id).orElse(null);
 
         if (book != null) {
@@ -136,39 +143,43 @@ public class BookService {
 
     //region ENDPOINT
     public List<BookByAuthorDto> findAllBooksByAuthor(String author) throws InsufficientParametersException {
-        if (author == null || author.isEmpty()) {
+        if (author == null || author.trim().isEmpty()) {
             throw new InsufficientParametersException();
         }
-        return bookByAuthorRepository.findAllByAuthors(author.toLowerCase())
+        return bookByAuthorRepository.findAllByAuthors(author.trim().toLowerCase())
                 .stream()
                 .map(BookByAuthorDto::new)
                 .collect(Collectors.toList());
     }
 
-    public Book findBookById(UUID id) {
+    public Book findBookById(UUID id) throws InvalidBookIdException {
+        if (id == null) {
+            throw new InvalidBookIdException();
+        }
         return bookRepository.findById(id).orElse(null);
     }
 
     public List<BookByTitle> findBooksByTitle(String title) throws InsufficientParametersException {
-        if (title == null || title.isEmpty()) {
+        if (title == null || title.trim().isEmpty()) {
             throw new InsufficientParametersException();
         }
-        return bookByTitleRepository.findAllByTitle(title.toLowerCase());
+        return bookByTitleRepository.findAllByTitle(title.trim().toLowerCase());
     }
 
     public List<BookByPublisher> findBooksByPublisher(String publisher) throws InsufficientParametersException {
-        if (publisher == null || publisher.isEmpty()) {
+        if (publisher == null || publisher.trim().isEmpty()) {
             throw new InsufficientParametersException();
         }
-        return bookByPublisherRepository.findAllByPublisherName(publisher.toLowerCase());
+        return bookByPublisherRepository.findAllByPublisherName(publisher.trim().toLowerCase());
     }
 
     public List<BookByAuthorDto> findBookByTitleAndAuthor(String title, String author)
             throws InsufficientParametersException {
-        if (title == null || title.isEmpty() || author == null || author.isEmpty()) {
+        if (title == null || title.trim().isEmpty() || author == null || author.trim().isEmpty()) {
             throw new InsufficientParametersException();
         }
-        BookByAuthor entity = bookByAuthorRepository.findByAuthorsAndTitle(author.toLowerCase(), title.toLowerCase());
+        BookByAuthor entity = bookByAuthorRepository.findByAuthorsAndTitle(
+                author.trim().toLowerCase(), title.trim().toLowerCase());
         if (entity != null) {
             return List.of(new BookByAuthorDto(entity));
         }
@@ -177,18 +188,20 @@ public class BookService {
 
     public List<BookByPublisher> findBooksByTitleAndPublisher(String title, String publisher)
             throws InsufficientParametersException {
-        if (title == null || title.isEmpty() || publisher == null || publisher.isEmpty()) {
+        if (title == null || title.trim().isEmpty() || publisher == null || publisher.trim().isEmpty()) {
             throw new InsufficientParametersException();
         }
-        return bookByPublisherRepository.findAllByPublisherNameAndTitle(publisher, title);
+        return bookByPublisherRepository.findAllByPublisherNameAndTitle(
+                publisher.trim().toLowerCase(), title.trim().toLowerCase());
     }
 
     public List<BookByAuthorDto> findBooksByAuthorAndPublisher(String author, String publisher)
             throws InsufficientParametersException {
-        if (author == null || author.isEmpty() || publisher == null || publisher.isEmpty()) {
+        if (author == null || author.trim().isEmpty() || publisher == null || publisher.trim().isEmpty()) {
             throw new InsufficientParametersException();
         }
-        return bookByAuthorPublisherRepository.findAllByAuthorsAndPublisher(author, publisher)
+        return bookByAuthorPublisherRepository.findAllByAuthorsAndPublisher(
+                author.trim().toLowerCase(), publisher.trim().toLowerCase())
                 .stream()
                 .map(BookByAuthorDto::new)
                 .collect(Collectors.toList());
@@ -196,11 +209,12 @@ public class BookService {
 
     public List<BookByAuthorDto> findBookByTitleAuthorAndPublisher(String title, String author, String publisher)
             throws InsufficientParametersException {
-        if (title == null || title.isEmpty() || publisher == null || publisher.isEmpty()
-                || author == null || author.isEmpty()) {
+        if (title == null || title.trim().isEmpty() || publisher == null || publisher.trim().isEmpty()
+                || author == null || author.trim().isEmpty()) {
             throw new InsufficientParametersException();
         }
-        BookByAuthor entity = bookByAuthorRepository.findByAuthorsAndPublisherAndTitle(author, publisher, title);
+        BookByAuthor entity = bookByAuthorRepository.findByAuthorsAndPublisherAndTitle(
+                author.trim().toLowerCase(), publisher.trim().toLowerCase(), title.trim().toLowerCase());
         if (entity != null) {
             return List.of(new BookByAuthorDto(entity));
         }
@@ -208,25 +222,25 @@ public class BookService {
     }
 
     public boolean findIfInLibrary(UUID bookId, String username) throws InsufficientParametersException {
-        if (bookId == null || username == null || username.isEmpty()) {
+        if (bookId == null || username == null || username.trim().isEmpty()) {
             throw new InsufficientParametersException();
         }
-        return userLibraryByBookRepository.findByBookIdAndUsername(bookId, username) != null;
+        return userLibraryByBookRepository.findByBookIdAndUsername(bookId, username.trim()) != null;
     }
 
     public void addToUserLibrary(String username, UUID bookId, String title, List<String> authors)
             throws InsufficientParametersException {
-        if (bookId == null || username == null || username.isEmpty() || title == null || title.isEmpty()
-                || authors.isEmpty()) {
+        if (bookId == null || username == null || username.trim().isEmpty() || title == null || title.trim().isEmpty()
+                || authors == null || authors.isEmpty()) {
             throw new InsufficientParametersException();
         }
         bookByUserLibraryRepository.save(new BookByUserLibrary(
-                        username,
+                        username.trim(),
                         bookId,
-                        title.toLowerCase(),
+                        title.trim().toLowerCase(),
                         authors
                                 .stream()
-                                .map(String::toLowerCase)
+                                .map(author -> author.trim().toLowerCase())
                                 .collect(Collectors.toList())
                 )
         );
@@ -235,7 +249,10 @@ public class BookService {
 //endregion
 
     //region UTIL
-    private Book getExistingBook(Book book) {
+    private Book getExistingBook(Book book) throws InsufficientBookDataException {
+        if (book == null) {
+            throw new InsufficientBookDataException();
+        }
         return book
                 .getAuthors()
                 .stream()
@@ -269,7 +286,9 @@ public class BookService {
 
     private Book convertToLower(Book book) {
         List<String> authors = book.getAuthors();
-        book.setAuthors(authors.stream().map(String::toLowerCase).collect(Collectors.toList()));
+        book.setAuthors(authors.stream()
+                .map(author -> author.trim().toLowerCase())
+                .collect(Collectors.toList()));
         book.setTitle(book.getTitle().toLowerCase());
         if (book.getPublisher() == null) {
             book.setPublisher("unknown publisher");

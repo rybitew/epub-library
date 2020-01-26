@@ -1,4 +1,4 @@
-package pl.app.epublibrary.service;
+package pl.app.epublibrary.services;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,8 +7,6 @@ import pl.app.epublibrary.exceptions.*;
 import pl.app.epublibrary.model.book.Book;
 import pl.app.epublibrary.model.book.BookByUserLibrary;
 import pl.app.epublibrary.model.user.User;
-import pl.app.epublibrary.services.BookService;
-import pl.app.epublibrary.services.UserService;
 
 import java.io.IOException;
 import java.time.LocalDate;

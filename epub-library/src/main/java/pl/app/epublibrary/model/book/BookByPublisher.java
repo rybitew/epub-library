@@ -46,11 +46,11 @@ public class BookByPublisher {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BookByPublisher that = (BookByPublisher) o;
-        return Objects.equals(title.toLowerCase(), that.title.toLowerCase()) &&
-                Objects.equals(publisherName.toLowerCase(), that.publisherName.toLowerCase()) &&
+        return Objects.equals(title.trim().toLowerCase(), that.title.trim().toLowerCase()) &&
+                Objects.equals(publisherName.trim().toLowerCase(), that.publisherName.trim().toLowerCase()) &&
                 Objects.equals(bookId, that.bookId) &&
-                Objects.equals(authors.stream().map(String::toLowerCase).collect(Collectors.toList()),
-                        that.authors.stream().map(String::toLowerCase).collect(Collectors.toList()));
+                Objects.equals(authors.stream().map(author -> author.trim().toLowerCase()).collect(Collectors.toList()),
+                        that.authors.stream().map(author -> author.trim().toLowerCase()).collect(Collectors.toList()));
     }
 
     @Override

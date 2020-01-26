@@ -34,13 +34,33 @@ public class BookController {
                         throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "One of the parameters is empty.", e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Unknown Error", e);
         }
     }
 //region FIND BOOK
     @GetMapping(value = "/books/", params = {"id"})
     public @ResponseBody
     Book getBookById(@RequestParam(value = "id") String id) {
-        return bookService.findBookById(UUID.fromString(id));
+        try {
+            return bookService.findBookById(UUID.fromString(id));
+        } catch (InvalidBookIdException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Book ID is null.", e);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Invalid book ID.", e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Unknown Error", e);
+        }
     }
 
     @GetMapping(value = "/books/", params = {"title"})
@@ -52,6 +72,11 @@ public class BookController {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "One of the parameters is empty.", e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Unknown Error", e);
         }
     }
 
@@ -64,6 +89,11 @@ public class BookController {
                         throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "One of the parameters is empty.", e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Unknown Error", e);
         }
     }
 
@@ -77,6 +107,11 @@ public class BookController {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "One of the parameters is empty.", e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Unknown Error", e);
         }
     }
 
@@ -90,6 +125,11 @@ public class BookController {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "One of the parameters is empty.", e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Unknown Error", e);
         }
     }
 
@@ -103,6 +143,11 @@ public class BookController {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "One of the parameters is empty.", e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Unknown Error", e);
         }
     }
 
@@ -117,9 +162,15 @@ public class BookController {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "One of the parameters is empty.", e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Unknown Error", e);
         }
     }
 //endregion
+
     @GetMapping(value = "books/library/", params = {"id", "username"})
     public boolean checkIfInLibrary(@RequestParam(value = "id") String bookId,
                                     @RequestParam(value = "username") String username) {
@@ -129,6 +180,15 @@ public class BookController {
                         throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "One of the parameters is empty.", e);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Invalid book ID.", e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Unknown Error", e);
         }
     }
 
@@ -139,10 +199,18 @@ public class BookController {
             bookService.updateAuthor(UUID.fromString(book.getBookId().toString()),
                     Arrays.stream(book.getAuthors()).map(String::toLowerCase).collect(Collectors.toList()));
             return "OK";
+        } catch (InsufficientParametersException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "No book authors specified.", e);
         } catch (InvalidBookIdException e) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
-                    "Unknown Error", e);
+                    "Book ID is null.", e);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Invalid book ID.", e);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(
@@ -158,11 +226,11 @@ public class BookController {
         } catch (InvalidBookIdException e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "Invalid book ID.", e);
+                    "Book ID is null.", e);
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "Unknown Error", e);
+                    HttpStatus.BAD_REQUEST,
+                    "Invalid book ID.", e);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(
@@ -182,6 +250,15 @@ public class BookController {
                         throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "One of the parameters is empty.", e);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Invalid book ID.", e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Unknown Error", e);
         }
     }
 }
