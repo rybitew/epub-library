@@ -98,7 +98,7 @@ public class UserService {
         if (username == null || username.trim().isEmpty()) {
             throw new InvalidUsernameException();
         }
-        username = username.trim();
+        username = username.trim().toLowerCase();
 
         Boolean isElevated = userRepository.findIfElevated(username);
         return isElevated == null? false : isElevated;
@@ -116,7 +116,7 @@ public class UserService {
         if (email == null || email.trim().isEmpty()) {
             throw new InvalidEmailException();
         }
-        email = email.trim();
+        email = email.trim().toLowerCase();
         return userRepository.findByEmail(email);
     }
 
@@ -125,7 +125,7 @@ public class UserService {
         if (username == null || username.trim().isEmpty() || bookId == null) {
             throw new InvalidUsernameOrBookIdException();
         }
-        username = username.trim();
+        username = username.trim().toLowerCase();
         try {
             bookByUserLibraryRepository.deleteByUsernameAndBookId(username, bookId);
             userLibraryByBookRepository.deleteByUsernameAndBookId(username, bookId);
@@ -138,6 +138,7 @@ public class UserService {
         if (username == null || username.trim().isEmpty()) {
             throw new InvalidUsernameException();
         }
+        username = username.trim().toLowerCase();
         return bookByUserLibraryRepository.findAllByUsername(username);
     }
 //endregion

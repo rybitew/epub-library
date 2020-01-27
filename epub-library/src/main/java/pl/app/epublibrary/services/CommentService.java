@@ -34,9 +34,10 @@ public class CommentService {
         this.commentByUserNameRepository = commentByUserNameRepository;
     }
 
-//region CRUD
+    //region CRUD
     public void saveComment(Comment comment) throws InvalidEntityException {
-        if (comment == null) {
+        if (comment == null || comment.getUsername() == null || comment.getUsername().trim().isEmpty()
+                || comment.getBookId() == null || comment.getTitle() == null || comment.getTitle().trim().isEmpty()) {
             throw new InvalidEntityException();
         }
         if (!comment.getComment().isEmpty()) {
@@ -47,7 +48,8 @@ public class CommentService {
     }
 
     public void deleteComment(Comment comment) throws InvalidEntityException {
-        if (comment == null) {
+        if (comment == null || comment.getBookId() == null ||
+                comment.getId() == null || comment.getTimestamp() == null) {
             throw new InvalidEntityException();
         }
         commentRepository.deleteCommentById(comment.getId());
@@ -84,9 +86,10 @@ public class CommentService {
     }
 
     public void deleteAllUserComments(String username) throws InvalidUsernameException {
-        if (username == null) {
+        if (username == null || username.trim().isEmpty()) {
             throw new InvalidUsernameException();
         }
+        username = username.trim().toLowerCase();
         Set<UUID> commentsByUsername = commentByUserNameRepository.findAllCommentsByUsername(username)
                 .stream()
                 .map(CommentId::getCommentId)
@@ -103,9 +106,10 @@ public class CommentService {
 //endregion
 
     public List<Comment> findAllCommentsByUser(String username) throws InvalidUsernameException {
-        if (username == null) {
+        if (username == null || username.trim().isEmpty()) {
             throw new InvalidUsernameException();
         }
+        username = username.trim().toLowerCase();
         List<UUID> commentIds = commentByUserNameRepository.findAllCommentsByUsername(username)
                 .stream()
                 .map(CommentId::getCommentId)

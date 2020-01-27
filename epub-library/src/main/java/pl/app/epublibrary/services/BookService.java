@@ -225,7 +225,8 @@ public class BookService {
         if (bookId == null || username == null || username.trim().isEmpty()) {
             throw new InsufficientParametersException();
         }
-        return userLibraryByBookRepository.findByBookIdAndUsername(bookId, username.trim()) != null;
+        username = username.trim().toLowerCase();
+        return userLibraryByBookRepository.findByBookIdAndUsername(bookId, username) != null;
     }
 
     public void addToUserLibrary(String username, UUID bookId, String title, List<String> authors)
