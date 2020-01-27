@@ -9,7 +9,6 @@ import pl.app.epublibrary.model.book.*;
 import pl.app.epublibrary.model.user.User;
 import pl.app.epublibrary.repositories.book.*;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,7 +36,7 @@ public class BookServiceTest {
 
     @Test
     void saveBookInvalid()
-            throws InsufficientBookDataException, BookAlreadyExistsException, InvalidBookIdException, IOException {
+            throws InsufficientBookDataException, BookAlreadyExistsException, InvalidBookIdException, CannotDeleteFileException {
         Book testBook = new Book(UUID.randomUUID(), "title", List.of("author one", "author two"),
                 LocalDate.now(), "publisher", null);
         testBook.setTitle(null);
@@ -57,7 +56,8 @@ public class BookServiceTest {
 
     @Test
     void saveBookValid()
-            throws InsufficientBookDataException, BookAlreadyExistsException, InvalidBookIdException, IOException {
+            throws InsufficientBookDataException, BookAlreadyExistsException, InvalidBookIdException,
+            CannotDeleteFileException {
         Book book = new Book(UUID.randomUUID(),
                 "test book",
                 List.of("test author one", "test author two"),
@@ -114,7 +114,7 @@ public class BookServiceTest {
     @Test
     void updateAuthorValid()
             throws InsufficientBookDataException, BookAlreadyExistsException, InvalidBookIdException,
-            InsufficientParametersException, IOException {
+            InsufficientParametersException, CannotDeleteFileException {
         List<String> authors = new LinkedList<>(List.of("author1", "author2"));
         Book book = new Book(UUID.randomUUID(),
                 "test book",
@@ -136,7 +136,7 @@ public class BookServiceTest {
 
     @Test
     void deleteBookValid()
-            throws InvalidBookIdException, InsufficientBookDataException, BookAlreadyExistsException, IOException {
+            throws InvalidBookIdException, InsufficientBookDataException, BookAlreadyExistsException, CannotDeleteFileException {
         Book book = new Book(UUID.randomUUID(),
                 "test book",
                 List.of("test author one", "test author two"),
@@ -163,7 +163,7 @@ public class BookServiceTest {
     }
 
     @Test
-    void findAllBooksByAuthorValid() throws InsufficientBookDataException, BookAlreadyExistsException, InsufficientParametersException, InvalidBookIdException, IOException {
+    void findAllBooksByAuthorValid() throws InsufficientBookDataException, BookAlreadyExistsException, InsufficientParametersException, InvalidBookIdException, CannotDeleteFileException {
         Book book = new Book(UUID.randomUUID(),
                 "test book",
                 List.of("test author one", "test author two"),
@@ -188,7 +188,7 @@ public class BookServiceTest {
 
     @Test
     void findBookByIdValid()
-            throws InsufficientBookDataException, BookAlreadyExistsException, InvalidBookIdException, IOException {
+            throws InsufficientBookDataException, BookAlreadyExistsException, InvalidBookIdException, CannotDeleteFileException {
         Book book = new Book(UUID.randomUUID(),
                 "test book",
                 List.of("test author one", "test author two"),
@@ -210,7 +210,7 @@ public class BookServiceTest {
     @Test
     void findBooksByTitleValid()
             throws InsufficientBookDataException, BookAlreadyExistsException, InsufficientParametersException,
-            InvalidBookIdException, IOException {
+            InvalidBookIdException, CannotDeleteFileException {
         Book book = new Book(UUID.randomUUID(),
                 "test book",
                 List.of("test author one", "test author two"),
@@ -235,7 +235,7 @@ public class BookServiceTest {
     @Test
     void findBooksByPublisherValid()
             throws InsufficientBookDataException, BookAlreadyExistsException, InsufficientParametersException,
-            InvalidBookIdException, IOException {
+            InvalidBookIdException, CannotDeleteFileException {
         Book book = new Book(UUID.randomUUID(),
                 "test book",
                 List.of("test author one", "test author two"),
@@ -280,7 +280,7 @@ public class BookServiceTest {
     @Test
     void findBookByTitleAndAuthorValid()
             throws InsufficientParametersException, InsufficientBookDataException, BookAlreadyExistsException,
-            InvalidBookIdException, IOException {
+            InvalidBookIdException, CannotDeleteFileException {
         Book book = new Book(UUID.randomUUID(),
                 "test book",
                 List.of("test author one", "test author two"),
@@ -321,7 +321,7 @@ public class BookServiceTest {
     @Test
     void findBooksByTitleAndPublisherValid()
             throws InsufficientParametersException, InsufficientBookDataException, BookAlreadyExistsException,
-            InvalidBookIdException, IOException {
+            InvalidBookIdException, CannotDeleteFileException {
         Book book = new Book(UUID.randomUUID(),
                 "test book",
                 List.of("test author one", "test author two"),
@@ -357,7 +357,7 @@ public class BookServiceTest {
     @Test
     void findBooksByAuthorAndPublisherValid()
             throws InsufficientBookDataException, BookAlreadyExistsException, InsufficientParametersException,
-            IOException, InvalidBookIdException {
+            CannotDeleteFileException, InvalidBookIdException {
         Book book = new Book(UUID.randomUUID(),
                 "test book",
                 List.of("test author one", "test author two"),
@@ -402,7 +402,7 @@ public class BookServiceTest {
     @Test
     void findBookByTitleAuthorAndPublisherValid()
             throws InsufficientBookDataException, BookAlreadyExistsException, InsufficientParametersException,
-            IOException, InvalidBookIdException {
+            CannotDeleteFileException, InvalidBookIdException {
         Book book = new Book(UUID.randomUUID(),
                 "test book",
                 List.of("test author one", "test author two"),
@@ -437,7 +437,7 @@ public class BookServiceTest {
     @Test
     void findIfInLibraryValid()
             throws InsufficientBookDataException, BookAlreadyExistsException, InsufficientParametersException,
-            IOException, InvalidBookIdException, InvalidUsernameException, InvalidEmailException,
+            CannotDeleteFileException, InvalidBookIdException, InvalidUsernameException, InvalidEmailException,
             InvalidEmailFormatException, InvalidPasswordException, InvalidUsernameOrBookIdException {
         Book book = new Book(UUID.randomUUID(),
                 "test book",
@@ -477,7 +477,7 @@ public class BookServiceTest {
     @Test
     void addToUserLibraryValid()
             throws InsufficientBookDataException, BookAlreadyExistsException, InsufficientParametersException,
-            IOException, InvalidBookIdException, InvalidUsernameException, InvalidEmailException,
+            CannotDeleteFileException, InvalidBookIdException, InvalidUsernameException, InvalidEmailException,
             InvalidEmailFormatException, InvalidPasswordException, InvalidUsernameOrBookIdException {
         Book book = new Book(UUID.randomUUID(),
                 "test book",

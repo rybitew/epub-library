@@ -8,7 +8,6 @@ import pl.app.epublibrary.model.book.Book;
 import pl.app.epublibrary.model.book.BookByUserLibrary;
 import pl.app.epublibrary.model.user.User;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
@@ -213,7 +212,7 @@ public class UserServiceTest {
             throws InvalidUsernameException, InvalidEmailException, InvalidEmailFormatException,
             InvalidPasswordException, InsufficientBookDataException, BookAlreadyExistsException,
             InsufficientParametersException, InvalidUsernameOrBookIdException, UnexpectedErrorException,
-            InvalidBookIdException, IOException {
+            InvalidBookIdException, CannotDeleteFileException, CannotDeleteFileException {
         Book book = new Book(UUID.randomUUID(), "book", List.of("author one"), LocalDate.now(),
                 "publisher", null);
         userService.deleteUser("valid");
@@ -240,7 +239,7 @@ public class UserServiceTest {
     void findAllUserLibraryBooksValid()
             throws InvalidUsernameOrBookIdException, InvalidUsernameException, InsufficientBookDataException,
             BookAlreadyExistsException, InvalidPasswordException, InvalidEmailFormatException, InvalidEmailException,
-            InsufficientParametersException, InvalidBookIdException, IOException {
+            InsufficientParametersException, InvalidBookIdException, CannotDeleteFileException {
         Book book = new Book(UUID.randomUUID(), "book", List.of("author one"), LocalDate.now(),
                 "publisher", null);
         User userNotEmpty = new User("valid", "test", "test1@test.test", false);

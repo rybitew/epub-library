@@ -37,7 +37,6 @@ public class CommentController {
                     HttpStatus.BAD_REQUEST,
                     "Invalid comment data", e);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Unknown Error", e);
@@ -53,7 +52,6 @@ public class CommentController {
                     HttpStatus.BAD_REQUEST,
                     "Invalid comment data", e);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Unknown Error", e);
@@ -72,7 +70,6 @@ public class CommentController {
                     HttpStatus.BAD_REQUEST,
                     "Username is null", e);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Unknown Error", e);
@@ -91,7 +88,6 @@ public class CommentController {
                     HttpStatus.BAD_REQUEST,
                     "Book ID is null", e);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Unknown Error", e);

@@ -1,14 +1,12 @@
 package pl.app.epublibrary.services;
 
+import com.adobe.epubcheck.api.EpubCheck;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import pl.app.epublibrary.config.FileStorageProperties;
-import pl.app.epublibrary.exceptions.CannotCreateDirectoryException;
-import pl.app.epublibrary.exceptions.FileSaveErrorException;
-import pl.app.epublibrary.exceptions.InvalidFileException;
-import pl.app.epublibrary.exceptions.InvalidFileNameException;
+import pl.app.epublibrary.exceptions.*;
 import pl.app.epublibrary.model.book.Book;
 import pl.app.epublibrary.util.MetadataReader;
 
@@ -41,17 +39,23 @@ public class FileStorageService {
     }
 
     public Book storeFile(MultipartFile file) throws FileSaveErrorException, InvalidFileException {
+        if (file == null) {
+            throw new InvalidFileException();
+        }
         try {
             String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-            // Check if the file's name contains invalid characters
-            if(fileName.contains("..")) {
+            if (fileName.contains("..")) {
                 throw new InvalidFileNameException();
             }
 
-            // Copy file to the target location (Replacing existing file with the same name)
+            // Copy-replace file to the target location
             Path targetLocation = this.fileStorageLocation.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
+            EpubCheck epubCheck = new EpubCheck(targetLocation.toFile());
+            if (!epubCheck.validate()) {
+                throw new InvalidFileException();
+            }
             metadataReader.setBook(targetLocation.toString());
 
             UUID bookId = UUID.randomUUID();
@@ -61,30 +65,26 @@ public class FileStorageService {
                     metadataReader.getReleaseDate(),
                     metadataReader.getPublisher(),
                     metadataReader.getCoverImagePath(bookId));
-
+            file.getInputStream().close();
             deleteFile(targetLocation);
             return book;
         } catch (IOException | InvalidFileNameException ex) {
             throw new FileSaveErrorException();
-        } catch (NullPointerException e) {
+        } catch (NullPointerException | InvalidFileException e) {
             throw new InvalidFileException();
         }
     }
 
-    public void deleteCover(UUID bookId) throws IOException {
+    public void deleteCover(UUID bookId) throws CannotDeleteFileException {
         try {
             Files.deleteIfExists(Paths.get("./covers/" + bookId.toString() + ".png"));
         } catch (IOException e) {
-            deleteCover(bookId);
+            throw new CannotDeleteFileException();
         }
     }
 
-    private void deleteFile(Path location) {
-        try {
-            Files.deleteIfExists(location);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void deleteFile(Path location) throws IOException {
+        Files.deleteIfExists(location);
     }
 }
 

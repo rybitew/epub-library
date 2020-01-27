@@ -110,7 +110,7 @@ public class BookService {
      *
      * @param id ID of the book to delete
      */
-    public void deleteBook(UUID id) throws InvalidBookIdException, IOException {
+    public void deleteBook(UUID id) throws InvalidBookIdException, CannotDeleteFileException {
         if (id == null) {
             throw new InvalidBookIdException();
         }

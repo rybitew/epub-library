@@ -6,10 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-import pl.app.epublibrary.exceptions.BookAlreadyExistsException;
-import pl.app.epublibrary.exceptions.FileSaveErrorException;
-import pl.app.epublibrary.exceptions.InsufficientBookDataException;
-import pl.app.epublibrary.exceptions.InvalidFileException;
+import pl.app.epublibrary.exceptions.*;
 import pl.app.epublibrary.model.book.Book;
 import pl.app.epublibrary.services.BookService;
 import pl.app.epublibrary.services.FileStorageService;
@@ -57,13 +54,12 @@ public class FileController {
                 throw new ResponseStatusException(
                         HttpStatus.CONFLICT,
                         "Book already exists.", e);
-            } catch (IOException ex) {
-                e.printStackTrace();
-                return "Book exists";
+            } catch (CannotDeleteFileException ex) {
+                throw new ResponseStatusException(
+                        HttpStatus.CONFLICT,
+                        "Cannot delete a file, .", e);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Unknown Error", e);
@@ -75,7 +71,9 @@ public class FileController {
     byte[] getBookCover(@RequestParam(value = "path") String path) {
         try {
             FileInputStream in = new FileInputStream(path);
-            return in.readAllBytes();
+            byte[] bytes = in.readAllBytes();
+            in.close();
+            return bytes;
         } catch (IOException e) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,

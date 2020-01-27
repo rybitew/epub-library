@@ -8,7 +8,6 @@ import pl.app.epublibrary.model.book.Book;
 import pl.app.epublibrary.model.comment.Comment;
 import pl.app.epublibrary.model.user.User;
 
-import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
@@ -58,7 +57,7 @@ class CommentServiceTest {
     void saveCommentValid()
             throws InsufficientBookDataException, BookAlreadyExistsException, InvalidEmailException,
             InvalidPasswordException, InvalidEntityException, InvalidUsernameException, InvalidBookIdException,
-            InvalidUsernameOrBookIdException, InvalidEmailFormatException, IOException {
+            InvalidUsernameOrBookIdException, InvalidEmailFormatException, CannotDeleteFileException {
         Book book = new Book(UUID.randomUUID(),
                 "test book",
                 List.of("test author one", "test author two"),

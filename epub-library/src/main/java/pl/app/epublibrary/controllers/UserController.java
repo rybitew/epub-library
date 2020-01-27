@@ -60,7 +60,6 @@ public class UserController {
                     HttpStatus.BAD_REQUEST,
                     "Invalid e-mail format.", e);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Unknown Error.", e);
@@ -76,7 +75,6 @@ public class UserController {
                     HttpStatus.BAD_REQUEST,
                     "Username is null.", e);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Unknown Error.", e);
@@ -92,7 +90,6 @@ public class UserController {
                     HttpStatus.BAD_REQUEST,
                     "Username is null.", e);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Unknown Error.", e);
@@ -115,7 +112,6 @@ public class UserController {
                     HttpStatus.BAD_REQUEST,
                     "Invalid username or password.");
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Unknown Error.", e);
@@ -135,7 +131,6 @@ public class UserController {
                     HttpStatus.NOT_FOUND,
                     "Invalid username. Error deleting user's library.", e);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Unknown Error.", e);
@@ -152,7 +147,6 @@ public class UserController {
                     HttpStatus.BAD_REQUEST,
                     "Invalid username or book ID.", e);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Unknown Error.", e);
@@ -173,7 +167,6 @@ public class UserController {
                     HttpStatus.BAD_REQUEST,
                     "Username is null.", e);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Unknown Error.", e);
@@ -186,7 +179,6 @@ public class UserController {
         try {
             return userService.findAllUserLibraryBooks(username);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Unknown Error.", e);

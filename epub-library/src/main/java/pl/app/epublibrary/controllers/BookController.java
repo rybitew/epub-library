@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pl.app.epublibrary.dto.BookByAuthorDto;
+import pl.app.epublibrary.exceptions.CannotDeleteFileException;
 import pl.app.epublibrary.exceptions.InsufficientParametersException;
 import pl.app.epublibrary.exceptions.InvalidBookIdException;
 import pl.app.epublibrary.model.book.*;
@@ -35,7 +36,6 @@ public class BookController {
                     HttpStatus.BAD_REQUEST,
                     "One of the parameters is empty.", e);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Unknown Error", e);
@@ -56,7 +56,6 @@ public class BookController {
                     HttpStatus.BAD_REQUEST,
                     "Invalid book ID.", e);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Unknown Error", e);
@@ -73,7 +72,6 @@ public class BookController {
                     HttpStatus.BAD_REQUEST,
                     "One of the parameters is empty.", e);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Unknown Error", e);
@@ -90,7 +88,6 @@ public class BookController {
                     HttpStatus.BAD_REQUEST,
                     "One of the parameters is empty.", e);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Unknown Error", e);
@@ -108,7 +105,6 @@ public class BookController {
                     HttpStatus.BAD_REQUEST,
                     "One of the parameters is empty.", e);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Unknown Error", e);
@@ -126,7 +122,6 @@ public class BookController {
                     HttpStatus.BAD_REQUEST,
                     "One of the parameters is empty.", e);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Unknown Error", e);
@@ -144,7 +139,6 @@ public class BookController {
                     HttpStatus.BAD_REQUEST,
                     "One of the parameters is empty.", e);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Unknown Error", e);
@@ -163,7 +157,6 @@ public class BookController {
                     HttpStatus.BAD_REQUEST,
                     "One of the parameters is empty.", e);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Unknown Error", e);
@@ -185,7 +178,6 @@ public class BookController {
                     HttpStatus.BAD_REQUEST,
                     "Invalid book ID.", e);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Unknown Error", e);
@@ -212,7 +204,6 @@ public class BookController {
                     HttpStatus.BAD_REQUEST,
                     "Invalid book ID.", e);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Unknown Error", e);
@@ -231,8 +222,11 @@ public class BookController {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Invalid book ID.", e);
+        } catch (CannotDeleteFileException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Cannot delete the book cover.", e);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Unknown Error", e);
@@ -255,7 +249,6 @@ public class BookController {
                     HttpStatus.BAD_REQUEST,
                     "Invalid book ID.", e);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Unknown Error", e);
