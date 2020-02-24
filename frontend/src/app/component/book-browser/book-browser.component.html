@@ -62,5 +62,5 @@
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
     <mat-row *matRowDef="let book; let i = dataIndex; columns: displayedColumns;"></mat-row>
   </table>
-  <p *ngIf="result === null || !(result?.length > 0)">No results</p>
+  <p *ngIf="(result === null || !(result?.length > 0)) && visible===true">No results</p>
 </div>

@@ -52,8 +52,11 @@ public class FileStorageService {
             Path targetLocation = this.fileStorageLocation.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
+            System.err.close();
             EpubCheck epubCheck = new EpubCheck(targetLocation.toFile());
             if (!epubCheck.validate()) {
+                file.getInputStream().close();
+                deleteFile(targetLocation);
                 throw new InvalidFileException();
             }
             metadataReader.setBook(targetLocation.toString());

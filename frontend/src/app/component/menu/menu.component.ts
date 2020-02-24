@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {NavigationEnd, Router} from '@angular/router';
 // @ts-ignore
 import ServerAddress from '../../../assets/server-address.json';
+import {throwError} from 'rxjs';
 
 @Component({
   selector: 'app-menu',
@@ -58,10 +59,7 @@ export class MenuComponent implements OnInit {
       let file: File = fileList[0];
       let formData: FormData = new FormData();
       formData.append('file', file);
-      this.http.post<any>(this.serverAddress + 'book/upload/', formData).subscribe(res => {
-          throw new Error('Uploaded');
-        }
-      );
+      this.http.post<any>(this.serverAddress + 'book/upload/', formData).subscribe();
     }
   }
 }

@@ -17,5 +17,5 @@
   <button mat-raised-button class="result" *ngIf="result" (click)="goToUser()">
       {{result.username}}
   </button>
-  <p *ngIf="!result">No user with such username</p>
+  <p *ngIf="!result && visible === true">No user with such username</p>
 </div>

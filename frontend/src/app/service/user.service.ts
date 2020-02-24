@@ -22,7 +22,6 @@ export class UserService {
 
   constructor(private http: HttpClient) {
     this.serverUrl = ServerAddress.http;
-    console.log(this.serverUrl);
     this.userUrl = this.serverUrl + 'user/';
     this.loginUrl = this.userUrl + 'login';
     this.registerUrl = this.userUrl + 'register';
@@ -39,8 +38,8 @@ export class UserService {
     return this.http.post<boolean>(this.registerUrl, user);
   }
 
-  public deleteUser(): Observable<any> {
-    return this.http.delete(this.deleteUrl + '?username=' + sessionStorage.getItem('user'));
+  public deleteUser(username: string): Observable<any> {
+    return this.http.delete(this.deleteUrl + '?username=' + username);
   }
 
   public elevateUser(username: string): Observable<any> {

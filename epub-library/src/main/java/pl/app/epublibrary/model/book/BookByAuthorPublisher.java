@@ -43,10 +43,10 @@ public class BookByAuthorPublisher {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BookByAuthorPublisher that = (BookByAuthorPublisher) o;
-        return Objects.equals(authors.toLowerCase(), that.authors.toLowerCase()) &&
-                Objects.equals(publisher.toLowerCase(), that.publisher.toLowerCase()) &&
+        return Objects.equals(authors.trim().toLowerCase(), that.authors.trim().toLowerCase()) &&
+                Objects.equals(publisher.trim().toLowerCase(), that.publisher.trim().toLowerCase()) &&
                 Objects.equals(bookId, that.bookId) &&
-                Objects.equals(title.toLowerCase(), that.title.toLowerCase());
+                Objects.equals(title.trim().toLowerCase(), that.title.trim().toLowerCase());
     }
 
     @Override

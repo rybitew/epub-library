@@ -1,2 +1,12 @@
 .content {
 }
+.welcome {
+  font-size: 30px;
+  font-weight: bold;
+}
+.admin-text {
+  font-weight: bold;
+}
+.instruction {
+  font-size: 30px;
+}

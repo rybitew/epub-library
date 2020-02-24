@@ -30,12 +30,12 @@ public class FileController {
     }
 
     @PostMapping("/book/upload/")
-    public String uploadFile(@RequestParam(value = "file") MultipartFile file) {
+    public HttpStatus uploadFile(@RequestParam(value = "file") MultipartFile file) {
         try {
             Book book = fileStorageService.storeFile(file);
             bookId = book.getId();
             bookService.saveBook(book);
-            return "OK";
+            return HttpStatus.OK;
         } catch (InsufficientBookDataException e) {
             throw new ResponseStatusException(
                     HttpStatus.UNPROCESSABLE_ENTITY,
@@ -57,12 +57,12 @@ public class FileController {
             } catch (CannotDeleteFileException ex) {
                 throw new ResponseStatusException(
                         HttpStatus.CONFLICT,
-                        "Cannot delete a file, .", e);
+                        "Cannot delete a file.", e);
             }
         } catch (Exception e) {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Unknown Error", e);
+                    "Unknown Error.", e);
         }
     }
 

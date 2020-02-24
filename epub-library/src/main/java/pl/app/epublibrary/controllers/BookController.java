@@ -8,7 +8,9 @@ import pl.app.epublibrary.dto.BookByAuthorDto;
 import pl.app.epublibrary.exceptions.CannotDeleteFileException;
 import pl.app.epublibrary.exceptions.InsufficientParametersException;
 import pl.app.epublibrary.exceptions.InvalidBookIdException;
-import pl.app.epublibrary.model.book.*;
+import pl.app.epublibrary.model.book.Book;
+import pl.app.epublibrary.model.book.BookByPublisher;
+import pl.app.epublibrary.model.book.BookByTitle;
 import pl.app.epublibrary.services.BookService;
 
 import java.util.Arrays;

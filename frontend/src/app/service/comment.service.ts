@@ -41,7 +41,6 @@ export class CommentService {
         comment: null,
       },
     };
-    console.log('delete');
     return this.http.delete(this.deleteCommentUrl, options);
   }
 

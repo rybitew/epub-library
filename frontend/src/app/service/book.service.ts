@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Book} from '../model/book';
 import {BookByAuthor} from '../model/book-by-author';
 import {BookByPublisher} from '../model/book-by-publisher';
@@ -70,7 +70,6 @@ export class BookService {
     let book: BookByPublisher = new BookByPublisher();
     book.bookId = id;
     book.authors = authors;
-    console.log(book);
 
     return this.http.put(this.bookUrl.concat('/change-author/'), book);
   }

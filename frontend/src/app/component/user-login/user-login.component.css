@@ -14,9 +14,11 @@ button {
   outline: none;
   margin: 5px;
   background-color: #f5f5f5;
+  width: 85px;
 }
 mat-form-field {
   text-align: center;
+  width: 100%;
 }
 .error {
   background-color: indianred;

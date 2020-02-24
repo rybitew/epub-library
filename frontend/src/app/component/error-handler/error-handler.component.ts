@@ -1,5 +1,4 @@
-import {Component, ErrorHandler, Injectable, NgZone, OnInit} from '@angular/core';
-import {throwError} from 'rxjs';
+import {Component, ErrorHandler, NgZone} from '@angular/core';
 import {MatSnackBar} from '@angular/material';
 
 @Component({
@@ -30,7 +29,6 @@ export class ErrorHandlerComponent implements ErrorHandler {
       // return an observable with a user-facing error message
     }
     if (this.errorMessage !== undefined && this.errorMessage.trim() !== '') {
-      console.log(this.errorMessage);
       this.zone.run(() => this.errorSnackBar.open(this.errorMessage, 'Ok', {
         verticalPosition: 'bottom',
         horizontalPosition: 'center',

@@ -1,6 +1,5 @@
 package pl.app.epublibrary.util;
 
-import com.adobe.epubcheck.api.EpubCheck;
 import nl.siegmann.epublib.domain.Author;
 import nl.siegmann.epublib.domain.Book;
 import nl.siegmann.epublib.domain.Date;
@@ -21,7 +20,6 @@ import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
-import java.util.zip.ZipFile;
 
 @Component
 public class MetadataReader {

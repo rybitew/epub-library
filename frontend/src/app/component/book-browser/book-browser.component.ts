@@ -1,11 +1,8 @@
-import {Component, ElementRef, NgZone, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {BookService} from '../../service/book.service';
 import {BookByAuthor} from '../../model/book-by-author';
-import {MatTable, MatTableDataSource} from '@angular/material';
+import {MatTable} from '@angular/material';
 import {Router} from '@angular/router';
-import {error} from 'util';
-import {HttpErrorResponse} from '@angular/common/http';
-import {throwError} from 'rxjs';
 
 @Component({
   selector: 'app-book-browser',
@@ -16,6 +13,7 @@ export class BookBrowserComponent implements OnInit {
 
   @ViewChild('table', {static: false}) table: MatTable<BookByAuthor>;
 
+  public visible = false;
   public result: BookByAuthor[] = [];
   public displayedColumns = ['index', 'title', 'authors', 'publisher'];
 
@@ -69,6 +67,7 @@ export class BookBrowserComponent implements OnInit {
         this.bookService.findByPublisher(publisher).subscribe(books => this.result = books.map(book => new BookByAuthor(book)));
       }
     }
+    this.visible = true;
     if (this.result !== undefined) {
       if (this.table) {
         this.table.dataSource = this.result;

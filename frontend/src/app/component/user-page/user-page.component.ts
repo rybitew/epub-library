@@ -1,9 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatDialog, MatTable} from '@angular/material';
-import {BookByAuthor} from '../../model/book-by-author';
 import {ActivatedRoute, Router} from '@angular/router';
-import {HttpErrorResponse} from '@angular/common/http';
-import {throwError} from 'rxjs';
 import {UserService} from '../../service/user.service';
 import {BookByUserLibrary} from '../../model/book-by-user-library';
 import {CommentService} from '../../service/comment.service';
@@ -42,9 +39,6 @@ export class UserPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    // if (sessionStorage.getItem('authenticated') !== 'true') {
-    //
-    // }
     this.authenticated = sessionStorage.getItem('authenticated') === 'true';
     this.username = this.route.snapshot.params.username;
     this.currentUser = sessionStorage.getItem('user');
@@ -60,19 +54,16 @@ export class UserPageComponent implements OnInit {
       this.table.dataSource = book;
       this.table.renderRows();
     });
-    // this.table.dataSource = this.result;
-    // this.table.renderRows();
     this.result = [];
   }
 
   public deleteComment(comment: Comment) {
-    this.commentService.deleteComment(comment).subscribe(res => console.log(res));
+    this.commentService.deleteComment(comment).subscribe();
     location.reload();
   }
 
   public deleteFromLibrary(id: string) {
-    console.log(id);
-    this.userService.deleteBookFromLibrary(id).subscribe(res => console.log(res));
+    this.userService.deleteBookFromLibrary(id).subscribe();
     location.reload();
   }
 
@@ -84,7 +75,6 @@ export class UserPageComponent implements OnInit {
       });
 
       dialogRef.afterClosed().subscribe(result => {
-        console.log(result.actionResult);
         if (result.actionResult === true) {
           this.deleteAccount();
         }
@@ -93,12 +83,13 @@ export class UserPageComponent implements OnInit {
   }
 
   public deleteAccount() {
-    this.userService.deleteUser().subscribe(res => console.log(res));
+    this.userService.deleteUser(this.username).subscribe();
     this.router.navigate(['home']);
   }
 
   public elevateUser() {
-    this.userService.elevateUser(this.username).subscribe(res => console.log(res));
+    this.userService.elevateUser(this.username).subscribe();
+    this.elevated = true;
   }
 
   public isUserElevated() {

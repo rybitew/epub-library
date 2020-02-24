@@ -17,12 +17,14 @@ import {
   MatFormFieldModule,
   MatInputModule,
   MatListModule,
-  MatSidenavModule, MatSnackBar, MatSnackBarContainer, MatSnackBarModule, MatTableModule
+  MatSidenavModule,
+  MatSnackBarModule,
+  MatTableModule
 } from '@angular/material';
 import {UserFinderComponent} from './component/user-finder/user-finder.component';
 import {AppComponent} from './app.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {HttpClientModule} from '@angular/common/http';
 import {BookComponent} from './component/book/book.component';
 import {UserLoginComponent} from './component/user-login/user-login.component';
 import {AuthorPageComponent} from './component/author-page/author-page.component';

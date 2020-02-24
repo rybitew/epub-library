@@ -8,15 +8,8 @@ import pl.app.epublibrary.config.FileStorageProperties;
 import pl.app.epublibrary.exceptions.InvalidEmailException;
 import pl.app.epublibrary.exceptions.InvalidEmailFormatException;
 import pl.app.epublibrary.exceptions.InvalidUsernameException;
-import pl.app.epublibrary.model.book.Book;
 import pl.app.epublibrary.model.user.User;
-import pl.app.epublibrary.services.BookService;
 import pl.app.epublibrary.services.UserService;
-
-import java.time.LocalDate;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
 
 @SpringBootApplication
 @EnableConfigurationProperties({FileStorageProperties.class})

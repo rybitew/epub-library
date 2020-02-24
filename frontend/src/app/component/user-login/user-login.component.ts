@@ -3,9 +3,6 @@ import {UserService} from '../../service/user.service';
 import {UserDto} from '../../model/user-dto';
 import {Router} from '@angular/router';
 import {User} from '../../model/user';
-import {throwError} from 'rxjs';
-import {HttpErrorResponse} from '@angular/common/http';
-import {error} from 'util';
 
 @Component({
   selector: 'app-user-login',

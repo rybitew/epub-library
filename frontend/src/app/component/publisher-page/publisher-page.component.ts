@@ -1,11 +1,7 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {BookByAuthor} from '../../model/book-by-author';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BookService} from '../../service/book.service';
-import {HttpErrorResponse} from '@angular/common/http';
-import {throwError} from 'rxjs';
 import {BookByPublisher} from '../../model/book-by-publisher';
-import {MAT_DIALOG_DATA} from '@angular/material';
 
 @Component({
   selector: 'app-publisher-page',

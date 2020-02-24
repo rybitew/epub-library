@@ -7,8 +7,9 @@ import pl.app.epublibrary.exceptions.*;
 import pl.app.epublibrary.model.book.*;
 import pl.app.epublibrary.repositories.book.*;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,7 +50,7 @@ public class BookService {
 // region CRUD
 
     public void saveBook(Book book) throws BookAlreadyExistsException, InsufficientBookDataException {
-        if (book != null && book.getTitle() != null && book.getAuthors() != null) {
+        if (book != null && book.getTitle() != null && !book.getTitle().trim().isEmpty() && book.getAuthors() != null) {
             book = convertToLower(book);
             Book existingBook = this.getExistingBook(book);
             if (existingBook == null || !existingBook.equals(book)) {

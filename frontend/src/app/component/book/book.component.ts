@@ -66,13 +66,12 @@ export class BookComponent implements OnInit {
           });
       }
     }
-    console.log(this.isInLibrary);
   }
 
   public addToLibrary() {
     if (sessionStorage.getItem('authenticated') === 'true' && sessionStorage.getItem('user')) {
       this.bookService.addToUserLibrary(this.bookInfo.id, this.bookInfo.title, this.bookInfo.authors)
-        .subscribe(res => console.log(res));
+        .subscribe();
       this.isInLibrary = true;
     } else {
       this.router.navigate(['login']);
@@ -82,19 +81,19 @@ export class BookComponent implements OnInit {
   public removeFromLibrary() {
     if (this.isInLibrary) {
       this.userService.deleteBookFromLibrary(this.bookInfo.id)
-        .subscribe(res => console.log(res));
+        .subscribe();
       this.isInLibrary = false;
     }
   }
 
   public deleteBook() {
 
-    this.bookService.deleteBook(this.bookInfo.id).subscribe(res => console.log(res));
+    this.bookService.deleteBook(this.bookInfo.id).subscribe();
     this.router.navigate(['book']);
   }
 
   public deleteComment(comment: Comment) {
-    this.commentService.deleteComment(comment).subscribe(res => console.log(res));
+    this.commentService.deleteComment(comment).subscribe();
     location.reload();
   }
 
@@ -112,7 +111,6 @@ export class BookComponent implements OnInit {
       });
 
       dialogRef.afterClosed().subscribe(result => {
-        console.log(result.actionResult);
         if (result.actionResult === true) {
           this.deleteBook();
         }
@@ -132,7 +130,7 @@ export class BookComponent implements OnInit {
       dialogRef.afterClosed().subscribe(result => {
         if (result.authors.authors.length > 0) {
           this.bookService.changeAuthors(this.route.snapshot.params.id, result.authors.authors)
-            .subscribe(res => console.log(res));
+            .subscribe();
           location.reload();
         }
       });
@@ -145,10 +143,9 @@ export class BookComponent implements OnInit {
 
   public publish() {
     if (sessionStorage.getItem('authenticated') === 'true' && sessionStorage.getItem('user')) {
-      if (this.commentContent.trim()) {
-        console.log('commented');
+      if (this.commentContent && this.commentContent.trim()) {
         this.commentService.addComment(this.bookInfo.id, this.commentContent, this.bookInfo.title)
-          .subscribe(res => console.log(res));
+          .subscribe();
         this.commentContent = '';
         location.reload();
       }
@@ -171,7 +168,6 @@ export class BookComponent implements OnInit {
 
 //region Book cover recovering
   public getBookCover() {
-    console.log(this.bookInfo);
     this.isImageLoading = true;
     this.bookService.getImage(this.bookInfo.coverUrl).subscribe(data => {
       this.createImageFromBlob(data);
